@@ -110,7 +110,7 @@ button,.btn{font:inherit;border:0;border-radius:10px;padding:10px 14px;backgroun
         </ol>
         <div class="lbl">La chiave può solo scrivere note private («gist») sul tuo GitHub: non dà accesso al resto. I progressi viaggiano cifrati: senza il codice MM1 nessuno li può leggere.</div>
       </details>
-      <div class="btns" style="margin-top:8px"><input id="lnkCode" placeholder="Incolla il codice MM1-…" autocomplete="off" autocapitalize="off" spellcheck="false" style="flex:1;min-width:220px;font:inherit;padding:9px 12px;border-radius:10px;border:1px solid var(--line,#ccc);background:transparent;color:inherit"><button id="lnkGo" class="primary">Collega</button></div>
+      <div class="btns" style="margin-top:8px"><input id="lnkCode" placeholder="Scrivi il tuo codice (o incolla quello MM1-…)" autocomplete="off" autocapitalize="off" spellcheck="false" style="flex:1;min-width:220px;font:inherit;padding:9px 12px;border-radius:10px;border:1px solid var(--line,#ccc);background:transparent;color:inherit"><button id="lnkGo" class="primary">Collega</button></div>
     </div>
     <div class="btns" id="lnkOn" hidden style="margin-top:8px"><button id="lnkNow">🔄 Aggiorna ora</button><button id="lnkOff">Scollega</button></div>
   </div>
@@ -379,7 +379,20 @@ loadAll().then(o=>{STATE={pack:o.pack,hist:o.hist||[]};render(STATE.pack,STATE.h
 /* ---------- collegamento automatico (gist cifrato scritto dall'iPad di «Il mio mondo») ---------- */
 const LKEY="prog-link-v1";
 const unb64=s=>{s=s.replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";const b=atob(s),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a;};
-function parseCode(c){const m=String(c||"").trim().match(/^MM1-([0-9a-f]{20,40})-([A-Za-z0-9_-]{40,46})$/);return m?{gist:m[1],key:m[2]}:null;}
+function parseCode(c){const m=String(c||"").trim().match(/^MM1-([0-9a-f]{20,40})-([A-Za-z0-9_-]{40,46})$/);if(m)return{gist:m[1],key:m[2]};const n=String(c||"").trim().toLowerCase().replace(/\s+/g,"");return n.length>=6?{short:n}:null;}
+/* codice scelto dal genitore: stessa chiave e stessa etichetta calcolate sull'iPad */
+async function shortLink(n){
+  const base=await crypto.subtle.importKey("raw",new TextEncoder().encode(n),"PBKDF2",false,["deriveBits"]);
+  const bits=await crypto.subtle.deriveBits({name:"PBKDF2",salt:new TextEncoder().encode("mie-app-mondo-v2"),iterations:310000,hash:"SHA-256"},base,256);
+  let s="";new Uint8Array(bits).forEach(x=>s+=String.fromCharCode(x));const key=btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+  const h=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("tag:mie-app-mondo:"+n));const tag=Array.from(new Uint8Array(h)).slice(0,10).map(x=>("0"+x.toString(16)).slice(-2)).join("");
+  const owner=(location.hostname.match(/^([^.]+)\.github\.io$/)||[])[1]||"f6kd4bp6sr-stack";
+  const r=await fetch("https://api.github.com/users/"+owner+"/gists?per_page=100",{cache:"no-store",headers:{Accept:"application/vnd.github+json"}});
+  if(!r.ok)throw new Error(r.status===403?"troppi controlli in un’ora, riprova più tardi":"errore "+r.status);
+  const hit=(await r.json()).find(g=>g.description==="mie-app-mondo "+tag);
+  if(!hit)throw new Error("codice non trovato: sull’iPad collega «Il mio mondo» con lo stesso codice, poi riprova");
+  return{gist:hit.id,key};
+}
 async function decrypt(key,txt){const o=JSON.parse(txt);if(o.app!=="mondo-sync")throw new Error("contenuto non riconosciuto");
   const k=await crypto.subtle.importKey("raw",unb64(key),"AES-GCM",false,["decrypt"]);
   const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:unb64(o.iv)},k,unb64(o.ct));return JSON.parse(new TextDecoder().decode(pt));}
@@ -408,7 +421,9 @@ async function pull(manual){
   }catch(e){LINK.err=e.name==="OperationError"?"il codice non corrisponde: ricopialo dall’iPad":String(e.message||e);LINK.checked=new Date().toISOString();lsSet(LKEY,LINK);if(manual)toast("Non riuscito: "+LINK.err);}
   finally{pulling=false;paintLink();}
 }
-$("lnkGo").onclick=()=>{const c=parseCode($("lnkCode").value);if(!c){toast("Codice non valido: deve iniziare con MM1-");return;}LINK={gist:c.gist,key:c.key};lsSet(LKEY,LINK);kv("readwrite","progressi-link",JSON.stringify(LINK)).catch(()=>{});$("lnkCode").value="";paintLink();pull(true);};
+$("lnkGo").onclick=async()=>{let c=parseCode($("lnkCode").value);if(!c){toast("Codice non valido: scrivi il codice scelto (almeno 6 caratteri) o quello MM1-");return;}
+  if(c.short){toast("Cerco i dati del codice…");try{c=await shortLink(c.short);}catch(e){toast("Non riuscito: "+e.message);return;}}
+  LINK={gist:c.gist,key:c.key};lsSet(LKEY,LINK);kv("readwrite","progressi-link",JSON.stringify(LINK)).catch(()=>{});$("lnkCode").value="";paintLink();pull(true);};
 $("lnkNow").onclick=()=>pull(true);
 $("lnkOff").onclick=()=>{if($("lnkOff").dataset.sure){LINK=null;try{localStorage.removeItem(LKEY)}catch(e){}kv("readwrite","progressi-link").catch(()=>{});delete $("lnkOff").dataset.sure;$("lnkOff").textContent="Scollega";paintLink();}else{$("lnkOff").dataset.sure=1;$("lnkOff").textContent="Tocca ancora per scollegare";}};
 (async()=>{if(!LINK){try{const r=await kv("readonly","progressi-link");if(r){LINK=JSON.parse(r);lsSet(LKEY,LINK);}}catch(e){}}paintLink();})();
