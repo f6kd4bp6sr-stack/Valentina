@@ -87,9 +87,10 @@ button,.btn{font:inherit;border:0;border-radius:10px;padding:10px 14px;backgroun
 
   <div class="card">
     <b>Carica i dati</b>
-    <div class="lbl">Sull’iPad di «Il mio mondo» ci sono due modi: <b>☁️ Salva i ricordi di oggi</b> crea la copia completa (<i>drago-progressi-…json</i>: utilizzo, materie, tabelline, risposte); <b>📊 Progressi → 📤 Condividi</b> manda il file <i>progressi-…csv</i> con le risposte giuste e sbagliate per materia. Salvali in File / iCloud Drive (o inviali con AirDrop) e aprili qui con «Carica la copia»: vanno bene tutti e due, e il CSV aggiorna le percentuali della copia già caricata. I dati restano solo su questo dispositivo.</div>
+    <div class="lbl"><b>Il modo più semplice:</b> sull’iPad apri Casa → 💾 Salvataggi → <b>📱 Mostra il QR</b>, poi qui tocca <b>📷 Leggi il QR dall’iPad</b> e inquadralo (niente internet, niente chiavi). In alternativa, sull’iPad di «Il mio mondo» ci sono due modi: <b>☁️ Salva i ricordi di oggi</b> crea la copia completa (<i>drago-progressi-…json</i>: utilizzo, materie, tabelline, risposte); <b>📊 Progressi → 📤 Condividi</b> manda il file <i>progressi-…csv</i> con le risposte giuste e sbagliate per materia. Salvali in File / iCloud Drive (o inviali con AirDrop) e aprili qui con «Carica la copia»: vanno bene tutti e due, e il CSV aggiorna le percentuali della copia già caricata. I dati restano solo su questo dispositivo.</div>
     <div class="btns">
       <label class="btn primary" style="cursor:pointer">📂 Carica la copia<input type="file" id="fIn" accept="application/json,.json,text/csv,.csv,text/plain" hidden></label>
+      <button id="fQR">📷 Leggi il QR dall’iPad</button>
       <button id="fLocal" hidden>📱 Leggi da questo iPad</button>
       <button id="fClear" hidden>Togli i dati</button>
     </div>
@@ -356,6 +357,30 @@ async function accept(pack,from,quiet){
   const hist=(STATE.hist||[]).filter(h=>h.d!==s.d); hist.push(s); hist.sort((a,b)=>a.d<b.d?-1:1);
   STATE={pack,hist:hist.slice(-60)}; await saveAll(STATE.pack,STATE.hist); render(STATE.pack,STATE.hist); if(!quiet)toast("Progressi aggiornati");
 }
+/* ---------- 📷 QR di «Il mio mondo»: i progressi arrivano inquadrando lo schermo dell'iPad ---------- */
+async function qrDecode(txt){
+  const m=String(txt||"").match(/mm2([zj])=([A-Za-z0-9_-]+)/);if(!m)throw new Error("questo QR non è di «Il mio mondo»");
+  let b=m[2].replace(/-/g,"+").replace(/_/g,"/");while(b.length%4)b+="=";const bin=atob(b),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+  let js;if(m[1]==="z"){if(!window.DecompressionStream)throw new Error("aggiorna iOS per leggere questo QR");js=await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).text();}else js=new TextDecoder().decode(u);
+  return normalize(JSON.parse(js));
+}
+async function qrImport(txt){try{const pack=await qrDecode(txt);await accept(pack,"QR dell’iPad");toast("Progressi letti dal QR ✅");}catch(e){toast("QR non letto: "+e.message);}}
+function loadJsQR(){return new Promise((res,rej)=>{if(window.jsQR)return res();const s=document.createElement("script");s.src="jsqr.js";s.onload=()=>res();s.onerror=()=>rej(new Error("serve internet la prima volta"));document.head.appendChild(s);});}
+async function scanQR(){
+  try{await loadJsQR();}catch(e){toast("Non riesco a caricare il lettore: "+e.message);return;}
+  const ov=document.createElement("div");ov.style.cssText="position:fixed;inset:0;z-index:9999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px";
+  ov.innerHTML='<video playsinline muted style="max-width:100%;max-height:70vh;border-radius:16px"></video><div style="color:#fff;font:600 17px system-ui;text-align:center">Inquadra il QR che l’iPad mostra in<br>Casa → 💾 Salvataggi → 📱 Mostra il QR</div><button class="primary" id="qrStop">Chiudi</button>';
+  document.body.appendChild(ov);const v=ov.querySelector("video");let stream=null,done=false;
+  const stop=()=>{done=true;try{stream&&stream.getTracks().forEach(t=>t.stop());}catch(e){}ov.remove();};
+  ov.querySelector("#qrStop").onclick=stop;
+  try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"},audio:false});}catch(e){stop();toast("Fotocamera non disponibile: consenti l’accesso");return;}
+  v.srcObject=stream;await v.play().catch(()=>{});
+  const c=document.createElement("canvas"),x=c.getContext("2d",{willReadFrequently:true});
+  const tick=()=>{if(done)return;if(v.videoWidth){const w=Math.min(1000,v.videoWidth),h=Math.round(v.videoHeight*w/v.videoWidth);c.width=w;c.height=h;x.drawImage(v,0,0,w,h);const r=jsQR(x.getImageData(0,0,w,h).data,w,h,{inversionAttempts:"dontInvert"});if(r&&r.data&&/mm2[zj]=/.test(r.data)){stop();qrImport(r.data);return;}}requestAnimationFrame(tick);};
+  tick();
+}
+$("fQR").onclick=scanQR;
+(function(){ if(/mm2[zj]=/.test(location.hash)){ const h=location.hash; history.replaceState(null,"",location.pathname); setTimeout(()=>qrImport(h),400); } })();
 function parseCSV(t){ // file «progressi-…csv» di «Il mio mondo»: materia;id;giuste;sbagliate;totale;percentuale_giuste
   const lines=t.replace(/^\uFEFF/,"").split(/\r?\n/).filter(x=>x.trim());
   if(!lines.length||!/^materia;id;giuste;sbagliate/i.test(lines[0]))throw new Error("non è il file dei progressi");
