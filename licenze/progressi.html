@@ -76,6 +76,7 @@ button,.btn{font:inherit;border:0;border-radius:10px;padding:10px 14px;backgroun
 .trend.up{color:var(--good)} .trend.down{color:var(--bad)}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:999px;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:50}
 .toast.show{opacity:1}
+.dbars{display:grid;gap:4px;margin:8px 0 4px}.dbar{display:grid;grid-template-columns:72px 1fr 92px;gap:8px;align-items:center;font-size:13px}.dbar .dl{color:var(--mut,#7a8290)}.dbar .dn{text-align:right;font-variant-numeric:tabular-nums}.dt{display:flex;height:12px;border-radius:6px;background:rgba(127,127,127,.12);overflow:hidden}.dt .ok{background:#3aa66b}.dt .ko{background:#e06a5a}
 </style>
 </head>
 <body>
@@ -93,6 +94,25 @@ button,.btn{font:inherit;border:0;border-radius:10px;padding:10px 14px;backgroun
       <button id="fClear" hidden>Togli i dati</button>
     </div>
     <div class="lbl" id="srcInfo" style="margin-top:8px"></div>
+  </div>
+
+  <div class="card" id="lnk">
+    <b>🔗 Collegamento automatico con «Il mio mondo»</b>
+    <div class="lbl" id="lnkSt">Non collegato: i dati arrivano solo caricando i file.</div>
+    <div id="lnkSet">
+      <div class="lbl" style="margin-top:6px">Una volta sola: sull’iPad di «Il mio mondo» apri <b>📊 Progressi → 🔗 Per i genitori</b>, incolla la chiave GitHub e tocca «Collega»; poi copia qui il codice che compare (inizia con <i>MM1-</i>). Da quel momento l’iPad invia i progressi da solo, cifrati, ogni volta che l’app si apre e almeno una volta al giorno, e questa pagina li scarica da sola.</div>
+      <details style="margin-top:8px"><summary class="lbl" style="cursor:pointer"><b>Come creare la chiave GitHub (5 minuti, una volta sola)</b></summary>
+        <ol class="lbl" style="padding-left:20px;margin:6px 0">
+          <li>In Safari apri <a href="https://github.com/settings/tokens/new?scopes=gist&amp;description=mie-app%20progressi" target="_blank" rel="noopener">github.com/settings/tokens/new</a> ed entra con il tuo account GitHub.</li>
+          <li>In «Note» lascia <i>mie-app progressi</i>; in «Expiration» scegli <b>No expiration</b> (o un anno, e poi la rinnovi).</li>
+          <li>Spunta <b>solo</b> la casella <b>gist</b>; tutto il resto vuoto.</li>
+          <li>Tocca <b>Generate token</b> e copia la chiave (inizia con <i>ghp_</i>): si vede una volta sola. Mandala all’iPad con AirDrop o Note e incollala in «Per i genitori».</li>
+        </ol>
+        <div class="lbl">La chiave può solo scrivere note private («gist») sul tuo GitHub: non dà accesso al resto. I progressi viaggiano cifrati: senza il codice MM1 nessuno li può leggere.</div>
+      </details>
+      <div class="btns" style="margin-top:8px"><input id="lnkCode" placeholder="Incolla il codice MM1-…" autocomplete="off" autocapitalize="off" spellcheck="false" style="flex:1;min-width:220px;font:inherit;padding:9px 12px;border-radius:10px;border:1px solid var(--line,#ccc);background:transparent;color:inherit"><button id="lnkGo" class="primary">Collega</button></div>
+    </div>
+    <div class="btns" id="lnkOn" hidden style="margin-top:8px"><button id="lnkNow">🔄 Aggiorna ora</button><button id="lnkOff">Scollega</button></div>
   </div>
 
   <div id="out"></div>
@@ -238,6 +258,16 @@ function summary(A){ // riepilogo numerico per l'andamento tra un caricamento e 
     tab:Object.values(D["tab-best"]||{}).reduce((a,b)=>a+(+b||0),0),diary:A.diary,good:A.good.length,bad:A.bad.length};
 }
 
+/* ---------- risposte giorno per giorno (registro «prog-days») ---------- */
+function daysCard(h,ref){
+  if(!h||typeof h!=="object"||!Object.keys(h).length)return "";
+  const end=new Date((ref||today())+"T12:00");let rows="",max=1,sum={ok:0,ko:0},list=[];
+  for(let i=13;i>=0;i--){const d=new Date(end);d.setDate(d.getDate()-i);const k=iso(d),v=h[k]||{};let ok=0,ko=0;Object.values(v).forEach(r=>{ok+=+r.ok||0;ko+=+r.ko||0;});list.push([k,ok,ko]);max=Math.max(max,ok+ko);sum.ok+=ok;sum.ko+=ko;}
+  rows=list.map(([k,ok,ko])=>`<div class="dbar"><span class="dl">${new Date(k+"T12:00").toLocaleDateString("it-IT",{weekday:"short",day:"numeric"})}</span><span class="dt"><i class="ok" style="width:${ok/max*100}%"></i><i class="ko" style="width:${ko/max*100}%"></i></span><span class="dn">${ok+ko?`${ok} ✓ · ${ko} ✗`:"—"}</span></div>`).join("");
+  const n=sum.ok+sum.ko;
+  return `<div class="card" style="margin-top:12px"><b>Risposte degli ultimi 14 giorni</b>${n?` <span class="lbl">· ${sum.ok} giuste, ${sum.ko} sbagliate (${Math.round(sum.ok/n*100)}%)</span>`:""}<div class="dbars">${rows}</div><div class="lbl">Verde = giuste, rosso = sbagliate, giorno per giorno.</div></div>`;
+}
+
 /* ---------- vista ---------- */
 function render(pack,hist){
   const out=$("out");
@@ -264,6 +294,7 @@ function render(pack,hist){
     <div><b>${A.lastUse?(daysAgo(A.lastUse)===0?"oggi":fmt(A.lastUse,{day:"numeric",month:"short"})):"—"}</b><span>ultimo utilizzo</span></div>
     <div><b>${A.energy}${tr("energy")}</b><span>energia del drago${A.dragon?" «"+esc(A.dragon)+"»":""}</span></div>
   </div>
+  ${daysCard(A.D["prog-days"],A.ref)}
   <div class="card" style="margin-top:12px"><b>Giorni di utilizzo · ultime 8 settimane</b><div class="heat">${heat}</div><div class="lbl">Ogni quadratino è un giorno (righe: lunedì → domenica). Verde = app usata.</div></div>
 
   <h2>In evidenza</h2>
@@ -282,33 +313,76 @@ function render(pack,hist){
 
 /* ---------- avvio ---------- */
 let STATE={pack:null,hist:[]};
-async function accept(pack,from){
+async function accept(pack,from,quiet){
   pack.from=from; const A=analyze(pack); const s=summary(A);
   const hist=(STATE.hist||[]).filter(h=>h.d!==s.d); hist.push(s); hist.sort((a,b)=>a.d<b.d?-1:1);
-  STATE={pack,hist:hist.slice(-60)}; await saveAll(STATE.pack,STATE.hist); render(STATE.pack,STATE.hist); toast("Progressi aggiornati");
+  STATE={pack,hist:hist.slice(-60)}; await saveAll(STATE.pack,STATE.hist); render(STATE.pack,STATE.hist); if(!quiet)toast("Progressi aggiornati");
 }
 function parseCSV(t){ // file «progressi-…csv» di «Il mio mondo»: materia;id;giuste;sbagliate;totale;percentuale_giuste
   const lines=t.replace(/^\uFEFF/,"").split(/\r?\n/).filter(x=>x.trim());
   if(!lines.length||!/^materia;id;giuste;sbagliate/i.test(lines[0]))throw new Error("non è il file dei progressi");
-  const prog={};lines.slice(1).forEach(l=>{const c=l.split(";");if(c.length>=4&&c[1])prog[c[1].trim()]={ok:+c[2]||0,ko:+c[3]||0};});
-  if(!Object.keys(prog).length)throw new Error("nel file non ci sono risposte");return prog;}
+  const prog={},days={};let blk="tot";
+  lines.slice(1).forEach(l=>{if(/^giorno;/i.test(l)){blk="day";return;}const c=l.split(";");
+    if(blk==="tot"){if(c.length>=4&&c[1])prog[c[1].trim()]={ok:+c[2]||0,ko:+c[3]||0};}
+    else if(c.length>=5&&/^\d{4}-\d\d-\d\d$/.test(c[0])){const d=days[c[0]]||(days[c[0]]={});d[c[2].trim()]={ok:+c[3]||0,ko:+c[4]||0};}});
+  if(!Object.keys(prog).length)throw new Error("nel file non ci sono risposte");prog.__days=days;return prog;}
 $("fIn").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{
     const t=String(r.result);
     if(/\.csv$/i.test(f.name)||/^\uFEFF?materia;/i.test(t)){
       const prog=parseCSV(t), now=new Date().toISOString();
       const base=STATE.pack?JSON.parse(JSON.stringify(STATE.pack)):{saved:now,loaded:now,data:{}};
-      base.data.prog=prog; base.progAt=now; if(!STATE.pack) base.saved=now;
+      const pd=prog.__days;delete prog.__days; base.data.prog=prog; if(pd&&Object.keys(pd).length)base.data["prog-days"]=pd; base.progAt=now; if(!STATE.pack) base.saved=now;
       accept(base,STATE.pack?(STATE.pack.from||"copia")+" + risposte da «"+f.name+"»":"risposte da «"+f.name+"»");
     } else accept(normalize(JSON.parse(t)),"file «"+f.name+"»");
   }catch(err){toast("File non valido: "+err.message)}};r.readAsText(f);e.target.value="";};
 const local=fromThisDevice(); if(local){$("fLocal").hidden=false;$("fLocal").onclick=()=>accept({saved:new Date().toISOString(),loaded:new Date().toISOString(),data:local},"letti da questo iPad");}
 $("fClear").onclick=async()=>{STATE={pack:null,hist:[]};try{localStorage.removeItem(KEY);localStorage.removeItem(HKEY)}catch(e){}try{await kv("readwrite","progressi")}catch(e){}render(null,[]);};
-loadAll().then(o=>{STATE={pack:o.pack,hist:o.hist||[]};render(STATE.pack,STATE.hist);});
+loadAll().then(o=>{STATE={pack:o.pack,hist:o.hist||[]};render(STATE.pack,STATE.hist);setTimeout(()=>pull(false),300);});
+/* ---------- collegamento automatico (gist cifrato scritto dall'iPad di «Il mio mondo») ---------- */
+const LKEY="prog-link-v1";
+const unb64=s=>{s=s.replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";const b=atob(s),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a;};
+function parseCode(c){const m=String(c||"").trim().match(/^MM1-([0-9a-f]{20,40})-([A-Za-z0-9_-]{40,46})$/);return m?{gist:m[1],key:m[2]}:null;}
+async function decrypt(key,txt){const o=JSON.parse(txt);if(o.app!=="mondo-sync")throw new Error("contenuto non riconosciuto");
+  const k=await crypto.subtle.importKey("raw",unb64(key),"AES-GCM",false,["decrypt"]);
+  const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:unb64(o.iv)},k,unb64(o.ct));return JSON.parse(new TextDecoder().decode(pt));}
+let LINK=lsGet(LKEY), pulling=false;
+function whenTxt(t){if(!t)return "mai";const d=new Date(t);return (d.toDateString()===new Date().toDateString()?"oggi":d.toLocaleDateString("it-IT",{weekday:"short",day:"numeric",month:"short"}))+" alle "+d.toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"});}
+function paintLink(){
+  const on=!!(LINK&&LINK.gist);$("lnkSet").hidden=on;$("lnkOn").hidden=!on;
+  if(!on){$("lnkSt").textContent="Non collegato: i dati arrivano solo caricando i file.";return;}
+  const age=LINK.sent?(Date.now()-new Date(LINK.sent).getTime())/36e5:null;
+  $("lnkSt").innerHTML=(LINK.err?`⚠️ ${esc(LINK.err)}<br>`:"")+`✅ Collegato. Ultimo invio dall’iPad: <b>${whenTxt(LINK.sent)}</b> · controllato ${whenTxt(LINK.checked)}`+
+    (age!=null&&age>36?`<br><b style="color:#c2410c">L’iPad non invia da ${Math.floor(age/24)} giorni: apri «Il mio mondo» con internet.</b>`:"");
+}
+async function pull(manual){
+  if(!LINK||!LINK.gist||pulling)return; pulling=true;
+  try{
+    const r=await fetch("https://api.github.com/gists/"+LINK.gist,{cache:"no-store",headers:{Accept:"application/vnd.github+json"}});
+    if(!r.ok)throw new Error(r.status===404?"collegamento non trovato: rifai il collegamento":r.status===403?"troppi controlli in un’ora, riprova più tardi":"errore "+r.status);
+    const g=await r.json(),f=g.files&&g.files["mondo.json"];if(!f)throw new Error("nessun dato inviato ancora");
+    let txt=f.content;if(f.truncated&&f.raw_url)txt=await (await fetch(f.raw_url,{cache:"no-store"})).text();
+    const pack=normalize(await decrypt(LINK.key,txt));
+    LINK.checked=new Date().toISOString();LINK.err="";
+    const isNew=!STATE.pack||STATE.pack.from!=="collegamento automatico"||pack.saved!==STATE.pack.saved;
+    LINK.sent=pack.saved;lsSet(LKEY,LINK);
+    if(isNew)await accept(pack,"collegamento automatico",!manual);
+    else if(manual)toast("Già aggiornato");
+  }catch(e){LINK.err=e.name==="OperationError"?"il codice non corrisponde: ricopialo dall’iPad":String(e.message||e);LINK.checked=new Date().toISOString();lsSet(LKEY,LINK);if(manual)toast("Non riuscito: "+LINK.err);}
+  finally{pulling=false;paintLink();}
+}
+$("lnkGo").onclick=()=>{const c=parseCode($("lnkCode").value);if(!c){toast("Codice non valido: deve iniziare con MM1-");return;}LINK={gist:c.gist,key:c.key};lsSet(LKEY,LINK);kv("readwrite","progressi-link",JSON.stringify(LINK)).catch(()=>{});$("lnkCode").value="";paintLink();pull(true);};
+$("lnkNow").onclick=()=>pull(true);
+$("lnkOff").onclick=()=>{if($("lnkOff").dataset.sure){LINK=null;try{localStorage.removeItem(LKEY)}catch(e){}kv("readwrite","progressi-link").catch(()=>{});delete $("lnkOff").dataset.sure;$("lnkOff").textContent="Scollega";paintLink();}else{$("lnkOff").dataset.sure=1;$("lnkOff").textContent="Tocca ancora per scollegare";}};
+(async()=>{if(!LINK){try{const r=await kv("readonly","progressi-link");if(r){LINK=JSON.parse(r);lsSet(LKEY,LINK);}}catch(e){}}paintLink();})();
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")pull(false);});
+setInterval(()=>pull(false),30*60e3);
+window.__pull=pull;
+
 window.__analyze=analyze; window.__normalize=normalize;
 
 })();
 </script>
-<script>window.APP_VERSION="40dfccf9d4";window.APP_BUILD="2026-10-03T11:08+02:00";</script>
+<script>window.APP_VERSION="bd7c9e1959";window.APP_BUILD="2026-10-03T11:23+02:00";</script>
 <script>
 /* ===== Aggiornamento automatico e controllo versione (uguale in Licenze, Tai Chi e Progressi) =====
    - all'apertura, al ritorno sull'app e ogni 30 minuti legge version.json saltando ogni copia vecchia (anche quella del server di GitHub);

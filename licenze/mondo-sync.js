@@ -1,0 +1,137 @@
+/* «Il mio mondo» → sezione Progressi: invio automatico e cifrato dei progressi.
+   - Si attiva solo dopo il collegamento fatto da un genitore (📊 Progressi → 🔗 Per i genitori).
+   - Invia SOLO i contatori dello studio (niente nome, niente testi del diario, niente aspetto o voce),
+     cifrati sull'iPad con una chiave che resta nel «codice di collegamento»: chi non ha il codice vede solo dati illeggibili.
+   - Invio: all'apertura, quando l'app va in secondo piano e ogni 30 minuti; almeno una volta al giorno anche senza novità. */
+(function () {
+  "use strict";
+  if (window.__mondoSync) return; window.__mondoSync = true;
+  var CFG = "msync-cfg", API = "https://api.github.com", FILE = "mondo.json";
+  var KEEP = ["days", "prog", "prog-days", "math-done", "sci-done", "games-done", "tab-best", "simon-best", "clock-level", "cuoca-level", "moves-done", "dragon", "diary", "m-steps", "m-open", "m-frasi"];
+  var KEEP_PREFIX = ["deck-", "mis-"];
+
+  function cfg() { try { return JSON.parse(localStorage.getItem(CFG) || "null"); } catch (e) { return null; } }
+  function setCfg(c) { try { if (c) localStorage.setItem(CFG, JSON.stringify(c)); else localStorage.removeItem(CFG); } catch (e) {} }
+  function b64(buf) { var s = "", a = new Uint8Array(buf); for (var i = 0; i < a.length; i++) s += String.fromCharCode(a[i]); return btoa(s).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }
+  function unb64(s) { s = s.replace(/-/g, "+").replace(/_/g, "/"); while (s.length % 4) s += "="; var b = atob(s), a = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) a[i] = b.charCodeAt(i); return a; }
+
+  function collect() {
+    var P = "vale2-", data = {};
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i); if (!k || k.indexOf(P) !== 0) continue;
+        var n = k.slice(P.length);
+        if (KEEP.indexOf(n) < 0 && !KEEP_PREFIX.some(function (p) { return n.indexOf(p) === 0; })) continue;
+        try { data[n] = JSON.parse(localStorage.getItem(k)); } catch (e) {}
+      }
+    } catch (e) {}
+    // solo quantità, mai testi: diario → giorni scritti; liste del metodo → quante voci
+    if (data.diary && typeof data.diary === "object") { var dd = {}; Object.keys(data.diary).forEach(function (d) { dd[d] = 1; }); data.diary = dd; }
+    ["m-steps", "m-open", "m-frasi"].forEach(function (k) { if (Array.isArray(data[k])) data[k] = data[k].map(function () { return 1; }); });
+    if (data.dragon && typeof data.dragon === "object") data.dragon = { name: data.dragon.name || "", energy: data.dragon.energy || 0 };
+    return data;
+  }
+  function hash(s) { var h = 0; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return String(h); }
+
+  async function encrypt(keyStr, obj) {
+    var key = await crypto.subtle.importKey("raw", unb64(keyStr), "AES-GCM", false, ["encrypt"]);
+    var iv = crypto.getRandomValues(new Uint8Array(12));
+    var ct = await crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, key, new TextEncoder().encode(JSON.stringify(obj)));
+    return JSON.stringify({ app: "mondo-sync", v: 1, iv: b64(iv), ct: b64(ct) });
+  }
+  function headers(token) { return { "Authorization": "Bearer " + token, "Accept": "application/vnd.github+json", "Content-Type": "application/json" }; }
+
+  var busy = false;
+  async function push(force) {
+    var c = cfg(); if (!c || busy) return false;
+    if (navigator.onLine === false) return false;
+    var data = collect(), js = JSON.stringify(data), h = hash(js), now = Date.now();
+    if (!force && c.h === h && now - (c.last || 0) < 12 * 3600e3) return true;   // nessuna novità: almeno un invio ogni 12 ore
+    if (!force && now - (c.last || 0) < 60e3) return true;
+    busy = true;
+    try {
+      var body = JSON.stringify({ files: (function () { var f = {}; f[FILE] = { content: "" }; return f; })() });
+      var content = await encrypt(c.key, { app: "mondo-valentina", saved: new Date().toISOString(), state: { data: data } });
+      var f = {}; f[FILE] = { content: content }; body = JSON.stringify({ files: f });
+      var r = await fetch(API + "/gists/" + c.gist, { method: "PATCH", headers: headers(c.token), body: body, keepalive: body.length < 60000, cache: "no-store" });
+      c = cfg() || c;
+      if (r.ok) { c.last = Date.now(); c.h = h; c.err = ""; setCfg(c); paint(); return true; }
+      c.err = r.status === 401 ? "chiave GitHub non valida o scaduta" : r.status === 404 ? "spazio di collegamento non trovato" : "errore " + r.status;
+      setCfg(c); paint(); return false;
+    } catch (e) { return false; } finally { busy = false; }
+  }
+
+  async function connect(token) {
+    var keyStr = b64(crypto.getRandomValues(new Uint8Array(32)));
+    var content = await encrypt(keyStr, { app: "mondo-valentina", saved: new Date().toISOString(), state: { data: collect() } });
+    var f = {}; f[FILE] = { content: content };
+    var r = await fetch(API + "/gists", { method: "POST", headers: headers(token), body: JSON.stringify({ description: "mie-app · collegamento progressi (cifrato)", public: false, files: f }) });
+    if (!r.ok) throw new Error(r.status === 401 ? "la chiave GitHub non è valida" : r.status === 403 || r.status === 404 ? "la chiave non ha il permesso «gist»" : "errore " + r.status);
+    var g = await r.json();
+    setCfg({ token: token, gist: g.id, key: keyStr, last: Date.now(), h: "", err: "" });
+    return code();
+  }
+  function code() { var c = cfg(); return c ? "MM1-" + c.gist + "-" + c.key : ""; }
+
+  /* ---------- pannello per i genitori (dentro 📊 Progressi) ---------- */
+  var box = null;
+  function when(t) { if (!t) return "mai"; var d = new Date(t), o = new Date(); return (d.toDateString() === o.toDateString() ? "oggi" : d.toLocaleDateString("it-IT", { day: "numeric", month: "short" })) + " alle " + d.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }); }
+  function paint() {
+    if (!box) return;
+    var c = cfg(), el = box.querySelector(".ms-body");
+    if (!c) {
+      el.innerHTML = '<p>Collega questi progressi alla sezione <b>🐉 Progressi</b> del genitore: si aggiornerà da sola, almeno una volta al giorno.</p>' +
+        '<p style="font-size:14px">Serve una chiave GitHub con il solo permesso <b>gist</b> (istruzioni nella sezione Progressi). Si inserisce una volta sola.</p>' +
+        '<input type="password" class="ms-tok" placeholder="Incolla la chiave GitHub" autocomplete="off" style="width:100%;font:inherit;padding:10px;border-radius:12px;border:2px solid #ccc;box-sizing:border-box">' +
+        '<div class="ms-row"><button type="button" class="btn ms-go">🔗 Collega</button></div><p class="ms-msg" style="font-size:14px"></p>';
+      el.querySelector(".ms-go").onclick = async function () {
+        var t = el.querySelector(".ms-tok").value.trim(), m = el.querySelector(".ms-msg");
+        if (!t) { m.textContent = "Incolla prima la chiave."; return; }
+        m.textContent = "Collegamento in corso…";
+        try { await connect(t); paint(); } catch (e) { m.textContent = "Non riuscito: " + e.message + "."; }
+      };
+      return;
+    }
+    el.innerHTML = '<p><b>' + (c.err ? "⚠️ Ultimo invio non riuscito: " + c.err : "✅ Collegato") + '</b><br>Ultimo invio: ' + when(c.last) + '</p>' +
+      '<p style="font-size:14px">Codice di collegamento da inserire nella sezione Progressi (una volta sola):</p>' +
+      '<textarea readonly class="ms-code" style="width:100%;height:64px;font:13px ui-monospace,monospace;border-radius:12px;padding:8px;box-sizing:border-box">' + code() + '</textarea>' +
+      '<div class="ms-row"><button type="button" class="btn ms-copy">📋 Copia</button><button type="button" class="btn ms-share">📤 Invia</button><button type="button" class="btn ms-now">🔄 Invia ora</button></div>' +
+      '<div class="ms-row"><button type="button" class="btn ghost ms-off">Scollega</button></div><p class="ms-msg" style="font-size:14px"></p>';
+    var m = el.querySelector(".ms-msg");
+    el.querySelector(".ms-copy").onclick = function () { var t = el.querySelector(".ms-code"); t.select(); try { navigator.clipboard.writeText(code()).then(function () { m.textContent = "Codice copiato."; }, function () { document.execCommand("copy"); m.textContent = "Codice copiato."; }); } catch (e) { document.execCommand("copy"); m.textContent = "Codice copiato."; } };
+    el.querySelector(".ms-share").onclick = function () { if (navigator.share) navigator.share({ text: code() }).catch(function () {}); else m.textContent = "Usa «Copia»."; };
+    el.querySelector(".ms-now").onclick = async function () { m.textContent = "Invio…"; var ok = await push(true); m.textContent = ok ? "Inviato " + when(Date.now()) + "." : "Invio non riuscito: controlla internet."; };
+    el.querySelector(".ms-off").onclick = function () { if (el.dataset.sure) { setCfg(null); delete el.dataset.sure; paint(); } else { el.dataset.sure = 1; m.textContent = "Tocca di nuovo «Scollega» per confermare."; } };
+  }
+  function openPanel() {
+    if (!box) {
+      box = document.createElement("div");
+      box.style.cssText = "position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px";
+      box.innerHTML = '<div style="background:#fff;color:#33304a;border-radius:22px;max-width:520px;width:100%;padding:18px 20px;font:17px/1.45 -apple-system,system-ui,sans-serif;max-height:90vh;overflow:auto">' +
+        '<h2 style="margin:0 0 8px">🔗 Per i genitori</h2><div class="ms-body"></div><div class="ms-row"><button type="button" class="btn ghost ms-close">Chiudi</button></div></div>';
+      var st = document.createElement("style"); st.textContent = ".ms-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:10px}"; box.appendChild(st);
+      box.querySelector(".ms-close").onclick = function () { box.remove(); };
+      box.addEventListener("click", function (e) { if (e.target === box) box.remove(); });
+    }
+    document.body.appendChild(box); paint();
+  }
+  function addButton() {
+    var s = document.getElementById("pg-share");
+    if (!s || document.getElementById("pg-link")) return;
+    var b = document.createElement("button"); b.type = "button"; b.className = "btn ghost"; b.id = "pg-link";
+    b.textContent = cfg() ? "🔗 Collegato" : "🔗 Per i genitori"; b.onclick = openPanel;
+    s.parentNode.insertBefore(b, s.nextSibling);
+  }
+
+  function start() {
+    try { new MutationObserver(addButton).observe(document.body, { childList: true, subtree: true }); } catch (e) {}
+    addButton();
+    setTimeout(function () { push(false); }, 4000);
+    document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") push(false); else setTimeout(function () { push(false); }, 2000); });
+    window.addEventListener("pagehide", function () { push(false); });
+    window.addEventListener("online", function () { push(false); });
+    setInterval(function () { push(false); }, 30 * 60e3);
+  }
+  window.__mondoSyncPush = push;
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
+})();

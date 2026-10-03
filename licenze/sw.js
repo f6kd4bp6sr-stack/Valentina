@@ -1,5 +1,5 @@
-// Licenze e presenze: funziona anche senza internet. Versione 40dfccf9d4
-const CACHE = 'licenze-40dfccf9d4';
+// Licenze e presenze: funziona anche senza internet. Versione bd7c9e1959
+const CACHE = 'licenze-bd7c9e1959';
 const FILES = ['./', './index.html', './taichi.html', './progressi.html', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES.map(f => new Request(f, { cache: 'reload' })))).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k.startsWith('licenze-') && k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
