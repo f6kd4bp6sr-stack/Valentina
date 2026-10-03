@@ -230,7 +230,7 @@ input[type=range]{padding:0;border:0;min-height:32px;accent-color:var(--accent);
 }
 
 .appsw{display:flex;justify-content:center;gap:4px;margin:10px auto 0;padding:4px;background:var(--accent-soft);border-radius:999px;width:max-content;max-width:calc(100% - 32px);font-family:var(--f-display)}
-.appsw a{display:flex;align-items:center;gap:6px;padding:8px 18px;border-radius:999px;font-weight:700;font-size:15px;color:var(--muted);text-decoration:none;white-space:nowrap}
+.appsw a{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:999px;font-weight:700;font-size:15px;color:var(--muted);text-decoration:none;white-space:nowrap}
 .appsw a.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.12)}
 body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
 main{padding-inline:max(16px,env(safe-area-inset-left)) max(16px,env(safe-area-inset-right))}
@@ -239,7 +239,7 @@ main{padding-inline:max(16px,env(safe-area-inset-left)) max(16px,env(safe-area-i
 @media (prefers-reduced-motion:reduce){ *{transition:none!important} }
 </style>
 
-<nav class="appsw" aria-label="App"><a href="./">📅 Licenze</a><a class="on" href="taichi.html" aria-current="page">🧘 Tai Chi</a></nav>
+<nav class="appsw" aria-label="App"><a href="./">📅 Licenze</a><a class="on" href="taichi.html" aria-current="page">🧘 Tai Chi</a><a href="progressi.html">🐉 Progressi</a></nav>
 <main>
   <!-- OGGI -->
   <section data-tab="oggi" class="on">
@@ -1460,7 +1460,7 @@ else document.getElementById('heroFig').innerHTML=still(EXM.apertura,1,false);
   info();setTimeout(info,1500);
 })();
 /* aggiornamento automatico e silenzioso (stesso sistema de "Il mondo di Valentina") */
-window.APP_VERSION="38006b1b4b";
+window.APP_VERSION="5e19484574";
 if('serviceWorker' in navigator && location.protocol.startsWith('http') && window.top===window && !window.claude){
   navigator.serviceWorker.register('sw.js').then(reg=>{
     const check=()=>{reg.update().catch(()=>{});fetch('version.json',{cache:'no-store'}).then(r=>r.json()).then(v=>{
