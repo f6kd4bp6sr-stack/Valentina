@@ -86,9 +86,9 @@ button,.btn{font:inherit;border:0;border-radius:10px;padding:10px 14px;backgroun
 
   <div class="card">
     <b>Carica i dati</b>
-    <div class="lbl">Sull’iPad di chi usa «Il mio mondo» si tocca «☁️ Salva i ricordi di oggi» (o «Copia di sicurezza»): il file <i>drago-progressi-…json</i> va in File / iCloud Drive. Qui lo apri con «Carica la copia». I dati restano solo su questo dispositivo.</div>
+    <div class="lbl">Sull’iPad di «Il mio mondo» ci sono due modi: <b>☁️ Salva i ricordi di oggi</b> crea la copia completa (<i>drago-progressi-…json</i>: utilizzo, materie, tabelline, risposte); <b>📊 Progressi → 📤 Condividi</b> manda il file <i>progressi-…csv</i> con le risposte giuste e sbagliate per materia. Salvali in File / iCloud Drive (o inviali con AirDrop) e aprili qui con «Carica la copia»: vanno bene tutti e due, e il CSV aggiorna le percentuali della copia già caricata. I dati restano solo su questo dispositivo.</div>
     <div class="btns">
-      <label class="btn primary" style="cursor:pointer">📂 Carica la copia<input type="file" id="fIn" accept="application/json,.json" hidden></label>
+      <label class="btn primary" style="cursor:pointer">📂 Carica la copia<input type="file" id="fIn" accept="application/json,.json,text/csv,.csv,text/plain" hidden></label>
       <button id="fLocal" hidden>📱 Leggi da questo iPad</button>
       <button id="fClear" hidden>Togli i dati</button>
     </div>
@@ -165,6 +165,9 @@ function analyze(pack){
   const good=[], bad=[];
   const acc=k=>{if(!prog||!prog[k])return null;const ok=+prog[k].ok||0,ko=+prog[k].ko||0;return ok+ko?{p:ok/(ok+ko),n:ok+ko}:null;};
   const accRow=(k)=>{const a=acc(k);return a?`<div class="row"><span>Risposte giuste</span><span class="v">${Math.round(a.p*100)}% <span class="lbl">su ${a.n}</span></span></div>`:"";};
+  const RANK={good:0,mid:1,bad:2};
+  const accSt=k=>{const a=acc(k);if(!a||a.n<5)return null;return a.p>=.85?"good":a.p>=.6?"mid":"bad";};
+  const mix=(st,...ks)=>{const ss=ks.map(accSt).filter(Boolean);if(!ss.length)return st;const w=ss.sort((a,b)=>RANK[b]-RANK[a])[0];if(st==="none")return w;return RANK[w]>RANK[st]?w:st;};
   const accEval=(k,label)=>{const a=acc(k);if(!a||a.n<10)return;if(a.p<.6)bad.push([`${label}: ${Math.round(a.p*100)}% di risposte giuste`,`su ${a.n} risposte`]);else if(a.p>=.85)good.push([`${label}: ${Math.round(a.p*100)}% di risposte giuste`,`su ${a.n} risposte`]);};
 
   // MATEMATICA
@@ -181,7 +184,7 @@ function analyze(pack){
    const topM=MATH.map(([id,,n])=>[n,+md[id]||0]).sort((a,b)=>b[1]-a[1])[0]; if(topM&&topM[1]>=3) good.push([`Matematica più allenata: ${topM[0]}`,`${topM[1]} volte`]);
    if(clock>=3) good.push([`Orologio: livello ${clock} di 4`,"legge bene le ore"]); else if((+md.ore||0)>=2&&clock<=1) bad.push(["Orologio: ancora al livello 1",`provato ${md.ore} volte`]);
    accEval("mate","Matematica");
-   const st=tot===0?"none":mathNever.length>=3||tbBad.length>=3?"bad":mathNever.length||tbBad.length?"mid":"good";
+   const st=mix(tot===0?"none":mathNever.length>=3||tbBad.length>=3?"bad":mathNever.length||tbBad.length?"mid":"good","mate");
    S.push({c:"var(--c1)",t:"🔢 Matematica",st,html:accRow("mate")+rows+`<div class="lbl" style="margin-top:10px">Tabelline: record di risposte giuste al primo tentativo (su 10)</div><div class="tabs-grid">${grid}</div>`+(clock?`<div class="row"><span>🕐 Livello orologio</span><span class="v">${clock} / 4</span></div>`:"")});}
 
   // SCIENZE
@@ -191,26 +194,26 @@ function analyze(pack){
    if(never.length) bad.push([`Scienze mai aperte: ${never.join(", ")}`,""]);
    if(done>=2) good.push([`Scienze: ${done} argomenti su ${SCI.length} completati`,""]);
    accEval("scienze","Scienze");
-   S.push({c:"var(--c3)",t:"🔬 Scienze",st:done===0&&never.length===SCI.length?"none":never.length>=2?"bad":never.length?"mid":"good",html:accRow("scienze")+rows});}
+   S.push({c:"var(--c3)",t:"🔬 Scienze",st:mix(done===0&&never.length===SCI.length?"none":never.length>=2?"bad":never.length?"mid":"good","scienze"),html:accRow("scienze")+rows});}
 
   // SCOPRI (materie scolastiche)
   {const ids=new Set(Object.keys(SCOPRI));Object.keys(D).forEach(k=>{const m=k.match(/^deck-[qf]-sc-([a-z]+)$/);if(m)ids.add(m[1]);});
    let rows="",core=[],other=[],explored=0;
-   [...ids].forEach(id=>{const meta=SCOPRI[id]||["📘",id,0];const q=deckSeen(D,"q-sc-"+id),f=deckSeen(D,"f-sc-"+id),m=misN(D,"scopri-"+id);
-     const score=(q?q.seen:0)+(f?f.seen:0)+m*2; if(score)explored++;
-     const a=acc(id); if(a)accEval(id,meta[1]);
+   Object.keys(prog||{}).forEach(k=>{if(!["mate","scienze","sport"].includes(k))ids.add(k);});
+   [...ids].forEach(id=>{const meta=SCOPRI[id]||["📘",id,0];const a=acc(id); if(a)accEval(id,meta[1]);const q=deckSeen(D,"q-sc-"+id),f=deckSeen(D,"f-sc-"+id),m=misN(D,"scopri-"+id);
+     const score=(q?q.seen:0)+(f?f.seen:0)+m*2+(a?a.n:0); if(score)explored++;
      if(!score&&meta[2])core.push(meta[1]); else if(!score)other.push(meta[1]);
      if(score>=12) good.push([`${meta[1]}: esplorata a fondo`,`${q?q.seen:0} domande, ${f?f.seen:0} curiosità, ${m} missioni`]);
      rows+=`<div class="row"><span>${meta[0]} ${esc(meta[1])}</span><span class="v">${a?Math.round(a.p*100)+"% · ":""}${q?`sfide ${q.seen}/${q.total}`:"sfide —"} · ${f?`curiosità ${f.seen}`:"curiosità —"} · missioni ${m}</span></div>`;});
    if(core.length) bad.push([`Materie di base mai esplorate: ${core.join(", ")}`,"nessuna sfida, curiosità o missione"]);
    if(other.length) bad.push([`Altre materie non ancora aperte: ${other.join(", ")}`,""]);
-   S.push({c:"var(--c2)",t:"🌍 Scopri · materie",st:explored===0?"none":core.length>=2?"bad":core.length||other.length>3?"mid":"good",html:rows});}
+   S.push({c:"var(--c2)",t:"🌍 Scopri · materie",st:mix(explored===0?"none":core.length>=2?"bad":core.length||other.length>3?"mid":"good",...ids),html:rows});}
 
   // SPORT, GIOCHI, METODO
   {let rows="",any=0;Object.entries(SPORT).forEach(([id,[ic,n]])=>{const q=deckSeen(D,"q-sp-"+id),f=deckSeen(D,"f-sp-"+id);if(q||f)any++;rows+=`<div class="row"><span>${ic} ${n}</span><span class="v">${q?`quiz ${q.seen}/${q.total}`:"quiz —"} · ${f?`curiosità ${f.seen}`:"curiosità —"}</span></div>`;});
-   const mv=+D["moves-done"]||0; rows+=`<div class="row"><span>🤸 Pause movimento fatte</span><span class="v">${mv}</span></div>`;
+   const mv=+D["moves-done"]||0; rows+=`<div class="row"><span>🤸 Pause movimento fatte</span><span class="v">${mv}</span></div>`; rows=accRow("sport")+rows; accEval("sport","Sport");
    if(mv>=5) good.push([`Movimento: ${mv} pause attive fatte`,""]);
-   S.push({c:"var(--c5)",t:"🤸 Sport e movimento",st:any||mv?"good":"none",html:rows});}
+   S.push({c:"var(--c5)",t:"🤸 Sport e movimento",st:mix(any||mv?"good":"none","sport"),html:rows});}
   {let rows="",tot=0;Object.entries(GAMES).forEach(([id,[ic,n]])=>{const c=+gd[id]||0;tot+=c;rows+=`<div class="row"><span>${ic} ${n}</span><span class="v">${c?c+" vinte":"—"}</span></div>`;});
    if(D["simon-best"]) rows+=`<div class="row"><span>🎵 Record «Segui la musica» (memoria)</span><span class="v">${D["simon-best"]} note</span></div>`;
    if(D["cuoca-level"]) rows+=`<div class="row"><span>👩‍🍳 Livello «Cuoca pasticciona» (attenzione)</span><span class="v">${D["cuoca-level"]}</span></div>`;
@@ -221,6 +224,8 @@ function analyze(pack){
    if(diary>=5) good.push([`Diario: ${diary} pagine scritte`,"buona abitudine a raccontarsi"]);
    S.push({c:"var(--c4)",t:"🧠 Metodo di studio e diario",st:diary||steps?"good":"none",html:rows});}
 
+  if(!days.length&&prog){ // solo il CSV: tengo solo le evidenze sulle risposte
+    const keep=x=>/risposte giuste/.test(x[0]); for(const a of [good,bad]){const k=a.filter(keep);a.length=0;a.push(...k);} }
   // UTILIZZO
   if(lastUse&&ago(lastUse)>=7) bad.push([`App non usata da ${ago(lastUse)} giorni`,`ultimo utilizzo ${fmt(lastUse)}`]);
   if(days.length&&last7<3) bad.push([`Uso discontinuo: ${last7} giorni negli ultimi 7`,"meglio poco ma tutti i giorni"]);
@@ -241,7 +246,7 @@ function render(pack,hist){
     out.innerHTML=`<div class="empty"><b>Nessun dato caricato</b>Carica la copia di «Il mio mondo» per vedere l’utilizzo, le materie, i punti di forza e cosa rinforzare.</div>`; return; }
   const A=analyze(pack);
   $("title").textContent=A.name?"I progressi di "+A.name:"I progressi";
-  $("srcInfo").textContent="Dati del "+fmt(pack.saved,{weekday:"long",day:"numeric",month:"long",year:"numeric"})+(pack.from?" · "+pack.from:"");
+  $("srcInfo").textContent="Dati del "+fmt(pack.saved,{weekday:"long",day:"numeric",month:"long",year:"numeric"})+(pack.progAt?" · risposte aggiornate il "+fmt(pack.progAt,{day:"numeric",month:"long"}):"")+(pack.from?" · "+pack.from:"");
   const prev=hist.filter(h=>h.d<A.ref).slice(-1)[0], now=summary(A);
   const tr=(k,inv)=>{if(!prev||prev[k]==null)return "";const d=now[k]-prev[k];if(!d)return "";const up=inv?d<0:d>0;return `<span class="trend ${up?"up":"down"}">${d>0?"+":""}${d}</span>`;};
   // calendario d'uso (8 settimane)
@@ -282,21 +287,93 @@ async function accept(pack,from){
   const hist=(STATE.hist||[]).filter(h=>h.d!==s.d); hist.push(s); hist.sort((a,b)=>a.d<b.d?-1:1);
   STATE={pack,hist:hist.slice(-60)}; await saveAll(STATE.pack,STATE.hist); render(STATE.pack,STATE.hist); toast("Progressi aggiornati");
 }
-$("fIn").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{accept(normalize(JSON.parse(r.result)),"file «"+f.name+"»")}catch(err){toast("File non valido: "+err.message)}};r.readAsText(f);e.target.value="";};
+function parseCSV(t){ // file «progressi-…csv» di «Il mio mondo»: materia;id;giuste;sbagliate;totale;percentuale_giuste
+  const lines=t.replace(/^\uFEFF/,"").split(/\r?\n/).filter(x=>x.trim());
+  if(!lines.length||!/^materia;id;giuste;sbagliate/i.test(lines[0]))throw new Error("non è il file dei progressi");
+  const prog={};lines.slice(1).forEach(l=>{const c=l.split(";");if(c.length>=4&&c[1])prog[c[1].trim()]={ok:+c[2]||0,ko:+c[3]||0};});
+  if(!Object.keys(prog).length)throw new Error("nel file non ci sono risposte");return prog;}
+$("fIn").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{
+    const t=String(r.result);
+    if(/\.csv$/i.test(f.name)||/^\uFEFF?materia;/i.test(t)){
+      const prog=parseCSV(t), now=new Date().toISOString();
+      const base=STATE.pack?JSON.parse(JSON.stringify(STATE.pack)):{saved:now,loaded:now,data:{}};
+      base.data.prog=prog; base.progAt=now; if(!STATE.pack) base.saved=now;
+      accept(base,STATE.pack?(STATE.pack.from||"copia")+" + risposte da «"+f.name+"»":"risposte da «"+f.name+"»");
+    } else accept(normalize(JSON.parse(t)),"file «"+f.name+"»");
+  }catch(err){toast("File non valido: "+err.message)}};r.readAsText(f);e.target.value="";};
 const local=fromThisDevice(); if(local){$("fLocal").hidden=false;$("fLocal").onclick=()=>accept({saved:new Date().toISOString(),loaded:new Date().toISOString(),data:local},"letti da questo iPad");}
 $("fClear").onclick=async()=>{STATE={pack:null,hist:[]};try{localStorage.removeItem(KEY);localStorage.removeItem(HKEY)}catch(e){}try{await kv("readwrite","progressi")}catch(e){}render(null,[]);};
 loadAll().then(o=>{STATE={pack:o.pack,hist:o.hist||[]};render(STATE.pack,STATE.hist);});
 window.__analyze=analyze; window.__normalize=normalize;
 
-/* aggiornamento automatico e silenzioso */
-if("serviceWorker" in navigator && location.protocol.startsWith("http") && window.top===window && !window.claude){
-  navigator.serviceWorker.register("sw.js").then(reg=>{
-    const check=()=>{reg.update().catch(()=>{});fetch("version.json",{cache:"no-store"}).then(r=>r.json()).then(v=>{if(v&&v.v&&window.APP_VERSION&&v.v!==window.APP_VERSION)location.reload();}).catch(()=>{});};
-    check(); document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")check();}); setInterval(check,30*60*1000);
-  }).catch(()=>{});
-}
 })();
 </script>
-<script>window.APP_VERSION="5e19484574";</script>
+<script>window.APP_VERSION="ec04a2e725";window.APP_BUILD="2026-10-03T10:44+02:00";</script>
+<script>
+/* ===== Aggiornamento automatico e controllo versione (uguale in Licenze, Tai Chi e Progressi) =====
+   - all'apertura, al ritorno sull'app e ogni 30 minuti legge version.json saltando ogni copia vecchia (anche quella del server di GitHub);
+   - se c'è una versione nuova salva i dati e ricarica, ma mai mentre si sta compilando qualcosa o durante una seduta;
+   - in fondo a ogni sezione: versione installata, data, stato e pulsante «Cerca aggiornamenti». */
+(function(){
+  "use strict";
+  var V=window.APP_VERSION||"", BUILT=window.APP_BUILD||"";
+  var st={state:"idle",last:null,remote:null,pending:false};
+  function visible(id){var e=document.getElementById(id);if(!e||e.hidden)return false;if(e.classList&&e.classList.contains("hide"))return false;return getComputedStyle(e).display!=="none";}
+  function busy(){var a=document.activeElement;return visible("sheet")||visible("modal")||visible("player")||!!(a&&/INPUT|SELECT|TEXTAREA/.test(a.tagName)&&a.type!=="file");}
+  function fmtBuilt(){if(!BUILT)return "";try{return new Date(BUILT).toLocaleString("it-IT",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});}catch(e){return "";}}
+  var TXT={idle:"",checking:"controllo in corso…",ok:"è l’ultima versione",new:"nuova versione trovata: aggiorno…",wait:"nuova versione pronta: si installa appena chiudi la finestra aperta",offline:"senza internet: controllo al prossimo collegamento"};
+  function paint(){
+    var bars=document.querySelectorAll(".updbar");
+    for(var i=0;i<bars.length;i++){var b=bars[i];
+      b.querySelector(".u-st").textContent=TXT[st.state]+(st.last&&st.state==="ok"?" (verificato alle "+st.last.toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"})+")":"");
+      b.dataset.st=st.state;}
+  }
+  function bar(){
+    if(document.querySelector(".updbar"))return;
+    var css=document.createElement("style");
+    css.textContent=".updbar{max-width:1100px;margin:22px auto 8px;padding:10px 16px;font-size:12.5px;color:#7a8290;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;justify-content:center;text-align:center}"+
+      ".updbar b{font-variant-numeric:tabular-nums}.updbar button{font:inherit;font-weight:700;border:0;border-radius:999px;padding:6px 12px;background:rgba(127,127,127,.16);color:inherit;cursor:pointer}"+
+      ".updbar[data-st=ok] .u-st{color:#2e8b57}.updbar[data-st=new] .u-st,.updbar[data-st=wait] .u-st{color:#c2410c;font-weight:700}";
+    document.head.appendChild(css);
+    var d=document.createElement("div");d.className="updbar";
+    d.innerHTML="<span>Versione <b>"+V+"</b>"+(BUILT?" del "+fmtBuilt():"")+"</span><span class=\"u-st\"></span><button type=\"button\">Cerca aggiornamenti</button>";
+    d.querySelector("button").addEventListener("click",function(){check(true);});
+    var mains=document.querySelectorAll("main");
+    // nelle sezioni con più pagine la barra va in fondo al documento, sopra la barra delle schede
+    document.body.insertBefore(d,document.querySelector("nav.tabs")||null);
+    paint();
+  }
+  function apply(v){
+    try{if(typeof window.__flush==="function")window.__flush();}catch(e){}
+    setTimeout(function(){location.replace(location.pathname+"?v="+encodeURIComponent(v));},350);
+  }
+  function check(manual){
+    if(!/^https?:/.test(location.protocol))return;
+    st.state="checking";paint();
+    if(window.__swreg)window.__swreg.update().catch(function(){});
+    fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json();}).then(function(v){
+      st.last=new Date();st.remote=v&&v.v;
+      if(st.remote&&st.remote!==V){
+        if(manual||!busy()){st.state="new";paint();apply(st.remote);}
+        else{st.state="wait";st.pending=true;paint();}
+      }else{st.state="ok";paint();}
+    }).catch(function(){st.state="offline";paint();});
+  }
+  setInterval(function(){if(st.pending&&!busy()){st.pending=false;st.state="new";paint();apply(st.remote);}},5000);
+  if(location.search.indexOf("v=")>=0&&history.replaceState){try{history.replaceState(null,"",location.pathname+location.hash);}catch(e){}}
+  if(window.claude||window.top!==window){ // dentro Claude: niente aggiornamento automatico, solo la versione
+    if(document.readyState!=="loading")bar();else document.addEventListener("DOMContentLoaded",bar);
+    return;
+  }
+  if(document.readyState!=="loading")bar();else document.addEventListener("DOMContentLoaded",bar);
+  if("serviceWorker" in navigator&&/^https?:/.test(location.protocol)){
+    navigator.serviceWorker.register("sw.js").then(function(reg){window.__swreg=reg;}).catch(function(){});
+  }
+  check(false);
+  document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")check(false);});
+  window.addEventListener("pageshow",function(e){if(e.persisted)check(false);});
+  setInterval(function(){check(false);},30*60*1000);
+})();
+</script>
 </body>
 </html>

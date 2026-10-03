@@ -1459,17 +1459,74 @@ else document.getElementById('heroFig').innerHTML=still(EXM.apertura,1,false);
   };
   info();setTimeout(info,1500);
 })();
-/* aggiornamento automatico e silenzioso (stesso sistema de "Il mondo di Valentina") */
-window.APP_VERSION="5e19484574";
-if('serviceWorker' in navigator && location.protocol.startsWith('http') && window.top===window && !window.claude){
-  navigator.serviceWorker.register('sw.js').then(reg=>{
-    const check=()=>{reg.update().catch(()=>{});fetch('version.json',{cache:'no-store'}).then(r=>r.json()).then(v=>{
-      if(v&&v.v&&v.v!==window.APP_VERSION&&document.getElementById('player').hidden){TCM.flush().finally(()=>location.reload())}}).catch(()=>{})};
-    check();
-    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')check()});
-    setInterval(check,30*60*1000);
-  }).catch(()=>{});
-}
+window.__flush=()=>{ try{ TCM.flush(); }catch(e){} };
+</script>
+<script>window.APP_VERSION="ec04a2e725";window.APP_BUILD="2026-10-03T10:44+02:00";</script>
+<script>
+/* ===== Aggiornamento automatico e controllo versione (uguale in Licenze, Tai Chi e Progressi) =====
+   - all'apertura, al ritorno sull'app e ogni 30 minuti legge version.json saltando ogni copia vecchia (anche quella del server di GitHub);
+   - se c'è una versione nuova salva i dati e ricarica, ma mai mentre si sta compilando qualcosa o durante una seduta;
+   - in fondo a ogni sezione: versione installata, data, stato e pulsante «Cerca aggiornamenti». */
+(function(){
+  "use strict";
+  var V=window.APP_VERSION||"", BUILT=window.APP_BUILD||"";
+  var st={state:"idle",last:null,remote:null,pending:false};
+  function visible(id){var e=document.getElementById(id);if(!e||e.hidden)return false;if(e.classList&&e.classList.contains("hide"))return false;return getComputedStyle(e).display!=="none";}
+  function busy(){var a=document.activeElement;return visible("sheet")||visible("modal")||visible("player")||!!(a&&/INPUT|SELECT|TEXTAREA/.test(a.tagName)&&a.type!=="file");}
+  function fmtBuilt(){if(!BUILT)return "";try{return new Date(BUILT).toLocaleString("it-IT",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});}catch(e){return "";}}
+  var TXT={idle:"",checking:"controllo in corso…",ok:"è l’ultima versione",new:"nuova versione trovata: aggiorno…",wait:"nuova versione pronta: si installa appena chiudi la finestra aperta",offline:"senza internet: controllo al prossimo collegamento"};
+  function paint(){
+    var bars=document.querySelectorAll(".updbar");
+    for(var i=0;i<bars.length;i++){var b=bars[i];
+      b.querySelector(".u-st").textContent=TXT[st.state]+(st.last&&st.state==="ok"?" (verificato alle "+st.last.toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"})+")":"");
+      b.dataset.st=st.state;}
+  }
+  function bar(){
+    if(document.querySelector(".updbar"))return;
+    var css=document.createElement("style");
+    css.textContent=".updbar{max-width:1100px;margin:22px auto 8px;padding:10px 16px;font-size:12.5px;color:#7a8290;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;justify-content:center;text-align:center}"+
+      ".updbar b{font-variant-numeric:tabular-nums}.updbar button{font:inherit;font-weight:700;border:0;border-radius:999px;padding:6px 12px;background:rgba(127,127,127,.16);color:inherit;cursor:pointer}"+
+      ".updbar[data-st=ok] .u-st{color:#2e8b57}.updbar[data-st=new] .u-st,.updbar[data-st=wait] .u-st{color:#c2410c;font-weight:700}";
+    document.head.appendChild(css);
+    var d=document.createElement("div");d.className="updbar";
+    d.innerHTML="<span>Versione <b>"+V+"</b>"+(BUILT?" del "+fmtBuilt():"")+"</span><span class=\"u-st\"></span><button type=\"button\">Cerca aggiornamenti</button>";
+    d.querySelector("button").addEventListener("click",function(){check(true);});
+    var mains=document.querySelectorAll("main");
+    // nelle sezioni con più pagine la barra va in fondo al documento, sopra la barra delle schede
+    document.body.insertBefore(d,document.querySelector("nav.tabs")||null);
+    paint();
+  }
+  function apply(v){
+    try{if(typeof window.__flush==="function")window.__flush();}catch(e){}
+    setTimeout(function(){location.replace(location.pathname+"?v="+encodeURIComponent(v));},350);
+  }
+  function check(manual){
+    if(!/^https?:/.test(location.protocol))return;
+    st.state="checking";paint();
+    if(window.__swreg)window.__swreg.update().catch(function(){});
+    fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json();}).then(function(v){
+      st.last=new Date();st.remote=v&&v.v;
+      if(st.remote&&st.remote!==V){
+        if(manual||!busy()){st.state="new";paint();apply(st.remote);}
+        else{st.state="wait";st.pending=true;paint();}
+      }else{st.state="ok";paint();}
+    }).catch(function(){st.state="offline";paint();});
+  }
+  setInterval(function(){if(st.pending&&!busy()){st.pending=false;st.state="new";paint();apply(st.remote);}},5000);
+  if(location.search.indexOf("v=")>=0&&history.replaceState){try{history.replaceState(null,"",location.pathname+location.hash);}catch(e){}}
+  if(window.claude||window.top!==window){ // dentro Claude: niente aggiornamento automatico, solo la versione
+    if(document.readyState!=="loading")bar();else document.addEventListener("DOMContentLoaded",bar);
+    return;
+  }
+  if(document.readyState!=="loading")bar();else document.addEventListener("DOMContentLoaded",bar);
+  if("serviceWorker" in navigator&&/^https?:/.test(location.protocol)){
+    navigator.serviceWorker.register("sw.js").then(function(reg){window.__swreg=reg;}).catch(function(){});
+  }
+  check(false);
+  document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")check(false);});
+  window.addEventListener("pageshow",function(e){if(e.persisted)check(false);});
+  setInterval(function(){check(false);},30*60*1000);
+})();
 </script>
 </body>
 </html>
