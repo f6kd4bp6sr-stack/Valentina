@@ -7,7 +7,7 @@
   "use strict";
   if (window.__mondoSync) return; window.__mondoSync = true;
   var CFG = "msync-cfg", API = "https://api.github.com", FILE = "mondo.json";
-  var KEEP = ["days", "prog", "prog-days", "math-done", "sci-done", "games-done", "tab-best", "simon-best", "clock-level", "cuoca-level", "moves-done", "dragon", "diary", "m-steps", "m-open", "m-frasi"];
+  var KEEP = ["days", "prog", "prog-days", "math-done", "sci-done", "games-done", "tab-best", "simon-best", "clock-level", "cuoca-level", "moves-done", "dragon", "diary", "m-steps", "m-open", "m-frasi", "path-day", "gems", "piggy", "diff-level"];
   var KEEP_PREFIX = ["deck-", "mis-"];
 
   function cfg() { try { return JSON.parse(localStorage.getItem(CFG) || "null"); } catch (e) { return null; } }
@@ -28,6 +28,18 @@
     // solo quantità, mai testi: diario → giorni scritti; liste del metodo → quante voci
     if (data.diary && typeof data.diary === "object") { var dd = {}; Object.keys(data.diary).forEach(function (d) { dd[d] = 1; }); data.diary = dd; }
     ["m-steps", "m-open", "m-frasi"].forEach(function (k) { if (Array.isArray(data[k])) data[k] = data[k].map(function () { return 1; }); });
+    // percorso: solo il riepilogo per materia (nozioni imparate, consolidate, da ripassare), non le domande
+    try {
+      var PA = JSON.parse(localStorage.getItem(P + "path") || "null");
+      if (PA && PA.srs) {
+        var today = new Date(), td = today.getFullYear() + "-" + ("0" + (today.getMonth() + 1)).slice(-2) + "-" + ("0" + today.getDate()).slice(-2), sum = {};
+        Object.keys(PA.srs).forEach(function (k) { var r = PA.srs[k] || {}, b = +r.b || 0; if (b <= 0) return; var u = r.u || "?", e = sum[u] || (sum[u] = { l: 0, s: 0, d: 0 }); e.l++; if (b >= 4) e.s++; if (r.d && r.d <= td) e.d++; });
+        var U = PA.u || {}, tappe = 0; Object.keys(U).forEach(function (k) { tappe += Object.keys((U[k] && U[k].done) || {}).length; });
+        data.path = { sum: sum, tappe: tappe, units: Object.keys(U).length, ref: td };
+      }
+      var C = JSON.parse(localStorage.getItem(P + "coll") || "null");
+      if (C && C.f) { var n = 0; Object.keys(C.f).forEach(function (k) { n += (C.f[k] || []).length; }); data.coll = { figs: n }; }
+    } catch (e) {}
     if (data.dragon && typeof data.dragon === "object") data.dragon = { name: data.dragon.name || "", energy: data.dragon.energy || 0 };
     return data;
   }

@@ -163,7 +163,19 @@ function fromThisDevice(){ // stesso indirizzo: se «Il mio mondo» è usato su 
 /* ---------- materie e argomenti di «Il mio mondo» ---------- */
 const MATH=[["tab","⚡","Tabelline"],["fraz","🍕","Frazioni, decimali, %"],["prob","🕵️","Problemi"],["geo","📐","Aree e perimetri"],["media","🎒","Verso la media"],["ore","🕐","L’orologio"]];
 const SCI=[["corpo","🫀","Il corpo umano"],["spazio","🪐","Sistema solare"],["energia","⚡","Energia e materia"],["animali","🦊","Animali e ambienti"]];
-const SCOPRI={ita:["📖","Italiano",1],storia:["🏛️","Storia",1],geo:["🗺️","Geografia",1],eng:["🇬🇧","Inglese",1],arte:["🎨","Arte",0],musica:["🎵","Musica",0],civica:["🤝","Ed. civica",0],tecno:["💡","Tecnologia",0],media:["🎒","Verso la 1ª media",0],roblox:["🎮","Roblox",0]};
+const SCOPRI={ita:["📖","Italiano",1],storia:["🏛️","Storia",1],geo:["🗺️","Geografia",1],eng:["🇬🇧","Inglese",1],arte:["🎨","Arte",0],musica:["🎵","Musica",0],civica:["🤝","Ed. civica",0],tecno:["💡","Tecnologia",0],media:["🎒","Verso la 1ª media",0],roblox:["🧱","Roblox",0],soldi:["🐷","Soldi e risparmio",0]};
+const SPORTN={patt:["⛸️","Pattinaggio"],aerea:["🤸","Ginnastica aerea"],nuoto:["🏊","Nuoto"],corpo:["💪","Corpo in movimento"]};
+function unitLabel(u){if(u==="mate")return "🔢 Matematica";if(SCOPRI[u])return SCOPRI[u][0]+" "+SCOPRI[u][1];
+  if(u.startsWith("sci-")){const t=SCI.find(x=>x[0]===u.slice(4));if(t)return t[1]+" "+t[2];}
+  if(u.startsWith("sp-")){const t=SPORTN[u.slice(3)];if(t)return t[0]+" "+t[1];}return u;}
+/* percorso a tappe e ripasso a intervalli: dal dato completo (copia) o dal riepilogo (collegamento) */
+function pathSummary(P,ref){
+  if(!P||typeof P!=="object")return null;
+  if(P.sum)return {per:P.sum,tappe:+P.tappe||0,units:+P.units||0,ref:P.ref||ref};
+  if(!P.srs)return null; const per={};
+  Object.keys(P.srs).forEach(k=>{const r=P.srs[k]||{},b=+r.b||0;if(b<=0)return;const e=per[r.u||"?"]||(per[r.u||"?"]={l:0,s:0,d:0});e.l++;if(b>=4)e.s++;if(r.d&&r.d<=ref)e.d++;});
+  const U=P.u||{};return {per,tappe:Object.values(U).reduce((a,us)=>a+Object.keys((us&&us.done)||{}).length,0),units:Object.keys(U).length,ref};
+}
 const SPORT={patt:["⛸️","Pattinaggio"],aerea:["🎪","Ginnastica aerea"],nuoto:["🏊","Nuoto"],corpo:["💪","Corpo in movimento"]};
 const GAMES={cuoca:["👩‍🍳","La cuoca pasticciona"],simon:["🎵","Segui la musica"],gone:["🔍","Cosa è sparito?"],colors:["🎨","Colori pazzi"]};
 const deckSeen=(D,k)=>{const d=D["deck-"+k];if(!d||!d.total)return null;const left=Array.isArray(d.q)?d.q.length:0;return {seen:left===0&&Array.isArray(d.last)&&d.last.length?d.total:d.total-left,total:d.total};};
@@ -190,6 +202,7 @@ function analyze(pack){
   const mix=(st,...ks)=>{const ss=ks.map(accSt).filter(Boolean);if(!ss.length)return st;const w=ss.sort((a,b)=>RANK[b]-RANK[a])[0];if(st==="none")return w;return RANK[w]>RANK[st]?w:st;};
   const accEval=(k,label)=>{const a=acc(k);if(!a||a.n<10)return;if(a.p<.6)bad.push([`${label}: ${Math.round(a.p*100)}% di risposte giuste`,`su ${a.n} risposte`]);else if(a.p>=.85)good.push([`${label}: ${Math.round(a.p*100)}% di risposte giuste`,`su ${a.n} risposte`]);};
 
+  const PU=pathSummary(D.path,ref), pl=id=>PU&&PU.per[id]?PU.per[id].l:0, pathTxt=id=>{const e=PU&&PU.per[id];return e?` · percorso ${e.l} imparate`:"";};
   // MATEMATICA
   {let rows="",tot=0,mathNever=[];
    MATH.forEach(([id,ic,n])=>{const c=+md[id]||0;tot+=c;if(!c)mathNever.push(n);rows+=`<div class="row"><span>${ic} ${esc(n)}</span><span class="v">${c?c+(c===1?" volta":" volte"):"—"}</span></div>`;});
@@ -200,17 +213,18 @@ function analyze(pack){
    if(tbBad.length) bad.push([`Tabelline da ripassare: ${tbBad.map(t=>"×"+t).join(", ")}`,"6 o meno giuste su 10 al primo tentativo (record migliore)"]);
    if(tbNever.length&&tbNever.length<9) bad.push([`Tabelline mai allenate da sola: ${tbNever.map(t=>"×"+t).join(", ")}`,"compaiono solo nei giri misti"]);
    if(tbGood.length) good.push([`Tabelline sicure: ${tbGood.map(t=>"×"+t).join(", ")}`,"9 o 10 giuste su 10 al primo tentativo"]);
-   if(mathNever.length) bad.push([`Matematica mai provata: ${mathNever.join(", ")}`,""]);
+   if(mathNever.length&&!pl("mate")) bad.push([`Matematica mai provata: ${mathNever.join(", ")}`,""]);
+   if(pl("mate")) rows=`<div class="row"><span>🧭 Percorso a tappe</span><span class="v">${pl("mate")} nozioni imparate</span></div>`+rows;
    const topM=MATH.map(([id,,n])=>[n,+md[id]||0]).sort((a,b)=>b[1]-a[1])[0]; if(topM&&topM[1]>=3) good.push([`Matematica più allenata: ${topM[0]}`,`${topM[1]} volte`]);
    if(clock>=3) good.push([`Orologio: livello ${clock} di 4`,"legge bene le ore"]); else if((+md.ore||0)>=2&&clock<=1) bad.push(["Orologio: ancora al livello 1",`provato ${md.ore} volte`]);
    accEval("mate","Matematica");
-   const st=mix(tot===0?"none":mathNever.length>=3||tbBad.length>=3?"bad":mathNever.length||tbBad.length?"mid":"good","mate");
+   const st=mix(tot===0&&!pl("mate")?"none":pl("mate")&&!tbBad.length?"good":mathNever.length>=3||tbBad.length>=3?"bad":mathNever.length||tbBad.length?"mid":"good","mate");
    S.push({c:"var(--c1)",t:"🔢 Matematica",st,html:accRow("mate")+rows+`<div class="lbl" style="margin-top:10px">Tabelline: record di risposte giuste al primo tentativo (su 10)</div><div class="tabs-grid">${grid}</div>`+(clock?`<div class="row"><span>🕐 Livello orologio</span><span class="v">${clock} / 4</span></div>`:"")});}
 
   // SCIENZE
   {let rows="",done=0,never=[];
-   SCI.forEach(([id,ic,n])=>{const ok=!!sd[id],q=deckSeen(D,"q-sci-"+id),f=deckSeen(D,"f-sci-"+id),m=misN(D,"sci-"+id);if(ok)done++;if(!ok&&!q&&!f)never.push(n);
-     rows+=`<div class="row"><span>${ic} ${esc(n)} ${ok?"✓":""}</span><span class="v">${q?`quiz ${q.seen}/${q.total}`:"quiz —"} · ${f?`curiosità ${f.seen}/${f.total}`:"curiosità —"}${m?` · esperimenti ${m}`:""}</span></div>`;});
+   SCI.forEach(([id,ic,n])=>{const ok=!!sd[id],q=deckSeen(D,"q-sci-"+id),f=deckSeen(D,"f-sci-"+id),m=misN(D,"sci-"+id);if(ok)done++;if(!ok&&!q&&!f&&!pl("sci-"+id))never.push(n);
+     rows+=`<div class="row"><span>${ic} ${esc(n)} ${ok?"✓":""}</span><span class="v">${q?`quiz ${q.seen}/${q.total}`:"quiz —"} · ${f?`curiosità ${f.seen}/${f.total}`:"curiosità —"}${m?` · esperimenti ${m}`:""}${pathTxt("sci-"+id)}</span></div>`;});
    if(never.length) bad.push([`Scienze mai aperte: ${never.join(", ")}`,""]);
    if(done>=2) good.push([`Scienze: ${done} argomenti su ${SCI.length} completati`,""]);
    accEval("scienze","Scienze");
@@ -221,16 +235,16 @@ function analyze(pack){
    let rows="",core=[],other=[],explored=0;
    Object.keys(prog||{}).forEach(k=>{if(!["mate","scienze","sport"].includes(k))ids.add(k);});
    [...ids].forEach(id=>{const meta=SCOPRI[id]||["📘",id,0];const a=acc(id); if(a)accEval(id,meta[1]);const q=deckSeen(D,"q-sc-"+id),f=deckSeen(D,"f-sc-"+id),m=misN(D,"scopri-"+id);
-     const score=(q?q.seen:0)+(f?f.seen:0)+m*2+(a?a.n:0); if(score)explored++;
+     const score=(q?q.seen:0)+(f?f.seen:0)+m*2+(a?a.n:0)+pl(id); if(score)explored++;
      if(!score&&meta[2])core.push(meta[1]); else if(!score)other.push(meta[1]);
-     if(score>=12) good.push([`${meta[1]}: esplorata a fondo`,`${q?q.seen:0} domande, ${f?f.seen:0} curiosità, ${m} missioni`]);
-     rows+=`<div class="row"><span>${meta[0]} ${esc(meta[1])}</span><span class="v">${a?Math.round(a.p*100)+"% · ":""}${q?`sfide ${q.seen}/${q.total}`:"sfide —"} · ${f?`curiosità ${f.seen}`:"curiosità —"} · missioni ${m}</span></div>`;});
+     if(score>=12) good.push([`${meta[1]}: esplorata a fondo`,[q&&q.seen?q.seen+" domande":"",f&&f.seen?f.seen+" curiosità":"",m?m+" missioni":"",a?a.n+" risposte":"",pl(id)?pl(id)+" nozioni nel percorso":""].filter(Boolean).join(", ")]);
+     rows+=`<div class="row"><span>${meta[0]} ${esc(meta[1])}</span><span class="v">${a?Math.round(a.p*100)+"% · ":""}${q?`sfide ${q.seen}/${q.total}`:"sfide —"} · ${f?`curiosità ${f.seen}`:"curiosità —"} · missioni ${m}${pathTxt(id)}</span></div>`;});
    if(core.length) bad.push([`Materie di base mai esplorate: ${core.join(", ")}`,"nessuna sfida, curiosità o missione"]);
    if(other.length) bad.push([`Altre materie non ancora aperte: ${other.join(", ")}`,""]);
    S.push({c:"var(--c2)",t:"🌍 Scopri · materie",st:mix(explored===0?"none":core.length>=2?"bad":core.length||other.length>3?"mid":"good",...ids),html:rows});}
 
   // SPORT, GIOCHI, METODO
-  {let rows="",any=0;Object.entries(SPORT).forEach(([id,[ic,n]])=>{const q=deckSeen(D,"q-sp-"+id),f=deckSeen(D,"f-sp-"+id);if(q||f)any++;rows+=`<div class="row"><span>${ic} ${n}</span><span class="v">${q?`quiz ${q.seen}/${q.total}`:"quiz —"} · ${f?`curiosità ${f.seen}`:"curiosità —"}</span></div>`;});
+  {let rows="",any=0;Object.entries(SPORT).forEach(([id,[ic,n]])=>{const q=deckSeen(D,"q-sp-"+id),f=deckSeen(D,"f-sp-"+id);if(q||f||pl("sp-"+id))any++;rows+=`<div class="row"><span>${ic} ${n}</span><span class="v">${q?`quiz ${q.seen}/${q.total}`:"quiz —"} · ${f?`curiosità ${f.seen}`:"curiosità —"}${pathTxt("sp-"+id)}</span></div>`;});
    const mv=+D["moves-done"]||0; rows+=`<div class="row"><span>🤸 Pause movimento fatte</span><span class="v">${mv}</span></div>`; rows=accRow("sport")+rows; accEval("sport","Sport");
    if(mv>=5) good.push([`Movimento: ${mv} pause attive fatte`,""]);
    S.push({c:"var(--c5)",t:"🤸 Sport e movimento",st:mix(any||mv?"good":"none","sport"),html:rows});}
@@ -250,7 +264,15 @@ function analyze(pack){
   if(lastUse&&ago(lastUse)>=7) bad.push([`App non usata da ${ago(lastUse)} giorni`,`ultimo utilizzo ${fmt(lastUse)}`]);
   if(days.length&&last7<3) bad.push([`Uso discontinuo: ${last7} giorni negli ultimi 7`,"meglio poco ma tutti i giorni"]);
   if(last7>=5) good.push([`Costanza: ${last7} giorni su 7`,`serie attuale ${streak} giorni di fila`]);
-  return {D,days,last7,last30,lastUse,streak,diary,name,S,good,bad,prog:!!prog,ref,energy:D.dragon&&D.dragon.energy||0,dragon:D.dragon&&D.dragon.name||""};
+  const path=pathSummary(D.path,ref);
+  if(path){let l=0,so=0,du=0;Object.values(path.per).forEach(e=>{l+=e.l;so+=e.s;du+=e.d;});path.l=l;path.s=so;path.d=du;
+    if(du>=25)bad.push([`Ripasso arretrato: ${du} nozioni da ripassare`,"il ripasso a intervalli funziona se si fa nei giorni giusti"]);
+    if(so>=30)good.push([`${so} nozioni consolidate`,"ricordate anche a distanza di due settimane o più"]);}
+  const pd=D["path-day"]&&D["path-day"].d===ref?D["path-day"]:null;
+  const gems=D.gems&&typeof D.gems==="object"?D.gems:null;
+  const figs=D.coll&&D.coll.f?Object.values(D.coll.f).reduce((a,x)=>a+(Array.isArray(x)?x.length:0),0):(D.coll&&D.coll.figs!=null?+D.coll.figs:null);
+  const piggy=D.piggy&&D.piggy.n!=null?+D.piggy.n:null;
+  return {D,days,last7,last30,lastUse,streak,diary,name,S,good,bad,prog:!!prog,ref,path,pd,gems,figs,piggy,energy:D.dragon&&D.dragon.energy||0,dragon:D.dragon&&D.dragon.name||""};
 }
 function summary(A){ // riepilogo numerico per l'andamento tra un caricamento e l'altro
   const D=A.D,md=D["math-done"]||{};
@@ -266,6 +288,20 @@ function daysCard(h,ref){
   rows=list.map(([k,ok,ko])=>`<div class="dbar"><span class="dl">${new Date(k+"T12:00").toLocaleDateString("it-IT",{weekday:"short",day:"numeric"})}</span><span class="dt"><i class="ok" style="width:${ok/max*100}%"></i><i class="ko" style="width:${ko/max*100}%"></i></span><span class="dn">${ok+ko?`${ok} ✓ · ${ko} ✗`:"—"}</span></div>`).join("");
   const n=sum.ok+sum.ko;
   return `<div class="card" style="margin-top:12px"><b>Risposte degli ultimi 14 giorni</b>${n?` <span class="lbl">· ${sum.ok} giuste, ${sum.ko} sbagliate (${Math.round(sum.ok/n*100)}%)</span>`:""}<div class="dbars">${rows}</div><div class="lbl">Verde = giuste, rosso = sbagliate, giorno per giorno.</div></div>`;
+}
+
+function pathCard(A){
+  const P=A.path; if(!P&&!A.pd&&!A.gems&&A.figs==null&&A.piggy==null)return "";
+  let h=`<h2>Percorso e memoria</h2><div class="kpi">`;
+  if(P)h+=`<div><b>${P.l}</b><span>nozioni imparate nel percorso</span></div><div><b>${P.s}</b><span>consolidate (ricordate dopo 2+ settimane)</span></div><div><b>${P.d}</b><span>da ripassare${P.d>=25?" · arretrato":""}</span></div><div><b>${P.tappe}</b><span>tappe completate</span></div>`;
+  if(A.pd)h+=`<div><b>${A.pd.done||(A.pd.nuove>=12&&A.pd.rip>=(A.pd.ripGoal||0))?"✅":"…"}</b><span>obiettivo di oggi: ${+A.pd.nuove||0} nuove, ${+A.pd.rip||0} ripassi</span></div>`;
+  if(A.gems)h+=`<div><b>${+A.gems.tot||0}</b><span>gemme guadagnate (${+A.gems.n||0} da spendere)</span></div>`;
+  if(A.figs!=null)h+=`<div><b>${A.figs}<span class="lbl">/300</span></b><span>figurine dell’album</span></div>`;
+  if(A.piggy!=null)h+=`<div><b>${A.piggy}</b><span>nel salvadanaio</span></div>`;
+  h+=`</div>`;
+  if(P&&Object.keys(P.per).length){const rows=Object.entries(P.per).sort((a,b)=>b[1].l-a[1].l).map(([u,e])=>`<div class="row"><span>${esc(unitLabel(u))}</span><span class="v">${e.l} imparate · ${e.s} consolidate${e.d?` · <b style="color:var(--bad,#c2410c)">${e.d} da ripassare</b>`:""}</span></div>`).join("");
+    h+=`<div class="card" style="margin-top:12px"><b>Materia per materia nel percorso</b>${rows}<div class="lbl">«Consolidate» = la nozione è stata ricordata più volte di fila e il prossimo ripasso è tra due settimane o più.</div></div>`;}
+  return h;
 }
 
 /* ---------- vista ---------- */
@@ -296,6 +332,8 @@ function render(pack,hist){
   </div>
   ${daysCard(A.D["prog-days"],A.ref)}
   <div class="card" style="margin-top:12px"><b>Giorni di utilizzo · ultime 8 settimane</b><div class="heat">${heat}</div><div class="lbl">Ogni quadratino è un giorno (righe: lunedì → domenica). Verde = app usata.</div></div>
+
+  ${pathCard(A)}
 
   <h2>In evidenza</h2>
   <div class="ev">
@@ -382,7 +420,7 @@ window.__analyze=analyze; window.__normalize=normalize;
 
 })();
 </script>
-<script>window.APP_VERSION="4f6df4fffc";window.APP_BUILD="2026-10-03T14:08+02:00";</script>
+<script>window.APP_VERSION="1076903edb";window.APP_BUILD="2026-10-03T20:30+02:00";</script>
 <script>
 /* ===== Aggiornamento automatico e controllo versione (uguale in Licenze, Tai Chi e Progressi) =====
    - all'apertura, al ritorno sull'app e ogni 30 minuti legge version.json saltando ogni copia vecchia (anche quella del server di GitHub);
