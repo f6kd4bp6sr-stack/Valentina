@@ -2,9 +2,9 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<script>window.APP_VERSION="d6ec1ad365";</script>
+<script>window.APP_VERSION="c14b8c882e";</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self' data: blob:; connect-src 'self' https://api.github.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://f6kd4bp6sr-stack.github.io; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self' data: blob:; connect-src 'self' https://api.github.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
 <meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="referrer" content="no-referrer">
 <title>Il mio mondo</title>
@@ -1481,6 +1481,7 @@ function onboarding(edit) {
       '<p style="margin-top:14px">Di che colore?</p><div class="swatches" id="ob-sw"></div>' + childFields(cf) +
       '<div class="row"><button type="button" class="btn" id="ob-go" style="--bc:' + DCOLORS[color][2] + ';--bs:' + DCOLORS[color][3] + '">' + (edit ? 'Salva' : 'Fai nascere il mio drago!') + '</button>' +
       (edit ? '<button type="button" class="btn ghost" id="ob-x">Annulla</button>' : '') + '</div>' +
+      (edit && typeof linkBtnHtml === 'function' ? '<div class="row center" style="margin-top:10px">' + linkBtnHtml() + '</div>' : '') +
       (edit ? '' : '<div class="row center" style="margin-top:10px"><button type="button" class="btn small ghost" id="ob-restore">📂 Ho già un drago: ripristina i miei progressi</button></div>'),
       [DCOLORS[color][2], DCOLORS[color][3]]);
     const sw = $('ob-sw');
@@ -1508,6 +1509,7 @@ function onboarding(edit) {
       }
     });
     if (edit) $('ob-x').addEventListener('click', closeModal);
+    if (edit && typeof bindLinkBtn === 'function') bindLinkBtn();
   };
   if (!edit) $('modal').dataset.lock = '1';
   draw();
@@ -8845,8 +8847,9 @@ function openProg() {
     (rows.length ? '<div style="text-align:left;max-height:50vh;overflow:auto">' + rows.map(r => '<div style="padding:8px 0;border-bottom:1px solid var(--line)"><div class="row between" style="font-weight:800"><span>' + esc(r.name) + '</span><span>✅ ' + r.ok + ' · ❌ ' + r.ko + ' · ' + r.pc + '%</span></div>' + bar(r) + '</div>').join('') + '</div>'
       : '<p style="font-weight:800">Ancora nessuna risposta: prova un quiz!</p>') +
     '<p style="font-weight:700;font-size:14px;color:var(--ink-soft);margin-top:10px">' + progSavedTxt() + '</p>' +
-    '<div class="row center" style="margin-top:14px"><button type="button" class="btn" id="pg-share">📤 Condividi</button><button type="button" class="btn ghost" id="pg-ok" data-focus>Chiudi</button></div>');
+    '<div class="row center" style="margin-top:14px"><button type="button" class="btn" id="pg-share">📤 Condividi</button>' + linkBtnHtml() + '<button type="button" class="btn ghost" id="pg-ok" data-focus>Chiudi</button></div>');
   $('pg-ok').addEventListener('click', closeModal);
+  bindLinkBtn();
   $('pg-share').addEventListener('click', () => progShare($('pg-share')));
 }
 
@@ -8861,6 +8864,29 @@ function progWeek() {
   for (let i = 0; i < 7; i++) { const d = h[iso(addDays(new Date(), -i))]; if (!d) continue; act++; Object.values(d).forEach(r => { ok += r.ok; ko += r.ko; }); }
   if (!ok && !ko) return '';
   return '<div class="pill" style="margin:6px auto 4px;display:inline-block;font-weight:800">Ultimi 7 giorni: ✅ ' + ok + ' · ❌ ' + ko + ' · ' + Math.round(ok / (ok + ko) * 100) + '% · ' + act + (act === 1 ? ' giorno' : ' giorni') + ' di studio</div>';
+}
+
+/* ---------- 🔗 collegamento con i genitori: disponibile da subito, anche senza risposte ---------- */
+const SYNC_URL = 'https://f6kd4bp6sr-stack.github.io/mie-app/licenze/mondo-sync.js';
+function linkBtnHtml() { const on = window.__mondoSyncLinked && window.__mondoSyncLinked(); return '<button type="button" class="btn ghost" id="pg-link">' + (on ? '🔗 Collegato' : '🔗 Per i genitori') + '</button>'; }
+function loadSync() {
+  return new Promise(res => {
+    if (window.__mondoSyncOpen) return res(true);
+    const sc = document.createElement('script');
+    sc.src = location.protocol.startsWith('http') && location.pathname.indexOf('/mie-app/') >= 0 ? 'licenze/mondo-sync.js' : SYNC_URL;
+    sc.onload = () => res(!!window.__mondoSyncOpen); sc.onerror = () => res(false);
+    document.head.appendChild(sc); setTimeout(() => res(!!window.__mondoSyncOpen), 8000);
+  });
+}
+function bindLinkBtn() {
+  const b = $('pg-link'); if (!b || b.dataset.bound) return; b.dataset.bound = 1;
+  b.addEventListener('click', async e => {
+    e.stopImmediatePropagation();
+    b.disabled = true; const t = b.textContent; b.textContent = '⏳';
+    const ok = await loadSync(); b.disabled = false; b.textContent = t;
+    if (ok) window.__mondoSyncOpen();
+    else floatText(b, 'Serve internet: riprova tra poco');
+  }, true);
 }
 
 /* ================= IL PERCORSO (stile Duolingo) =================
