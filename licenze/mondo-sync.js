@@ -160,5 +160,7 @@
     setInterval(function () { push(false); }, 30 * 60e3);
   }
   window.__mondoSyncPush = push;
+  window.__mondoSyncOpen = openPanel;
+  window.__mondoSyncLinked = function () { return !!cfg(); };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
 })();
