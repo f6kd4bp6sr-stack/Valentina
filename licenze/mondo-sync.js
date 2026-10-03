@@ -106,12 +106,26 @@
     }
     el.innerHTML = '<p><b>' + (c.err ? "⚠️ Ultimo invio non riuscito: " + c.err : "✅ Collegato") + '</b><br>Ultimo invio: ' + when(c.last) + '</p>' +
       '<p style="font-size:14px">Codice di collegamento da inserire nella sezione Progressi (una volta sola):</p>' +
-      '<textarea readonly class="ms-code" style="width:100%;height:64px;font:13px ui-monospace,monospace;border-radius:12px;padding:8px;box-sizing:border-box">' + code() + '</textarea>' +
+      '<textarea readonly class="ms-code" onclick="this.setSelectionRange(0,this.value.length)" style="width:100%;height:84px;font:15px ui-monospace,monospace;border-radius:12px;padding:8px;box-sizing:border-box;-webkit-user-select:text;user-select:text">' + code() + '</textarea>' +
       '<div class="ms-row"><button type="button" class="btn ms-copy">📋 Copia</button><button type="button" class="btn ms-share">📤 Invia</button><button type="button" class="btn ms-now">🔄 Invia ora</button></div>' +
       '<div class="ms-row"><button type="button" class="btn ghost ms-off">Scollega</button></div><p class="ms-msg" style="font-size:14px"></p>';
     var m = el.querySelector(".ms-msg");
-    el.querySelector(".ms-copy").onclick = function () { var t = el.querySelector(".ms-code"); t.select(); try { navigator.clipboard.writeText(code()).then(function () { m.textContent = "Codice copiato."; }, function () { document.execCommand("copy"); m.textContent = "Codice copiato."; }); } catch (e) { document.execCommand("copy"); m.textContent = "Codice copiato."; } };
-    el.querySelector(".ms-share").onclick = function () { if (navigator.share) navigator.share({ text: code() }).catch(function () {}); else m.textContent = "Usa «Copia»."; };
+    el.querySelector(".ms-copy").onclick = function () {
+      /* iPad: prima la copia «classica» (sincrona, dentro il tocco), poi l'API moderna */
+      var txt = code(), ok = false;
+      try {
+        var tmp = document.createElement("textarea"); tmp.value = txt; tmp.setAttribute("readonly", "");
+        tmp.style.cssText = "position:fixed;top:0;left:0;opacity:0;font-size:16px"; document.body.appendChild(tmp);
+        tmp.contentEditable = "true"; tmp.readOnly = false;
+        var r = document.createRange(); r.selectNodeContents(tmp); var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+        tmp.setSelectionRange(0, txt.length); ok = document.execCommand("copy"); tmp.remove();
+      } catch (e) {}
+      if (ok) { m.textContent = "✅ Codice copiato: ora incollalo nella sezione Progressi."; return; }
+      try { navigator.clipboard.writeText(txt).then(function () { m.textContent = "✅ Codice copiato: ora incollalo nella sezione Progressi."; }, function () { m.textContent = "Non riesco a copiare: usa «📤 Invia» (AirDrop o Messaggi) oppure tieni premuto sul codice."; }); }
+      catch (e) { m.textContent = "Non riesco a copiare: usa «📤 Invia» (AirDrop o Messaggi) oppure tieni premuto sul codice."; }
+      var t = el.querySelector(".ms-code"); try { t.focus(); t.setSelectionRange(0, txt.length); } catch (e) {}
+    };
+    el.querySelector(".ms-share").onclick = function () { if (navigator.share) navigator.share({ title: "Codice di collegamento", text: code() }).catch(function () {}); else m.textContent = "Usa «Copia»."; };
     el.querySelector(".ms-now").onclick = async function () { m.textContent = "Invio…"; var ok = await push(true); m.textContent = ok ? "Inviato " + when(Date.now()) + "." : "Invio non riuscito: controlla internet."; };
     el.querySelector(".ms-off").onclick = function () { if (el.dataset.sure) { setCfg(null); delete el.dataset.sure; paint(); } else { el.dataset.sure = 1; m.textContent = "Tocca di nuovo «Scollega» per confermare."; } };
   }
