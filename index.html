@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<script>window.APP_VERSION="25a227f6f3";</script>
+<script>window.APP_VERSION="336547722e";</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://f6kd4bp6sr-stack.github.io; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self' data: blob:; connect-src 'self' https://api.github.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
 <meta name="robots" content="noindex, nofollow, noarchive">
@@ -10518,13 +10518,13 @@ function qrData(days) {
 const b64u = bytes => { let s = ''; for (let i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); };
 async function qrText(days) {
   const js = JSON.stringify({ app: 'mondo-valentina', saved: new Date().toISOString(), state: { data: qrData(days) } });
-  let raw = new TextEncoder().encode(js), tag = 'mm2j=';
-  if (window.CompressionStream) { try { const cs = new Blob([raw]).stream().pipeThrough(new CompressionStream('deflate-raw')); raw = new Uint8Array(await new Response(cs).arrayBuffer()); tag = 'mm2z='; } catch (e) {} }
+  const plain = new TextEncoder().encode(js); let raw = plain, tag = 'mm2j=';
+  if (window.CompressionStream) { try { const cs = new Blob([plain]).stream().pipeThrough(new CompressionStream('deflate-raw')); raw = new Uint8Array(await new Response(cs).arrayBuffer()); tag = 'mm2z=' + plain.length + '.'; } catch (e) { raw = plain; } }
   return QR_BASE + tag + b64u(raw);
 }
 async function openQR() {
   let txt = '', svg = '';
-  for (const days of [30, 14, 7, 3, 0]) {
+  for (const days of [21, 14, 7, 3, 0]) {
     txt = await qrText(days);
     if (txt.length > 2900) continue;
     try { const q = qrcode(0, 'L'); q.addData(txt, 'Byte'); q.make(); svg = q.createSvgTag({ cellSize: 4, margin: 4, scalable: true }); break; } catch (e) { svg = ''; }
