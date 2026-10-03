@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<script>window.APP_VERSION="ca05367c9a";</script>
+<script>window.APP_VERSION="78c52fb8ee";</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self' data: blob:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
 <meta name="robots" content="noindex, nofollow, noarchive">
@@ -8322,7 +8322,26 @@ function progMark(ok, subj) {
   const p = store.get('prog', {}); const r = p[s] || { ok: 0, ko: 0 };
   if (ok) r.ok++; else r.ko++;
   p[s] = r; store.set('prog', p);
+  // storico giorno per giorno (ultimi 180 giorni), per vedere i progressi nel tempo
+  const day = todayIso(), h = store.get('prog-days', {});
+  const dd = h[day] || {}, dr = dd[s] || { ok: 0, ko: 0 };
+  if (ok) dr.ok++; else dr.ko++;
+  dd[s] = dr; h[day] = dd;
+  Object.keys(h).sort().slice(0, Math.max(0, Object.keys(h).length - 180)).forEach(k => delete h[k]);
+  store.set('prog-days', h);
+  progAutoSave();
 }
+/* Salvataggio automatico: la bambina non deve fare nulla.
+   Ogni risposta è già scritta subito nella memoria dell'iPad; pochi secondi dopo
+   viene aggiornata anche la copia di sicurezza del giorno (IndexedDB, ultime 30 giornate). */
+let __progTimer = null;
+function progAutoSave() {
+  clearTimeout(__progTimer);
+  __progTimer = setTimeout(() => { __progTimer = null; if (typeof saveAllNow === 'function') saveAllNow().then(r => { if (r && r.ok) store.set('__progSaved', Date.now(), true); }).catch(() => {}); }, 3000);
+}
+function progFlush() { if (__progTimer) { clearTimeout(__progTimer); __progTimer = null; try { dailySnapshot(); store.set('__progSaved', Date.now(), true); } catch (e) {} } }
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') progFlush(); });
+window.addEventListener('pagehide', progFlush);
 function progName(id) {
   if (id === 'mate') return '🔢 Matematica';
   if (id === 'scienze') return '🔬 Scienze';
@@ -8345,7 +8364,10 @@ function progText() {
     (n ? '\n\nTotale: ✅ ' + tot.ok + ' · ❌ ' + tot.ko + ' · ' + Math.round(tot.ok / n * 100) + '% giuste' : '');
 }
 function progCSV() {
-  return 'materia;id;giuste;sbagliate;totale;percentuale_giuste\n' + progRows().map(r => [r.name.replace(/^\S+\s/, ''), r.id, r.ok, r.ko, r.tot, r.pc].join(';')).join('\n') + '\n';
+  const h = store.get('prog-days', {});
+  const days = Object.keys(h).sort().map(d => Object.keys(h[d]).map(k => [d, progName(k).replace(/^\S+\s/, ''), k, h[d][k].ok, h[d][k].ko].join(';')).join('\n')).filter(Boolean).join('\n');
+  return 'materia;id;giuste;sbagliate;totale;percentuale_giuste\n' + progRows().map(r => [r.name.replace(/^\S+\s/, ''), r.id, r.ok, r.ko, r.tot, r.pc].join(';')).join('\n') + '\n' +
+    (days ? '\ngiorno;materia;id;giuste;sbagliate\n' + days + '\n' : '');
 }
 async function progShare(btn) {
   const text = progText(), d = new Date(), fn = 'progressi-' + d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0') + '.csv';
@@ -8364,12 +8386,26 @@ function openProg() {
   const rows = progRows();
   const bar = r => '<div style="height:10px;border-radius:6px;background:var(--bad-soft);overflow:hidden;margin-top:4px"><i style="display:block;height:100%;width:' + r.pc + '%;background:var(--c4)"></i></div>';
   openModal('<div class="big" style="font-size:26px">📊 I miei progressi</div>' +
-    '<p style="font-weight:700;color:var(--ink-soft)">Risposte giuste e sbagliate in ogni materia. Sbagliare fa parte dell’imparare!</p>' +
+    '<p style="font-weight:700;color:var(--ink-soft)">Risposte giuste e sbagliate in ogni materia. Sbagliare fa parte dell’imparare!</p>' + progWeek() +
     (rows.length ? '<div style="text-align:left;max-height:50vh;overflow:auto">' + rows.map(r => '<div style="padding:8px 0;border-bottom:1px solid var(--line)"><div class="row between" style="font-weight:800"><span>' + esc(r.name) + '</span><span>✅ ' + r.ok + ' · ❌ ' + r.ko + ' · ' + r.pc + '%</span></div>' + bar(r) + '</div>').join('') + '</div>'
       : '<p style="font-weight:800">Ancora nessuna risposta: prova un quiz!</p>') +
+    '<p style="font-weight:700;font-size:14px;color:var(--ink-soft);margin-top:10px">' + progSavedTxt() + '</p>' +
     '<div class="row center" style="margin-top:14px"><button type="button" class="btn" id="pg-share">📤 Condividi</button><button type="button" class="btn ghost" id="pg-ok" data-focus>Chiudi</button></div>');
   $('pg-ok').addEventListener('click', closeModal);
   $('pg-share').addEventListener('click', () => progShare($('pg-share')));
+}
+
+function progSavedTxt() {
+  const t = store.get('__progSaved', null) || store.get('__lastSave', null);
+  const n = (typeof LOCAL2 !== 'undefined' && LOCAL2.snapCount) || 0;
+  return '💾 Salvataggio automatico' + (t ? ': ultimo alle ' + new Date(t).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }) : ' attivo') +
+    (n ? ' · ' + n + (n === 1 ? ' copia di sicurezza' : ' copie di sicurezza') + ' sull’iPad' : '') + ' 🔒';
+}
+function progWeek() {
+  const h = store.get('prog-days', {}); let ok = 0, ko = 0, act = 0;
+  for (let i = 0; i < 7; i++) { const d = h[iso(addDays(new Date(), -i))]; if (!d) continue; act++; Object.values(d).forEach(r => { ok += r.ok; ko += r.ko; }); }
+  if (!ok && !ko) return '';
+  return '<div class="pill" style="margin:6px auto 4px;display:inline-block;font-weight:800">Ultimi 7 giorni: ✅ ' + ok + ' · ❌ ' + ko + ' · ' + Math.round(ok / (ok + ko) * 100) + '% · ' + act + (act === 1 ? ' giorno' : ' giorni') + ' di studio</div>';
 }
 
 /* ================= AVVIO ================= */
