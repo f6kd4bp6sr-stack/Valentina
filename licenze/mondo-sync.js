@@ -120,9 +120,10 @@
         var r = document.createRange(); r.selectNodeContents(tmp); var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
         tmp.setSelectionRange(0, txt.length); ok = document.execCommand("copy"); tmp.remove();
       } catch (e) {}
-      if (ok) { m.textContent = "✅ Codice copiato: ora incollalo nella sezione Progressi."; return; }
-      try { navigator.clipboard.writeText(txt).then(function () { m.textContent = "✅ Codice copiato: ora incollalo nella sezione Progressi."; }, function () { m.textContent = "Non riesco a copiare: usa «📤 Invia» (AirDrop o Messaggi) oppure tieni premuto sul codice."; }); }
-      catch (e) { m.textContent = "Non riesco a copiare: usa «📤 Invia» (AirDrop o Messaggi) oppure tieni premuto sul codice."; }
+      var okMsg = "✅ Codice copiato: ora incollalo nella sezione Progressi.", koMsg = "Non riesco a copiare: usa «📤 Invia» (AirDrop o Messaggi) oppure tieni premuto sul codice.";
+      if (ok) m.textContent = okMsg;
+      try { navigator.clipboard.writeText(txt).then(function () { m.textContent = okMsg; }, function () { if (!ok) m.textContent = koMsg; }); }
+      catch (e) { if (!ok) m.textContent = koMsg; }
       var t = el.querySelector(".ms-code"); try { t.focus(); t.setSelectionRange(0, txt.length); } catch (e) {}
     };
     el.querySelector(".ms-share").onclick = function () { if (navigator.share) navigator.share({ title: "Codice di collegamento", text: code() }).catch(function () {}); else m.textContent = "Usa «Copia»."; };
