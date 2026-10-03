@@ -5,7 +5,7 @@
    - Invio: all'apertura, quando l'app va in secondo piano e ogni 30 minuti; almeno una volta al giorno anche senza novità. */
 (function () {
   "use strict";
-  if (window.__mondoSync) return; window.__mondoSync = true;
+  if (window.__mondoSyncLoaded) return; window.__mondoSyncLoaded = true;
   var CFG = "msync-cfg", API = "https://api.github.com", FILE = "mondo.json";
   var KEEP = ["days", "prog", "prog-days", "math-done", "sci-done", "games-done", "tab-best", "simon-best", "clock-level", "cuoca-level", "moves-done", "dragon", "diary", "m-steps", "m-open", "m-frasi", "path-day", "gems", "piggy", "diff-level"];
   var KEEP_PREFIX = ["deck-", "mis-"];
@@ -76,7 +76,7 @@
       var f = {}; f[FILE] = { content: content }; body = JSON.stringify({ files: f });
       var r = await fetch(API + "/gists/" + c.gist, { method: "PATCH", headers: headers(c.token), body: body, keepalive: body.length < 60000, cache: "no-store" });
       c = cfg() || c;
-      if (r.ok) { c.last = Date.now(); c.h = h; c.err = ""; setCfg(c); paint(); return true; }
+      if (r.ok) { c.last = Date.now(); c.h = h; c.err = ""; setCfg(c); paint(); if (window.onMondoSync) try { window.onMondoSync(); } catch (e) {} return true; }
       c.err = r.status === 401 ? "chiave GitHub non valida o scaduta" : r.status === 404 ? "spazio di collegamento non trovato" : "errore " + r.status;
       setCfg(c); paint(); return false;
     } catch (e) { return false; } finally { busy = false; }
@@ -161,6 +161,7 @@
     document.body.appendChild(box); paint();
   }
   function addButton() {
+    if (window.MONDO_INLINE_LINK) return; // «Il mio mondo» mostra il collegamento in Casa
     var s = document.getElementById("pg-share");
     if (!s || document.getElementById("pg-link")) return;
     var b = document.createElement("button"); b.type = "button"; b.className = "btn ghost"; b.id = "pg-link";
@@ -179,6 +180,7 @@
   }
   window.__mondoSyncPush = push;
   window.__mondoSyncOpen = openPanel;
+  window.__mondoSyncApi = { cfg: cfg, connect: connect, push: push, code: code, off: function () { setCfg(null); } };
   window.__mondoSyncLinked = function () { return !!cfg(); };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
 })();
