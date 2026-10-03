@@ -5,6 +5,7 @@ self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c =>
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE && !k.startsWith('licenze-')).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
+  if (new URL(e.request.url).origin !== self.location.origin) return; // GitHub e altri siti: sempre dalla rete
   if (new URL(e.request.url).pathname.includes('/licenze/')) return; // app separata (Licenze e presenze): non toccarla
   if (new URL(e.request.url).pathname.endsWith('version.json')) return; // sempre dalla rete
   // pagina: prima la rete (per gli aggiornamenti), se manca internet la copia salvata
