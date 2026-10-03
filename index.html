@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<script>window.APP_VERSION="c90455c669";</script>
+<script>window.APP_VERSION="ca05367c9a";</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self' data: blob:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
 <meta name="robots" content="noindex, nofollow, noarchive">
@@ -1024,7 +1024,7 @@ function runQuiz(box, questions, opts) {
       b.type = 'button'; b.className = 'opt'; b.textContent = o;
       b.addEventListener('click', () => {
         wrap.querySelectorAll('.opt').forEach((x, j) => { x.disabled = true; if (j === q.a) x.classList.add('right'); });
-        const ok = k === q.a;
+        const ok = k === q.a; if (typeof progMark === 'function') progMark(ok);
         if (ok) { score++; ding(); cheer(b); gain(2, b); }
         else { b.classList.add('wrong'); oops(); cheer(b, pick(TRY), true); gain(1, b); }
         const fb = box.querySelector('.fb');
@@ -1122,7 +1122,7 @@ function makeKeypad(box, onSubmit, opts) {
   document.addEventListener('keydown', onKey);
   const api = {
     clear() { val = ''; delete box.dataset.locked; draw(); },
-    mark(ok) { disp.classList.add(ok ? 'ok' : 'no'); },
+    mark(ok) { disp.classList.add(ok ? 'ok' : 'no'); if (typeof progMark === 'function') progMark(ok); },
     lock() { box.dataset.locked = '1'; }
   };
   return api;
@@ -1249,7 +1249,7 @@ PAGES.home = el => {
         '<div class="kp-wrap">' + dragonSVG(i, D.color, 'bob') + (typeof keeperBadge === 'function' ? keeperBadge() : '') + '</div>' +
         '<div class="dname">' + esc(D.name) + '</div><div class="dlevel">' + esc(LEVELS[i].n) + ' · ' + D.energy + ' 🔥</div>' +
         (typeof keeperHome === 'function' ? keeperHome() : '') + '<div class="ebig" aria-hidden="true"><i style="width:' + ni.pct + '%"></i></div><div class="enext">' + esc(ni.text) + '</div>' +
-        '<div class="row center" style="margin-top:12px"><button type="button" class="btn small ghost" id="h-next">Un’altra frase</button><button type="button" class="btn small ghost" id="h-edit">⚙️ Impostazioni</button><button type="button" class="btn small ghost" id="h-cust">✨ Personalizza</button></div>' +
+        '<div class="row center" style="margin-top:12px"><button type="button" class="btn small ghost" id="h-next">Un’altra frase</button><button type="button" class="btn small ghost" id="h-edit">⚙️ Impostazioni</button><button type="button" class="btn small ghost" id="h-cust">✨ Personalizza</button><button type="button" class="btn small ghost" id="h-prog">📊 Progressi</button></div>' +
       '</div>' +
       '<div style="display:grid;gap:16px;align-content:start;min-width:0">' +
         (typeof homeMoodCard === 'function' ? homeMoodCard() : '') +
@@ -1294,6 +1294,7 @@ PAGES.home = el => {
   });
   $('h-next').addEventListener('click', () => { forzaI = drawDeck('forza', FORZA.length, 1)[0]; PAGES.home(el); });
   $('h-edit').addEventListener('click', () => onboarding(true));
+  if ($('h-prog')) $('h-prog').addEventListener('click', () => openProg());
   if ($('h-setbd')) $('h-setbd').addEventListener('click', () => onboarding(true));
   if ($('h-cust')) $('h-cust').addEventListener('click', () => openCustomize('bimba'));
   if (typeof wireBackup === 'function') wireBackup();
@@ -2006,7 +2007,7 @@ function mathFraz(p, m) {
         '<div class="qt"><span>' + esc(q.q) + '</span>' + sayBtn(q.q) + '</div><div class="progress" style="--gc:' + m.c + '"><i style="width:' + (i / qs.length * 100) + '%"></i></div>' +
         '<div class="viz" id="f-viz">' + (q.viz || '') + '</div><div id="f-in"></div><div id="f-fb"></div></div>';
       const fb = $('f-fb');
-      const result = (ok, el) => {
+      const result = (ok, el) => { progMark(ok);
         if (ok) { right++; ding(); cheer(el); gain(2, el); }
         else { oops(); cheer(el, pick(TRY), true); if (!tried) gain(1, el); }
         tried = true;
@@ -2170,7 +2171,7 @@ function mathGeo(p, m) {
       stage.innerHTML = '<div class="quiz" style="margin-top:14px"><div class="qn">Sfida ' + (i + 1) + ' di ' + plan.length + '</div>' +
         '<div class="progress" style="--gc:' + m.c + '"><i style="width:' + (i / plan.length * 100) + '%"></i></div><div id="ge-q"></div><div id="ge-fb"></div></div>';
       const q = $('ge-q'), fb = $('ge-fb');
-      const done = (ok, el, text) => {
+      const done = (ok, el, text) => { progMark(ok);
         if (ok) { right++; ding(); cheer(el); gain(2, el); } else { oops(); cheer(el, pick(TRY), true); gain(1, el); }
         fb.innerHTML = '<div class="explain"><b>' + (ok ? 'Giusto! ' : '') + '</b>' + esc(text) + '<div class="row" style="margin-top:10px">' + sayBtn(text) + '</div></div>';
         const nb = nextBtn(m.c, () => { i++; show(); }); fb.querySelector('.row').appendChild(nb); nb.focus();
@@ -7225,7 +7226,7 @@ function clockGame(id, stage, m) {
       wrap.appendChild(b);
     });
   }
-  function next(ok, e, ans) {
+  function next(ok, e, ans) { progMark(ok, 'mate');
     const fb = stage.querySelector('.fb');
     fb.innerHTML = '<div class="explain"><b>' + (ok ? 'Giusto! ' : 'Era: ' + esc(ans) + '. ') + '</b>' + esc(e) + '<div class="row" style="margin-top:10px">' + sayBtn(e) + '<button type="button" class="btn small" style="--bc:var(--c5)">Avanti →</button></div></div>';
     fb.querySelector('.btn').addEventListener('click', () => { i++; show(); });
@@ -8306,6 +8307,70 @@ const Music = (() => {
     }
   });
 })();
+
+/* ================= PROGRESSI PER MATERIA =================
+   In store 'prog': { mate: {ok, ko}, scienze: {ok, ko}, sport: {ok, ko}, storia: {ok, ko}, geo: …, ita: …, eng: … }
+   Si aggiorna a ogni risposta. Resta sull'iPad, entra nelle copie di sicurezza e si può condividere. */
+let __progLast = 0;
+function progSubject() {
+  if (current === 'scopri') return typeof scopriSel === 'string' ? scopriSel : 'scopri';
+  return ['mate', 'scienze', 'sport'].includes(current) ? current : null;
+}
+function progMark(ok, subj) {
+  const now = Date.now(); if (now - __progLast < 400) return; __progLast = now;  // una sola volta per risposta
+  const s = subj || progSubject(); if (!s) return;
+  const p = store.get('prog', {}); const r = p[s] || { ok: 0, ko: 0 };
+  if (ok) r.ok++; else r.ko++;
+  p[s] = r; store.set('prog', p);
+}
+function progName(id) {
+  if (id === 'mate') return '🔢 Matematica';
+  if (id === 'scienze') return '🔬 Scienze';
+  if (id === 'sport') return '🤸‍♀️ Sport';
+  const s = (typeof SCOPRI !== 'undefined') && SCOPRI.find(x => x.id === id);
+  return s ? s.ic + ' ' + s.name : id;
+}
+function progRows() {
+  const p = store.get('prog', {});
+  const order = ['mate', 'scienze'].concat((typeof SCOPRI !== 'undefined' ? SCOPRI.map(s => s.id) : []), ['sport']);
+  Object.keys(p).forEach(k => { if (!order.includes(k)) order.push(k); });
+  return order.filter(k => p[k] && (p[k].ok + p[k].ko) > 0).map(k => { const t = p[k].ok + p[k].ko; return { id: k, name: progName(k), ok: p[k].ok, ko: p[k].ko, tot: t, pc: Math.round(p[k].ok / t * 100) }; });
+}
+function progText() {
+  const rows = progRows(), d = new Date();
+  const tot = rows.reduce((a, r) => ({ ok: a.ok + r.ok, ko: a.ko + r.ko }), { ok: 0, ko: 0 });
+  const n = tot.ok + tot.ko;
+  return '📊 Progressi di ' + (childName() || 'studio') + ' — ' + d.toLocaleDateString('it-IT') + '\n\n' +
+    (rows.length ? rows.map(r => r.name + ': ✅ ' + r.ok + (r.ok === 1 ? ' giusta' : ' giuste') + ' · ❌ ' + r.ko + (r.ko === 1 ? ' sbagliata' : ' sbagliate') + ' (' + r.pc + '%)').join('\n') : 'Ancora nessuna risposta.') +
+    (n ? '\n\nTotale: ✅ ' + tot.ok + ' · ❌ ' + tot.ko + ' · ' + Math.round(tot.ok / n * 100) + '% giuste' : '');
+}
+function progCSV() {
+  return 'materia;id;giuste;sbagliate;totale;percentuale_giuste\n' + progRows().map(r => [r.name.replace(/^\S+\s/, ''), r.id, r.ok, r.ko, r.tot, r.pc].join(';')).join('\n') + '\n';
+}
+async function progShare(btn) {
+  const text = progText(), d = new Date(), fn = 'progressi-' + d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0') + '.csv';
+  const csv = '﻿' + progCSV();
+  try {
+    const f = new File([csv], fn, { type: 'text/csv' });
+    if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ title: 'Progressi', text: text, files: [f] }); return; }
+    if (navigator.share) { await navigator.share({ title: 'Progressi', text: text }); return; }
+  } catch (e) { if (e && e.name === 'AbortError') return; }
+  let dl = null; try { dl = window.claude && window.claude.use ? await window.claude.use('downloads') : null; } catch (e) {}
+  if (dl) { try { await dl.save({ filename: fn, data: csv }); return; } catch (e) { if (e && e.code === 'cancelled') return; } }
+  try { await navigator.clipboard.writeText(text); if (btn) floatText(btn, 'Copiato! 📋'); return; } catch (e) {}
+  try { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = fn; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); } catch (e) {}
+}
+function openProg() {
+  const rows = progRows();
+  const bar = r => '<div style="height:10px;border-radius:6px;background:var(--bad-soft);overflow:hidden;margin-top:4px"><i style="display:block;height:100%;width:' + r.pc + '%;background:var(--c4)"></i></div>';
+  openModal('<div class="big" style="font-size:26px">📊 I miei progressi</div>' +
+    '<p style="font-weight:700;color:var(--ink-soft)">Risposte giuste e sbagliate in ogni materia. Sbagliare fa parte dell’imparare!</p>' +
+    (rows.length ? '<div style="text-align:left;max-height:50vh;overflow:auto">' + rows.map(r => '<div style="padding:8px 0;border-bottom:1px solid var(--line)"><div class="row between" style="font-weight:800"><span>' + esc(r.name) + '</span><span>✅ ' + r.ok + ' · ❌ ' + r.ko + ' · ' + r.pc + '%</span></div>' + bar(r) + '</div>').join('') + '</div>'
+      : '<p style="font-weight:800">Ancora nessuna risposta: prova un quiz!</p>') +
+    '<div class="row center" style="margin-top:14px"><button type="button" class="btn" id="pg-share">📤 Condividi</button><button type="button" class="btn ghost" id="pg-ok" data-focus>Chiudi</button></div>');
+  $('pg-ok').addEventListener('click', closeModal);
+  $('pg-share').addEventListener('click', () => progShare($('pg-share')));
+}
 
 /* ================= AVVIO ================= */
 (function boot() {
