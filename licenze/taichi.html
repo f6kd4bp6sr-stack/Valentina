@@ -1,0 +1,1475 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Licenze">
+<meta name="theme-color" content="#EDF1EF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#101715" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAAKe0lEQVR4nO3dfVAU9x3H8e/twXEPPIqAOloRFO4UDIhFrQ9BK5rUaLUlMePUaGqTahzHhxlbmokTO9YOTU1rYjsOcUxTU5Om2mhNND7FQaMzohFQIaJSRBFBlAeBe+S46x9nbhrle/K4e7v3eY1/nLe7xy+b9/129w7vVLFpOQTQGUHqAYD/QhzAQhzAQhzAQhzAQhzAQhzAQhzAQhzAQhzAQhzAQhzAQhzAQhzAQhzAQhzAQhzAQhzAQhzAQhzAQhzAQhzAQhzAQhzAQhzAQhzAQhzAQhzAQhzACpJ6AN1zt3gPtygu/XkxR+KbXMbpG2YOYCEOYCEOYCEOYCEOYCEOYCEOYCEOYCEOYPnXK6QFufWSbCumJ44zKy9WnJE8kV/EIZf/r+Lw7g3JK5E4DmThg2fnSJiIlOccKKMrJNxL0swcyKJbpJpCJJg5UEbPiL/fcCkLLLHjwLTRGyLvPVHjQBm9J+Y+xGEFWOJdrYg8beQdDD98Weu5/f6yxoQYp+f2xerg1bujPLcXZlpWzGjzbvLAKvx020Cni4goy2jfOP/B4w97oUpzoET3TU1ws0UlqEivcceEu8bHO17Nant85X5SkFsvzpWLX7xC2nVXPnm6B1vtL9Ktm93qub3vgp5b7XhZiKcMIjpzXdNmU4Vq3d6lbqI/Hwk7UKwLCXKvmNE23WTXqN13mtWFlZprdcF9Mk5/I7M4euZYmfaXWW2GEPf9NuGrayHcakdKdURkCHGb7ar2DtWJcu28NKt36Z5z+gPFOiJa90zr7BSb587EWGdirLOfhy8Zkc45JDwVTR7ktDpUR0u1RHSgWNfhItPg9sdXu9kQdK0uiIhyxlviwjuI6Oi3RyUicrnp47N6IorUu7LH2EQaOk+c/an8E9IFGRYi2l+ka+9QfV6iI6L5GdbHVzvybQozRtuzjHYiKq0JrmlSe+683ahusghENCrOKajEGbj0lH9YmTLKPjDMdbMhaOvR0EazkBDjfGrYozOHy03HyrRElBDjHB7tzDLZPzmnJ6KjpdqXp5qJqMX68Fmk0zw8C6m4G/SLvw3wPkL+0sbkQUo7vih/5lAL5Dl1OHiRnTaKbmrutQpENN1kJyLT4PbBkR1EdLTs4RlpmO5hE43mh3tsZJyzILdezIsU8Sk/DiKam2YNVruJyBDintXZGYP3mLLzlCErLzYrL7a2WU1Etc3qS9XBRDRsgDNK7yKi6ga194pG8QIijiiDa1qynYieSbVpg92PLLU6VJ5LmJ9PNRfk1nv/DIroICLPmaygohcnWojogVXw3BMIAiIOItowr6Ugt37VzNbHF528GmJrVxFR6tDvnIt4/lpQrrU7VUT0QqZlzlNWItp2POzwZa3ZrjLbVbcblXzSpuT/ti7yzARqgUxDvhNHytD2Y2Vas1115nrIDJNNRbT+2dapSfbPSnT5BaF//CI8WO3Wa9zGwe3xAzuiQxV4sFHFpuWI8GPwllufE+EV9EA5rEAPIA5gIQ5gIQ5gIQ5gIQ5gIQ5gIQ5gIQ5gIQ5gIQ5gifTGm2nhSXF+UADJ6/ePycbMASzEASzEASzEASzEASzEASzEASzEASzEASzEASzEASzEASzEASzEASzEASzEASzEASxZfgRDY3NrVXXdzZq7VdV3q27XVdfeb2uzmK02s8VmttgsVrtaLeh1Wr0uZGBUeMLwISPjh2Skjpo8foxG8+gHhoIP8oujvqE5deYrvtdxdnTYHe1ND1pr6u5fvFLpudOg186aNn7NsgXGkd/r2Y+uvFV7tujKuZLywuLyylu17GpnPjTolfDpP/KLo8fMFtu+w6f3HzmzaP6MvNxlXZlFOlyu0qtVhUVXCovLC0uu3Gvo5AOvFSyA4vBwu92793159b/V/9q+4YnP731fnF75xjZxBuaHAvSE9OtL1zZs+UDqUfi7AI2DiHbv+7L0apXUo/BrMj6sCIJqrClxambK6FHDkxOHxkRHhofq1Wp1S6v5+o2agrMXd+091tDU4uMR/n3oq5TkeLHGKz/yi0NFqozUpBfnZc3LnhQZEfr4CtFR4dFR4RPHmVYu+fHy3K3HTxdxD1VYXN6fI5U9+cUREx1xaNfmrqwZZtC994e1kxesrq1v7HSFunud38+JHxo3Id00Id2YmW5cuvatiqo73dpcduQXR7cY9NrnZk7c8dGhTpearU/4coygIPVYU8KENGNmunHiOFNsdGTfD9GPKTwOIoobGMUtio4M873t/NmT58+e3Ncjkg3lX63UMccUIko1Jog5EtlReBwWq/3giUJu6dzsiWIORnaUHIfZYlv+m63c2WiqccSz0zNFHpK8KO2cw2Z3NDa1VtysOVV4+aP9J7jXOWKiI/Lz1qoFJT83ek/2cfx979Ffbd7RrU3SU0Zu//3qEcMG9dOQFEP2cXSdWhAmpBuXPj97bvYkIXC+xa8XAmheHT40bvrk9EnjR6OMLgqgOCpv1W5+d/f356zc9M4/HI5OvloWHhFAcXjY7I6/fPCfOUvfaGzu5Cu94P8FXBwel65UvrBikx3zh0+yPyFdkjNrSc4sz22Xy2222hqaWq5X3j5ZeGn/kTM+frHvcvmNt/P3vL5qkVgjlR9FzRyCoAoz6OKHxmVPy/jd+pfPf/7X5Yuf87H+jo8PtbRZRBue7CgqjkfotCG/XbfktZfmcStYrPZDJ86JOSR5UXIcHr9+bWGoQcctPX/xqpiDkRflx6EN0UwaZ+KW3qrBd5qylB8HEQ0cEMEtamk1izkSeQmIOBr4lzSCg2V/vdZ/lB+Hw9F+9sI33NJBMezviYHM4tj4p107/3m4Wy9+b3lvr4/r1ZTkEX0xLmWS2aR6p75h+4efvfv+pz/7ycycOdN8v+3ucLS/vWPvOzs/9bHOD6ek+1h6o7pu4rxV3R1kwuTFnd6fn7dGXr+RKrM4POruNW3J37Mlf0/amJGTxpkyxiYZE4dFRYRGRoQ6nR1ND9qu37h9+nzZ3oOnauru+3icjNSkVCNmDpYs4/AqKasoKavo2bZqQdi0fknfjkdhZHbO0YfeXLs4IzVJ6lH4NXnPHD0TpFZvXPfSK4t+JPVA/F3AxTElM+XNNYvHmvAvVp5MZnG89fqr2VMzDp0oPFV4uc1s7fqGYQbdzKkZC+c+Pf0Haf02OqVRxabliPBj7hbv6dsH7HC5yitufX3pWnlF9c3bd2/V1De1tFmsNpvdEaLRhBq0Bp02Oipi1IghyYnDxiTFTxpnUtinxcWl9/tXh8ps5vBSC8KYpPgxSfFSD0TJAvdqBZ4IcQALcQALcQBLpDhEOLUOKOLsT8wcwEIcwBIvDhxZ+opoexIzB7BEjQOTR++JuQ/FnjnQR2+IvPdwWAGWBHFg8ugZ8febSG/Zd6rP38dXKqmeTlIeVjCFdIWEe0nKmcMLU0inJH/y+EUcXqiE/KAJL/+KA/wKLmWBhTiAhTiAhTiAhTiAhTiAhTiAhTiAhTiAhTiAhTiAhTiAhTiAhTiAhTiAhTiAhTiAhTiAhTiAhTiAhTiAhTiAhTiAhTiAhTiAhTiAhTiAhTiAhTiAhTiAhTiAhTiA9T8hbBGQw0o9hwAAAABJRU5ErkJggg==">
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<title>Tai Chi sul Posto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Familjen+Grotesk:wght@500;600;700&display=swap">
+<style>
+/* Layout: colonna unica da telefono, barra schede in basso, lettore a schermo pieno per la sessione guidata */
+:root{
+  --bg:#EDF1EF; --surface:#FBFCFB; --ink:#1B2A27; --muted:#56675F; --line:#D3DDD9;
+  --accent:#2E6A58; --accent-ink:#FFFFFF; --accent-soft:#DCEAE4; --torso:#A9C9BD;
+  --shirt:#A9C9BD; --skin:#E7C2A2; --hair:#8E959A; --pants:#46596A; --effort:#E2581F; --effort-soft:#FBE3D6;
+  --warn:#A9531D; --warn-soft:#F6E5D8; --danger:#B3261E; --danger-soft:#F8DEDB; --ok:#2E7D4F;
+  --f-display:"Familjen Grotesk", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Atkinson Hyperlegible", "Verdana", system-ui, sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#101715; --surface:#18211E; --ink:#E4ECE9; --muted:#9CADA7; --line:#2B3833;
+  --accent:#7FC4AE; --accent-ink:#0F1A17; --accent-soft:#1F3A32; --torso:#3F6C5E;
+  --shirt:#46786A; --skin:#C99D7B; --hair:#B3B9BD; --pants:#6A8597; --effort:#FF8D55; --effort-soft:#43271A;
+  --warn:#E7A06B; --warn-soft:#3A2719; --danger:#F2867F; --danger-soft:#3D1E1C; --ok:#7CC79A; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#101715; --surface:#18211E; --ink:#E4ECE9; --muted:#9CADA7; --line:#2B3833;
+  --accent:#7FC4AE; --accent-ink:#0F1A17; --accent-soft:#1F3A32; --torso:#3F6C5E;
+  --shirt:#46786A; --skin:#C99D7B; --hair:#B3B9BD; --pants:#6A8597; --effort:#FF8D55; --effort-soft:#43271A;
+  --warn:#E7A06B; --warn-soft:#3A2719; --danger:#F2867F; --danger-soft:#3D1E1C; --ok:#7CC79A; color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55;margin:0}
+main{max-width:720px;margin:0 auto;padding-inline:16px;padding-block:20px 120px}
+h1,h2,h3{font-family:var(--f-display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:1.9rem;font-weight:700;letter-spacing:-.01em}
+h2{font-size:1.35rem;font-weight:600}
+h3{font-size:1.08rem;font-weight:600}
+p{margin:0}
+.eyebrow{font-family:var(--f-display);font-size:.78rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.muted{color:var(--muted)}
+.stack{display:flex;flex-direction:column;gap:14px}
+.stack-lg{display:flex;flex-direction:column;gap:28px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.num{font-variant-numeric:tabular-nums}
+button{font:inherit;cursor:pointer}
+.btn{border:0;border-radius:999px;padding:14px 22px;font-family:var(--f-display);font-weight:600;font-size:1.05rem;background:var(--accent);color:var(--accent-ink);min-height:52px}
+.btn.secondary{background:var(--accent-soft);color:var(--ink)}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn.danger{background:var(--danger-soft);color:var(--danger)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.chip{display:inline-block;font-size:.8rem;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--accent-soft);color:var(--ink)}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+input,select{font:inherit;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;min-height:48px;max-width:100%}
+label{font-weight:700}
+
+/* Tabs */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:flex;justify-content:center;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));z-index:5}
+nav.tabs .in{display:grid;grid-template-columns:repeat(5,1fr);width:100%;max-width:720px}
+nav.tabs button{background:none;border:0;color:var(--muted);padding:8px 2px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.78rem;font-weight:700;border-radius:10px}
+nav.tabs button svg{width:24px;height:24px}
+nav.tabs button[aria-selected="true"]{color:var(--accent);background:var(--accent-soft)}
+section[data-tab]{display:none}
+section[data-tab].on{display:block}
+
+/* Oggi */
+.hero{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end}
+.hero svg{width:96px;height:116px}
+.phasebar{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:8px}
+.phasebar span{height:8px;border-radius:4px;background:var(--line)}
+.phasebar span.done{background:var(--accent)}
+.phasebar span.cur{background:linear-gradient(90deg,var(--accent) var(--p,30%),var(--line) var(--p,30%))}
+.session{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start}
+.session .when{font-family:var(--f-display);font-weight:700;font-size:.85rem;background:var(--accent-soft);border-radius:10px;padding:8px 10px;text-align:center;min-width:76px}
+.session.done .when{background:var(--ok);color:var(--surface)}
+.session ol{margin:6px 0 0;padding-left:20px;color:var(--muted);font-size:.93rem}
+.week{display:flex;gap:6px;flex-wrap:wrap}
+.week .d{width:38px;text-align:center;font-size:.75rem;color:var(--muted)}
+.week .d i{display:block;margin:4px auto 0;width:28px;height:28px;border-radius:50%;border:2px solid var(--line);font-style:normal;line-height:24px;font-weight:700;color:var(--ink)}
+.week .d i.half{border-color:var(--accent);background:var(--accent-soft)}
+.week .d i.full{border-color:var(--accent);background:var(--accent);color:var(--accent-ink)}
+.week .d.today{color:var(--ink);font-weight:700}
+.note{border-left:4px solid var(--warn);background:var(--warn-soft);padding:12px 14px;border-radius:0 10px 10px 0}
+.note.alert{border-color:var(--danger);background:var(--danger-soft)}
+
+/* Esercizi */
+.ex{display:grid;gap:14px}
+.ex-head{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+.ex-head .n{font-family:var(--f-display);font-weight:700;color:var(--accent);font-size:1.4rem}
+.ex-figs{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:8px;align-items:end}
+.fig{background:var(--bg);border-radius:12px;padding:6px;text-align:center;min-width:0}
+.fig svg{width:100%;height:auto;display:block}
+.fig small{font-size:.75rem;color:var(--muted);font-weight:700}
+.ex-body{display:grid;gap:12px}
+.ex-body ol{margin:0;padding-left:22px}
+.ex-body li+li{margin-top:4px}
+.tips{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tip{border-radius:10px;padding:10px 12px;background:var(--bg);font-size:.93rem;min-width:0}
+.tip b{display:block;font-family:var(--f-display);font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tip.k b{color:var(--warn)} .tip.h b{color:var(--danger)}
+details.ex summary{list-style:none;cursor:pointer}
+details.ex summary::-webkit-details-marker{display:none}
+.more{color:var(--accent);font-weight:700;font-size:.95rem}
+details[open] .more{display:none}
+
+/* Programma */
+.phase{display:grid;gap:10px}
+.phase.cur{border:2px solid var(--accent)}
+.phase ul{margin:0;padding-left:20px}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.fact{background:var(--bg);border-radius:10px;padding:8px 10px;min-width:0}
+.fact b{display:block;font-family:var(--f-display);font-size:1.15rem}
+.fact span{font-size:.78rem;color:var(--muted)}
+.scale{display:grid;grid-template-columns:repeat(11,1fr);gap:3px;margin-top:6px}
+.scale div{text-align:center;font-weight:700;font-size:.85rem;padding:8px 0;border-radius:6px;background:var(--line)}
+.scale .g{background:var(--accent-soft)} .scale .m{background:var(--accent);color:var(--accent-ink)} .scale .x{background:var(--danger-soft);color:var(--danger)}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+td,th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-family:var(--f-display);font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.tw{overflow-x:auto}
+
+/* Diario */
+.logs{display:grid;gap:8px}
+.log{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.chart svg{width:100%;height:auto;display:block}
+.empty{text-align:center;padding:22px 12px;color:var(--muted);border:2px dashed var(--line);border-radius:12px}
+
+/* Lettore */
+#player{position:fixed;inset:0;background:var(--bg);z-index:20;overflow-y:auto;padding:calc(12px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px))}
+#player .wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:12px;min-height:100%}
+.ptop{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.prog{height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.prog div{height:100%;background:var(--accent);width:0}
+.pfig{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:8px;display:flex;justify-content:center}
+.pfig svg{width:min(100%,320px);height:auto}
+.breath{font-family:var(--f-display);font-weight:700;font-size:2rem;text-align:center;color:var(--accent);min-height:2.6rem}
+.pstats{display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center}
+.pstats div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px}
+.pstats b{display:block;font-family:var(--f-display);font-size:1.6rem}
+.pstats span{font-size:.8rem;color:var(--muted)}
+.pctrl{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:8px}
+.pctrl .btn{padding:12px 8px}
+.rpe{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.rpe button,.opts button{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:10px 0;font-weight:700;min-height:48px}
+.rpe button[aria-pressed="true"],.opts button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.opts{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.opts button{padding:10px 6px;font-size:.92rem}
+.check{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;padding:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;font-weight:400}
+.check input{width:26px;height:26px;min-height:0;margin:2px 0 0;accent-color:var(--accent)}
+.toggle{display:flex;align-items:center;gap:10px;font-weight:400}
+.toggle input{width:24px;height:24px;min-height:0;accent-color:var(--accent)}
+
+/* Figura */
+.fg-limb{stroke:var(--ink);stroke-width:9;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.fg-far{stroke:var(--muted);opacity:.55}
+.fg-torso{fill:var(--torso);stroke:var(--ink);stroke-width:3;stroke-linejoin:round}
+.fg-torso-s{stroke:var(--torso);stroke-width:26;stroke-linecap:round}
+.fg-head{fill:var(--surface);stroke:var(--ink);stroke-width:3.5}
+.fg-ground{stroke:var(--line);stroke-width:3;stroke-dasharray:6 6}
+.fg-chair{stroke:var(--muted);stroke-width:5;stroke-linecap:round;fill:none}
+.fg-arrow{stroke:var(--accent);stroke-width:3;fill:none;stroke-linecap:round}
+.fg-hand{fill:var(--ink)}
+
+
+.lo{fill:none;stroke:var(--ink);stroke-linecap:round;stroke-linejoin:round}
+.lf{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.fg-shirt,.fg-pants{stroke:var(--ink);stroke-width:2.5;stroke-linejoin:round}
+.fg-shirt{fill:var(--shirt)} .fg-pants{fill:var(--pants)}
+.fg-shoe,.fg-eye{fill:var(--ink)}
+.fg-face{fill:var(--skin);stroke:var(--ink);stroke-width:2.5;stroke-linejoin:round}
+.fg-hair{fill:var(--hair);stroke:var(--ink);stroke-width:2;stroke-linejoin:round}
+.fg-line{fill:none;stroke:var(--ink);stroke-width:1.8;stroke-linecap:round}
+.fg-line.soft{opacity:.35}
+.fg-breath{fill:none;stroke:var(--accent);stroke-width:2.2;stroke-linecap:round}
+.fg-far{opacity:.5}
+.fg-hatch{stroke:var(--muted);stroke-width:2;opacity:.6}
+.mu{stroke:var(--effort);stroke-linecap:round;fill:none}
+.mf{fill:var(--effort)}
+.trail{fill:none;stroke:var(--accent);stroke-width:2.5;stroke-dasharray:3 5;stroke-linecap:round;opacity:.8}
+.trail-h{fill:var(--accent)}
+.fg-name{font-family:var(--f-display);font-weight:700;fill:var(--ink)}
+.fg-trad{font-family:var(--f-body);font-size:10px;font-weight:700;letter-spacing:.06em;fill:var(--muted)}
+.fg-sense{font-family:var(--f-body);font-size:10px;font-style:italic;fill:var(--accent)}
+.trad{color:var(--muted);font-size:.95rem;margin-top:-4px}
+.trad b{letter-spacing:.04em}
+.trad i{color:var(--accent)}
+.chip.eff{background:var(--effort-soft);color:var(--ink)}
+.chip.eff::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--effort);margin-right:6px;vertical-align:1px}
+.lvl{display:inline-flex;gap:3px;align-items:center;font-size:.88rem;font-weight:700;color:var(--muted)}
+.lvl i{width:7px;height:16px;border-radius:2px;background:var(--line)}
+.lvl i.on{background:var(--effort)}
+.lvl span{margin-left:6px}
+.legend{display:grid;gap:6px;font-size:.9rem;color:var(--muted)}
+.legend i{display:inline-block;vertical-align:middle;margin-right:8px}
+.lg-eff{width:14px;height:14px;border-radius:50%;background:var(--effort)}
+.lg-trail{width:22px;border-top:3px dashed var(--accent)}
+.lg-br{width:14px;height:10px;border-right:3px solid var(--accent);border-radius:0 50% 50% 0}
+
+.btn.sm{min-height:42px;padding:8px 14px;font-size:.95rem}
+.btn.sm[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.song{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:.93rem}
+.song>span{min-width:0;flex:1}
+.song-now{text-align:center;color:var(--muted);font-size:.92rem;font-style:italic;min-height:1.4em;margin-top:-6px}
+input[type=range]{padding:0;border:0;min-height:32px;accent-color:var(--accent);background:transparent}
+
+.sync{font-size:.88rem;font-weight:700;color:var(--muted)}
+.sync[data-st="ok"]{color:var(--ok)}
+.sync[data-st="err"],.sync[data-st="full"]{color:var(--warn)}
+.saved-toast{text-align:center;font-weight:700;color:var(--ok);min-height:1.4em;margin-top:-8px;opacity:0;transition:opacity .3s}
+.saved-toast.on{opacity:1}
+@media (max-width:460px){
+  .ex-figs{grid-template-columns:1fr 1fr}
+  .ex-figs .fig.big{grid-column:1/-1}
+  .ex-figs .fig.big svg{max-width:240px;margin:0 auto}
+  .tips{grid-template-columns:1fr}
+  .facts{grid-template-columns:1fr 1fr 1fr}
+  h1{font-size:1.65rem}
+}
+
+.appsw{display:flex;justify-content:center;gap:4px;margin:10px auto 0;padding:4px;background:var(--accent-soft);border-radius:999px;width:max-content;max-width:calc(100% - 32px);font-family:var(--f-display)}
+.appsw a{display:flex;align-items:center;gap:6px;padding:8px 18px;border-radius:999px;font-weight:700;font-size:15px;color:var(--muted);text-decoration:none;white-space:nowrap}
+.appsw a.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+main{padding-inline:max(16px,env(safe-area-inset-left)) max(16px,env(safe-area-inset-right))}
+@media (min-width:900px){ main{max-width:860px} nav.tabs .in{max-width:860px} }
+#bkRow{display:flex;gap:10px;flex-wrap:wrap}
+@media (prefers-reduced-motion:reduce){ *{transition:none!important} }
+</style>
+
+<nav class="appsw" aria-label="App"><a href="./">📅 Licenze</a><a class="on" href="taichi.html" aria-current="page">🧘 Tai Chi</a></nav>
+<main>
+  <!-- OGGI -->
+  <section data-tab="oggi" class="on">
+    <div class="stack-lg">
+      <div class="hero">
+        <div class="stack" style="gap:6px">
+          <div class="eyebrow" id="todayDate"></div>
+          <h1 id="greet">Ciao</h1>
+          <p class="sync" data-st="local"></p>
+          <p class="muted" id="phaseLine"></p>
+          <div class="phasebar" id="phaseBar"></div>
+        </div>
+        <svg viewBox="0 -28 200 268" id="heroFig" aria-hidden="true"></svg>
+      </div>
+
+      <div id="advice"></div>
+
+      <div class="stack">
+        <h2>Le sessioni di oggi</h2>
+        <div id="sessions" class="stack"></div>
+      </div>
+
+      <div class="card stack">
+        <div class="row" style="justify-content:space-between">
+          <h3>Questa settimana</h3>
+          <span class="chip num" id="weekCount"></span>
+        </div>
+        <div class="week" id="weekDots"></div>
+        <p class="muted" style="font-size:.93rem">Pieno = 2 sessioni nel giorno. A metà = 1 sessione. In più: una camminata in piano di <b id="walkMin">10</b> minuti al giorno, a passo che ti lascia parlare.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ESERCIZI -->
+  <section data-tab="esercizi">
+    <div class="stack-lg">
+      <div class="stack" style="gap:8px">
+        <div class="eyebrow">Tutorial</div>
+        <h1 id="exCount">I movimenti</h1>
+        <p class="muted">Ispirati al Tai Chi e al Qi Gong, tutti sul posto, senza piegamenti profondi. Tocca un esercizio per aprire il tutorial completo.</p>
+        <div class="legend">
+          <span><i class="lg-eff"></i>Arancio: i muscoli che lavorano. Più si accendono, più è il momento dello sforzo.</span>
+          <span><i class="lg-trail"></i>Tratteggio con frecce: il percorso del movimento.</span>
+          <span><i class="lg-br"></i>Soffio davanti alla bocca: è il momento di espirare.</span>
+        </div>
+      </div>
+      <div id="exList" class="stack"></div>
+    </div>
+  </section>
+
+  <!-- PROGRAMMA -->
+  <section data-tab="programma">
+    <div class="stack-lg">
+      <div class="stack" style="gap:8px">
+        <div class="eyebrow">Programma</div>
+        <h1>Quattro fasi, poi per sempre</h1>
+        <p class="muted">Due sessioni brevi al giorno invece di una lunga: con la terapia per il cuore e le ginocchia sensibili, lo sforzo resta basso ma il tempo totale cresce. La mattina scioglie la rigidità, il pomeriggio lavora su forza ed equilibrio quando le articolazioni sono già calde.</p>
+      </div>
+
+      <div class="card stack">
+        <h3>Impostazioni</h3>
+        <div class="row">
+          <label for="startDate" style="min-width:150px">Data di inizio</label>
+          <input type="date" id="startDate">
+        </div>
+        <div class="row">
+          <label for="phaseOverride" style="min-width:150px">Fase</label>
+          <select id="phaseOverride">
+            <option value="auto">Automatica (in base alle settimane)</option>
+            <option value="0">Fase 1 · Adattamento</option>
+            <option value="1">Fase 2 · Costruzione</option>
+            <option value="2">Fase 3 · Tonificazione</option>
+            <option value="3">Fase 4 · Mantenimento</option>
+          </select>
+        </div>
+        <p class="muted" style="font-size:.93rem">Passa alla fase successiva solo se hai raggiunto gli obiettivi della fase in corso. Se una settimana va male, ripetila: non è un passo indietro.</p>
+      </div>
+
+      <div class="card stack">
+        <h3>Musica di sottofondo</h3>
+        <label class="toggle" for="musOn"><input type="checkbox" id="musOn"> Musica durante le sessioni</label>
+        <div class="row"><label for="musSel" style="min-width:150px">Brano</label><select id="musSel" style="flex:1;min-width:0"></select></div>
+        <div class="row"><label for="musVol" style="min-width:150px">Volume</label><input type="range" id="musVol" min="0" max="1" step="0.05" style="flex:1;min-width:0"></div>
+        <div class="row"><button class="btn secondary" type="button" id="musTry">♪ Prova</button></div>
+        <p class="muted" style="font-size:.93rem">Ogni esercizio ha un suo brano, su scala pentatonica cinese, con guzheng, flauto xiao e campane del tempio. La musica è generata dal vivo e segue il ritmo dell’esercizio: la melodia sale quando inspiri e scende quando espiri. Nelle pause suonano solo bordone e campane. Su iPhone, se non senti nulla, togli il silenzioso.</p>
+      </div>
+
+      <div id="phaseList" class="stack"></div>
+
+      <div class="card stack">
+        <h2>Obiettivi di peso</h2>
+        <p>Il peso scende soprattutto a tavola. Questi esercizi danno tono, equilibrio, ginocchia più protette e un cuore più allenato; per far scendere la bilancia conta l'alimentazione, da concordare con il medico.</p>
+        <div class="row">
+          <label for="w0" style="min-width:150px">Peso di partenza</label>
+          <input type="number" id="w0" step="0.1" min="40" max="250" inputmode="decimal" style="width:120px"> <span>kg</span>
+        </div>
+        <div class="tw"><table>
+          <thead><tr><th>Traguardo</th><th>Peso</th><th>Tempo realistico</th></tr></thead>
+          <tbody id="wGoals"></tbody>
+        </table></div>
+        <p class="muted" style="font-size:.93rem">Ritmo sicuro: non più di mezzo chilo a settimana. Misura anche la circonferenza vita all'altezza dell'ombelico: sotto i 102 cm il rischio cardiovascolare scende in modo netto.</p>
+      </div>
+
+      <div class="card stack">
+        <h2>Test di controllo ogni 4 settimane</h2>
+        <p class="muted">Sempre lo stesso giorno della settimana, alla stessa ora. Annota i risultati nel Diario.</p>
+        <div class="tw"><table>
+          <thead><tr><th>Test</th><th>Come</th><th>Segno di progresso</th></tr></thead>
+          <tbody>
+            <tr><td><b>Talloni</b></td><td>Quanti "Talloni al cielo" in 30 secondi, mani sulla sedia</td><td>+2 ripetizioni</td></tr>
+            <tr><td><b>Equilibrio</b></td><td>Secondi su una gamba con un solo dito sulla sedia (massimo 30)</td><td>Più secondi, meno oscillazioni</td></tr>
+            <tr><td><b>Marcia 2 minuti</b></td><td>Marcia dolce, poi dai un voto allo sforzo da 0 a 10</td><td>Stesso tempo, voto più basso</td></tr>
+            <tr><td><b>Peso e vita</b></td><td>Al mattino, a digiuno, dopo il bagno</td><td>Tendenza in discesa</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SICUREZZA -->
+  <section data-tab="sicurezza">
+    <div class="stack-lg">
+      <div class="stack" style="gap:8px">
+        <div class="eyebrow">Sicurezza</div>
+        <h1>Cuore e ginocchia prima di tutto</h1>
+      </div>
+
+      <div class="note alert stack" style="gap:8px">
+        <h3>Fermati subito se senti</h3>
+        <ul style="margin:0;padding-left:20px">
+          <li>dolore, peso o oppressione al petto, al braccio, alla mandibola o alla schiena</li>
+          <li>fiato corto che non corrisponde allo sforzo</li>
+          <li>capogiri, vista annebbiata, sensazione di svenimento</li>
+          <li>battito irregolare o palpitazioni</li>
+          <li>sudore freddo o nausea</li>
+        </ul>
+        <p><b>Siediti.</b> Se ti è stata prescritta una terapia d'emergenza, usala come indicato dal cardiologo. Se il disturbo non passa in pochi minuti, <b>chiama il 112</b>.</p>
+      </div>
+
+      <div class="card stack">
+        <div class="eyebrow">Solo su questo dispositivo</div>
+        <h2>Il tuo test da sforzo</h2>
+        <p class="muted" style="font-size:.93rem">Annota qui l’esito della prova da sforzo e le indicazioni del cardiologo: pressione a riposo e sotto sforzo, battito massimo, eventuali aritmie, limiti consigliati. Resta solo su questo dispositivo e nella copia su File / iCloud.</p>
+        <textarea id="ergo" rows="7" style="font:inherit;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;resize:vertical" placeholder="Es. data del test, esito, pressione, battito massimo, note del medico…"></textarea>
+        <p class="muted" id="ergoSaved" style="font-size:.88rem"></p>
+      </div>
+
+      <div class="card stack">
+        <h2>Prima di cominciare il programma</h2>
+        <p>Porta questo programma al cardiologo e chiedi:</p>
+        <ul style="margin:0;padding-left:20px">
+          <li>se puoi iniziare, e con quali limiti di sforzo;</li>
+          <li>se serve un test da sforzo per conoscere il tuo margine;</li>
+          <li>come i tuoi farmaci cambiano la risposta del battito.</li>
+        </ul>
+        <p>Per le ginocchia, una visita dal fisiatra o dal fisioterapista ti dice quanto puoi piegarle senza danni.</p>
+      </div>
+
+      <div class="card stack">
+        <h2>Come misurare lo sforzo</h2>
+        <p>Alcuni farmaci per il cuore, come i beta-bloccanti, tengono basso il battito: la frequenza cardiaca non è un buon indicatore. Usa la percezione dello sforzo, da 0 a 10.</p>
+        <div class="scale num" aria-hidden="true">
+          <div class="g">0</div><div class="g">1</div><div class="g">2</div><div class="m">3</div><div class="m">4</div><div class="m">5</div><div class="g">6</div><div class="x">7</div><div class="x">8</div><div class="x">9</div><div class="x">10</div>
+        </div>
+        <div class="tw"><table>
+          <tbody>
+            <tr><td class="num"><b>3–4</b></td><td>Leggero: respiri un po' più profondo, parli senza fatica. <b>Fasi 1 e 2.</b></td></tr>
+            <tr><td class="num"><b>5</b></td><td>Moderato: parli a frasi intere, ma non canteresti. <b>Fasi 3 e 4.</b></td></tr>
+            <tr><td class="num"><b>6</b></td><td>Limite massimo. Rallenta.</td></tr>
+            <tr><td class="num"><b>7+</b></td><td>Troppo. Fermati e siediti.</td></tr>
+          </tbody>
+        </table></div>
+        <p><b>Prova del parlato:</b> durante ogni esercizio devi poter dire una frase intera ad alta voce. Se non ci riesci, rallenta.</p>
+      </div>
+
+      <div class="card stack">
+        <h2>Regole per il cuore</h2>
+        <ul style="margin:0;padding-left:20px">
+          <li>Misura la pressione da seduto, a riposo, prima di ogni sessione. Se è a <b class="num">160/100</b> o più, non allenarti, ricontrolla dopo 15 minuti e, se resta alta, avvisa il medico. Chiedigli se per te la soglia è diversa.</li>
+          <li>Mai trattenere il respiro. Espira nella fase di sforzo.</li>
+          <li>Braccia mai sopra la testa a lungo: nei movimenti si arriva al massimo alla fronte.</li>
+          <li>Nessuna posizione mantenuta in tensione: tutto scorre lentamente.</li>
+          <li>Non allenarti nelle 1–2 ore dopo un pasto, con febbre o se ti senti poco bene.</li>
+          <li>Alzati lentamente da seduto: alcuni farmaci abbassano la pressione quando cambi posizione.</li>
+          <li>Ambiente né troppo caldo né troppo freddo. Bevi un bicchiere d'acqua prima.</li>
+          <li>Tieni il telefono a portata di mano.</li>
+        </ul>
+      </div>
+
+      <div class="card stack">
+        <h2>Regole per le ginocchia</h2>
+        <ul style="margin:0;padding-left:20px">
+          <li>Ginocchia morbide, mai bloccate e mai piegate oltre un quarto.</li>
+          <li>Il ginocchio resta sopra il secondo dito del piede: non cade verso l'interno e non supera la punta.</li>
+          <li>Regola del dolore: un fastidio fino a 2–3 su 10 che sparisce entro il giorno dopo va bene. Se è più forte o dura di più, riduci l'ampiezza o usa la versione da seduto.</li>
+          <li>Scarpe chiuse con suola stabile, pavimento non scivoloso, sedia robusta senza ruote.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIARIO -->
+  <section data-tab="diario">
+    <div class="stack-lg">
+      <div class="stack" style="gap:8px">
+        <div class="eyebrow">Diario</div>
+        <h1>I tuoi progressi</h1>
+        <p class="sync" data-st="local"></p>
+        <p class="muted" style="font-size:.93rem">Ogni esercizio completato viene salvato subito. Se chiudi l’app a metà, ritrovi la sessione da riprendere nella scheda Oggi.</p>
+      </div>
+
+      <div class="card stack">
+        <h2>Peso e vita</h2>
+        <div class="row">
+          <input type="date" id="wDate" aria-label="Data">
+          <input type="number" id="wKg" step="0.1" placeholder="kg" inputmode="decimal" style="width:96px" aria-label="Peso in kg">
+          <input type="number" id="wWaist" step="0.5" placeholder="vita cm" inputmode="decimal" style="width:110px" aria-label="Circonferenza vita in cm">
+          <button class="btn secondary" id="wAdd">Aggiungi</button>
+        </div>
+        <div class="chart" id="wChart"></div>
+      </div>
+
+      <div class="card stack">
+        <h2>Sessioni fatte</h2>
+        <div id="logList" class="logs"></div>
+      </div>
+
+      <div class="card stack">
+        <h2>Copia di sicurezza</h2>
+        <p class="muted" style="font-size:.93rem">I progressi restano su questo dispositivo, in due copie. Una volta alla settimana salva una copia su File o iCloud Drive: contiene sia il Tai Chi sia le licenze, e si ripristina dalla sezione Licenze → Variazioni → «Ripristina copia».</p>
+        <div id="bkRow"><button class="btn secondary" type="button" id="bkSave">Salva copia su File / iCloud</button></div>
+        <p class="muted" id="bkInfo" style="font-size:.88rem"></p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<nav class="tabs" aria-label="Sezioni">
+  <div class="in" role="tablist">
+    <button role="tab" data-go="oggi" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Oggi</button>
+    <button role="tab" data-go="esercizi" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="4.5" r="2"/><path d="M12 7v7M5 10l7-1 7 1M12 14l-4 7M12 14l4 7"/></svg>Esercizi</button>
+    <button role="tab" data-go="programma" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V14M10 20V10M16 20V6M22 20V3"/></svg>Programma</button>
+    <button role="tab" data-go="sicurezza" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>Sicurezza</button>
+    <button role="tab" data-go="diario" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Diario</button>
+  </div>
+</nav>
+
+<div id="player" hidden><div class="wrap" id="pWrap"></div></div>
+
+<script>
+/* Memoria del Tai Chi rinforzata: copia nel database del dispositivo e ripristino automatico */
+const TCM=(()=>{
+  let dbp=null;
+  const open=()=>dbp||(dbp=new Promise((res,rej)=>{try{const r=indexedDB.open('licenze-marco',1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains('kv'))r.result.createObjectStore('kv')};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}}));
+  const kv=async(mode,key,val)=>{const db=await open();return new Promise((res,rej)=>{const tx=db.transaction('kv',mode),st=tx.objectStore('kv');const q=mode==='readonly'?st.get(key):st.put(val,key);let out;q.onsuccess=()=>{out=q.result};tx.oncomplete=()=>res(out);tx.onerror=()=>rej(tx.error)})};
+  const dump=()=>{const o={};try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('tc_'))o[k]=localStorage.getItem(k)}}catch(e){}return o};
+  const had=Object.keys(dump()).length;   // letto PRIMA che l'app crei i valori iniziali
+  const api={ok:null,last:null,dump,kv};
+  const write=()=>{const o=dump();if(!Object.keys(o).length)return Promise.resolve();return kv('readwrite','taichi',JSON.stringify({savedAt:new Date().toISOString(),keys:o})).then(()=>{api.ok=true;api.last=new Date()}).catch(()=>{api.ok=false})};
+  let t=null;api.mirror=()=>{clearTimeout(t);t=setTimeout(write,250)};api.flush=()=>{clearTimeout(t);return write()};
+  (async()=>{try{const r=await kv('readonly','taichi');
+    if(!had&&r){const o=JSON.parse(r);let n=0;for(const k in o.keys){localStorage.setItem(k,o.keys[k]);n++}
+      if(n&&!sessionStorage.getItem('tcRestored')){sessionStorage.setItem('tcRestored','1');location.reload();return}}
+    else if(had)write();}catch(e){api.ok=false}})();
+  addEventListener('pagehide',()=>api.flush());
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')api.flush()});
+  return api;
+})();
+</script>
+<script>
+/* ---------- Archivio locale (solo comodità, protetto) ---------- */
+const store={
+  get(k,d){try{const v=localStorage.getItem('tc_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
+  set(k,v){try{localStorage.setItem('tc_'+k,JSON.stringify(v))}catch(e){}if(typeof onStoreSet==='function')onStoreSet(k)},
+  raw(k,v){try{localStorage.setItem('tc_'+k,JSON.stringify(v))}catch(e){}}
+};
+['set','raw'].forEach(f=>{const o=store[f];store[f]=function(k,v){o.call(store,k,v);TCM.mirror()}});
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const pad=n=>String(n).padStart(2,'0');
+const iso=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const todayISO=()=>iso(new Date());
+const fmtDate=s=>{const d=new Date(s+'T12:00');return d.toLocaleDateString('it-IT',{day:'numeric',month:'short'})};
+const mmss=s=>{s=Math.max(0,Math.ceil(s));return Math.floor(s/60)+':'+pad(s%60)};
+
+/* ---------- Pose della figura ---------- */
+const P=(b,o)=>Object.assign({},b,o);
+function shift(p,keys,dx,dy){const r={...p};keys.forEach(k=>{if(r[k])r[k]=[p[k][0]+dx,p[k][1]+dy]});return r}
+function mirror(p){const r={};for(const k in p){let k2=k;if(/L$/.test(k))k2=k.slice(0,-1)+'R';else if(/R$/.test(k))k2=k.slice(0,-1)+'L';r[k2]=[200-p[k][0],p[k][1]]}return r}
+const UPF=['head','neck','sL','sR','eL','eR','hL','hR','pL','pR'];
+const VB='0 -28 200 268';
+
+// Vista frontale
+const F={head:[100,36],neck:[100,54],sL:[82,64],sR:[118,64],eL:[75,96],eR:[125,96],hL:[73,126],hR:[127,126],pL:[89,130],pR:[111,130],kL:[87,175],kR:[113,175],fL:[86,220],fR:[114,220]};
+const W=P(F,{pL:[88,130],pR:[112,130],kL:[81,175],kR:[119,175],fL:[75,220],fR:[125,220]});
+// Vista laterale
+const S={head:[98,36],neck:[98,54],s:[98,64],eN:[101,96],hN:[102,126],eF:[95,96],hF:[94,126],p:[98,130],kN:[100,175],fN:[97,220],tN:[113,220],kF:[97,175],fF:[95,220],tF:[111,220]};
+const SC=P(S,{eN:[118,98],hN:[146,112],eF:[116,100],hF:[144,114]}); // mani sulla sedia
+
+const ex1A=P(F,{eL:[74,98],hL:[80,124],eR:[126,98],hR:[120,124]});
+const ex1B=P(F,{eL:[56,70],hL:[32,68],eR:[144,70],hR:[168,68]});
+const ex2A=P(S,{kN:[116,160],fN:[108,204],tN:[123,206],hF:[110,118],eF:[104,96],hN:[88,120],eN:[94,96]});
+const ex2B=P(S,{kF:[116,160],fF:[108,204],tF:[123,206],hN:[110,118],eN:[104,96],hF:[88,120],eF:[94,96]});
+const ex3A=P(F,{head:[95,36],eL:[60,100],hL:[46,116],eR:[106,100],hR:[84,118]});
+const Wb=P(W,{eL:[76,100],hL:[92,118],eR:[124,100],hR:[108,118]});
+const ex4A=P(shift(Wb,UPF,-8,2),{kL:[76,177],kR:[115,175]});
+const ex5A=P(shift(P(W,{head:[96,36],eL:[64,84],hL:[78,58],eR:[110,106],hR:[96,128]}),UPF,-6,1),{kL:[77,176],kR:[116,175]});
+const ex6A=P(F,{eR:[132,58],hR:[124,30],eL:[74,98],hL:[64,128]});
+const ex7A={head:[92,38],neck:[93,56],s:[93,66],p:[94,132],kN:[110,176],fN:[114,220],tN:[130,220],kF:[86,176],fF:[80,220],tF:[96,220],eN:[96,100],hN:[114,82],eF:[92,100],hF:[110,84]};
+const ex7B=P(ex7A,{head:[106,38],neck:[105,56],s:[104,66],p:[102,132],kN:[116,174],kF:[92,176],eN:[126,74],hN:[150,72],eF:[122,77],hF:[146,75]});
+const ex8B=shift(SC,['head','neck','s','eN','eF','p','kN','kF','fN','fF'],0,-8);
+const ex9B=P(SC,{head:[92,52],neck:[93,70],s:[94,80],p:[86,146],kN:[108,178],kF:[106,178],eN:[116,108],eF:[114,110]});
+const ex10A=P(S,{eN:[118,98],hN:[146,112],eF:[92,96],hF:[86,122]});
+const ex10B=P(ex10A,{kN:[122,152],fN:[116,196],tN:[131,198],kF:[97,175]});
+// nuovi movimenti
+const spH={hN:[106,62],hF:[102,63]};
+const spK=[P(S,{...spH,eN:[100,94],eF:[97,95]}),P(S,{...spH,eN:[124,78],eF:[121,79]}),P(S,{...spH,eN:[112,48],eF:[109,49]}),P(S,{...spH,eN:[80,80],eF:[77,81]})];
+const alA=P(F,{eL:[70,88],hL:[92,82],eR:[130,88],hR:[108,82]});
+const alB=P(F,{eL:[56,80],hL:[38,74],eR:[144,80],hR:[162,74]});
+const Ws=shift(P(W,{kL:[80,176],kR:[120,176]}),UPF,0,2);
+const arA=P(Ws,{eL:[80,94],hL:[102,82],eR:[120,94],hR:[98,86]});
+const arB=P(Ws,{head:[96,38],eL:[56,68],hL:[32,66],eR:[142,74],hR:[120,74]});
+const paB=P(F,{kR:[128,175],fR:[144,220],eL:[66,94],hL:[54,108],eR:[134,94],hR:[146,108]});
+const taArms={eN:[118,84],hN:[140,80],eF:[116,86],hF:[138,82]};
+const taB=P(S,{...taArms,kN:[110,173],fN:[124,212],tN:[136,202],kF:[96,174]});
+const taC=P(S,{...taArms,kF:[110,173],fF:[124,212],tF:[136,202],kN:[96,174]});
+const muA={head:[120,42],neck:[117,58],s:[115,68],p:[103,134],kN:[100,178],fN:[97,220],tN:[113,220],kF:[99,178],fF:[95,220],tF:[111,220],eN:[145,70],hN:[174,72],eF:[143,72],hF:[172,74]};
+const muB=P(muA,{head:[138,48],neck:[134,62],s:[131,72],p:[110,136],kN:[103,179],kF:[102,179],eN:[150,94],eF:[148,96]});
+const anA=P(F,{eR:[134,92],hR:[148,110],eL:[72,96],hL:[66,124]});
+const anB=P(anA,{kL:[72,172],fL:[58,212]});
+const reA=P(ex7B,{eN:[124,84],hN:[146,88],eF:[120,86],hF:[142,90]});
+const reB=P(ex7A,{eN:[78,104],hN:[100,100],eF:[76,106],hF:[98,102]});
+
+// movimenti aggiunti (25)
+const coA=P(F,{head:[89,40]}),coB=P(F,{head:[111,40]});
+const sfA=P(W,{eR:[130,88],hR:[108,80],eL:[72,106],hL:[94,122]});
+const orA=shift(Wb,UPF,-7,1),orB=shift(Wb,UPF,0,4),orC=shift(Wb,UPF,7,1),orD=shift(Wb,UPF,0,-1);
+const SEAT={head:[96,58],neck:[95,76],s:[94,86],p:[92,152],kN:[130,156],fN:[132,220],tN:[146,220],kF:[128,157],fF:[129,220],tF:[143,220],eN:[104,120],hN:[126,150],eF:[102,121],hF:[124,151]};
+const gaA=P(SEAT,{head:[92,54],neck:[91,72],s:[90,84],eN:[100,118],eF:[98,119]});
+const gaB=P(SEAT,{head:[118,74],neck:[111,86],s:[104,92],eN:[114,126],eF:[112,127]});
+const pgArms={eN:[106,98],hN:[118,116],eF:[100,98],hF:[112,116]};
+const pgA=P(S,pgArms);
+const pgB=P(S,{...pgArms,head:[95,37],neck:[95,55],s:[95,65],p:[95,131],kN:[112,174],fN:[124,214],tN:[137,206],kF:[95,176],eN:[103,99],hN:[115,117],eF:[97,99],hF:[109,117]});
+const pgC=P(S,{...pgArms,head:[107,37],neck:[107,55],s:[106,65],p:[104,131],kN:[118,176],fN:[124,220],tN:[140,220],kF:[99,176],fF:[95,220],tF:[111,220],eN:[114,98],hN:[126,116],eF:[108,98],hF:[120,116]});
+const tiA=P(F,{eL:[70,106],hL:[90,124],eR:[130,106],hR:[110,124]});
+const tiB=P(F,{eL:[68,80],hL:[88,58],eR:[132,80],hR:[112,58]});
+const chA=P(F,{eL:[70,94],hL:[90,86],eR:[130,94],hR:[110,86]});
+const chB=P(F,{eL:[76,104],hL:[90,124],eR:[124,104],hR:[110,124]});
+
+/* ---------- Esercizi ---------- */
+const LVL=['','Leggero · sforzo 2–3','Moderato · sforzo 3–4','Impegnativo · sforzo 4–5'];
+const EX=[
+ {id:'marcia',name:'Marcia dolce sul posto',trad:'Ta Bu',sense:'Il passo che segna il tempo',cat:'Riscaldamento',view:'s',keys:[S,ex2A,S,ex2B],sec:4,breath:'Respira normalmente',lvl:2,mus:['cosce','polpacci'],work:[1,.4,1,.4],trace:['kN'],
+  scopo:'Alza il battito un poco alla volta e scalda caviglie, anche e ginocchia prima del resto.',
+  passi:['Stai vicino allo schienale della sedia, se vuoi una mano d’appoggio.','Solleva prima il tallone, poi il ginocchio: il piede si stacca da terra di 10–15 cm.','Le braccia oscillano opposte alle gambe, rilassate.','Appoggia il piede partendo dalla punta. Un passo ogni due secondi circa.'],
+  knee:'Ginocchio basso. Se dà fastidio, alza solo i talloni alternati.',heart:'Devi poter parlare mentre marci.',seated:'Da seduto alterna il sollevamento dei piedi, come una marcia sul posto.',reps:[15,30,45,45]},
+ {id:'spalle',name:'Circoli delle spalle',trad:'Song Jian',sense:'Spalle che si sciolgono',cat:'Riscaldamento',view:'s',keys:spK,sec:6,breath:'Respira libero',lvl:1,mus:['spalle','schiena'],work:[.6,.8,.8,.6],trace:['eN'],
+  scopo:'Scioglie spalle e parte alta della schiena, rigide dopo tante ore alla scrivania.',
+  passi:['In piedi, ginocchia morbide, punte delle dita appoggiate sulle spalle.','Disegna con i gomiti un cerchio lento: avanti, in alto, indietro, giù.','Nel passaggio indietro avvicina le scapole e apri il petto.','Metà delle ripetizioni in un senso, metà nell’altro.'],
+  knee:'Nessun carico sulle gambe.',heart:'Cerchi piccoli e lenti, gomiti mai sopra la testa.',seated:'Identico, seduto con la schiena staccata dallo schienale.',reps:[6,8,10,10]},
+ {id:'apertura',name:'Respiro di apertura',trad:'Qi Shi',sense:'Il movimento che sorge',cat:'Respiro',view:'f',keys:[ex1A,ex1B],sec:10,breath:['Inspira','Espira'],lvl:1,mus:['spalle'],work:[.7,.3],trace:['hL','hR'],
+  scopo:'Calma il respiro, prepara il cuore in modo graduale e scioglie le spalle. Apre e chiude ogni sessione.',
+  passi:['Piedi alla larghezza delle anche, ginocchia morbide: né bloccate né piegate.','Inspirando dal naso, solleva le braccia ai lati fino all’altezza delle spalle, palmi verso il basso.','Espirando dalla bocca, lascia scendere le braccia lungo i fianchi.','Il movimento segue il respiro: se il respiro è corto, il movimento è corto.'],
+  knee:'Nessun piegamento: ginocchia solo sbloccate.',heart:'Le braccia non salgono oltre le spalle.',seated:'Uguale, seduto sul bordo della sedia con la schiena staccata dallo schienale.',reps:[5,6,8,8]},
+ {id:'onde',name:'Onde del fiume',trad:'Zhuan Yao',sense:'La vita gira come un fiume',cat:'Mobilità',view:'f',keys:[ex3A,mirror(ex3A)],sec:6,breath:'Respira libero',lvl:1,mus:['addome','fianchi'],work:[.7,.7],trace:['hL','hR'],
+  scopo:'Rotazione morbida del busto: scioglie la schiena e attiva gli addominali laterali.',
+  passi:['Piedi un po’ più larghi delle anche, ginocchia morbide.','Ruota il busto verso destra partendo dal bacino; le braccia, sciolte come corde, seguono.','Torna e ruota verso sinistra. Lo sguardo segue il movimento.','Ampio ma lento, senza slanci.'],
+  knee:'Non torcere il ginocchio col piede bloccato: lascia ruotare un poco il tallone opposto.',heart:'Nessuna velocità: il ritmo resta quello di un pendolo lento.',seated:'Mani sulle cosce, ruota il busto a destra e a sinistra.',reps:[6,8,10,12]},
+ {id:'albero',name:'Aprire e chiudere',trad:'Kai He',sense:'Aprire e chiudere',cat:'Respiro',view:'f',keys:[alA,alB],sec:10,breath:['Inspira, apri','Espira, chiudi'],lvl:1,mus:['petto','spalle','schiena'],work:[.7,.4],trace:['hL','hR'],
+  scopo:'Coordina respiro e braccia, apre il petto e rilassa le spalle.',
+  passi:['Piedi alla larghezza delle anche, ginocchia morbide.','Braccia davanti al petto come ad abbracciare un grande pallone, mani a una spanna l’una dall’altra.','Inspirando, apri le braccia ai lati del petto come se il pallone si gonfiasse.','Espirando, richiudile lentamente fino alla posizione iniziale.'],
+  knee:'Ginocchia sbloccate, peso su tutta la pianta.',heart:'Spalle basse. Se le braccia si stancano, abbassale tra una ripetizione e l’altra.',seated:'Identico, seduto con la schiena dritta.',reps:[5,6,8,8]},
+ {id:'peso',name:'Spostare il peso',trad:'Xu Shi',sense:'Il vuoto e il pieno',cat:'Equilibrio',view:'f',keys:[ex4A,mirror(ex4A)],sec:8,breath:'Respira lento e regolare',lvl:2,mus:['cosce','fianchi'],work:[1,1],trace:['head'],
+  scopo:'Allena l’equilibrio e i muscoli delle gambe che sostengono il ginocchio.',
+  passi:['Piedi larghi una volta e mezzo le spalle, punte leggermente in fuori, ginocchia appena flesse.','Mani davanti alla pancia, come a tenere una palla.','Porta lentamente il peso sulla gamba sinistra, poi passa dal centro e vai a destra.','Il busto resta dritto e scorre in orizzontale: la testa non sale e non scende.'],
+  knee:'Piega solo un quarto; il ginocchio resta sopra il secondo dito del piede.',heart:'Respiro continuo, spalle rilassate.',seated:'Sposta il peso da una natica all’altra, busto dritto.',reps:[6,8,10,12]},
+ {id:'nuvole',name:'Mani come nuvole',trad:'Yun Shou',sense:'Mani che scorrono come nuvole',cat:'Coordinazione',view:'f',keys:[ex5A,mirror(ex5A)],sec:10,breath:['Inspira','Espira'],lvl:2,mus:['spalle','addome','cosce'],work:[.8,.8],trace:['hL','hR'],
+  scopo:'Il movimento simbolo del Tai Chi: coordina braccia, busto e peso del corpo.',
+  passi:['Stessa posizione di "Spostare il peso".','Una mano davanti al viso, come a guardarti in uno specchio; l’altra all’altezza dell’ombelico.','Ruota il busto e sposta il peso verso il lato della mano alta.','Le mani si scambiano: quella alta scende, quella bassa sale, e riparti verso l’altro lato. Lo sguardo segue la mano alta.'],
+  knee:'Le ginocchia seguono il bacino, non lo anticipano.',heart:'La mano alta resta all’altezza del viso.',seated:'Stesso disegno delle mani da seduto, con la rotazione del busto.',reps:[4,6,8,10]},
+ {id:'cielo',name:'Separare cielo e terra',trad:'Dan Ju',sense:'Una mano sostiene il cielo',cat:'Allungamento',view:'f',keys:[ex6A,mirror(ex6A)],sec:8,breath:['Inspira','Espira'],lvl:1,mus:['spalle','fianchi','schiena'],work:[.7,.7],trace:['hL','hR'],
+  scopo:'Allunga i fianchi e la schiena, apre la cassa toracica.',
+  passi:['Piedi alla larghezza delle anche.','Inspirando, una mano sale davanti al corpo fino alla fronte con il palmo verso l’alto; l’altra spinge verso terra accanto all’anca.','Espirando, le mani tornano al centro davanti alla pancia.','Cambia lato. Allunga senza irrigidire.'],
+  knee:'Ginocchia morbide, peso distribuito sui due piedi.',heart:'La mano non va oltre la fronte e il respiro non si ferma in allungamento.',seated:'Identico, seduto con la schiena dritta.',reps:[4,6,8,10]},
+ {id:'arco',name:'Tirare l’arco',trad:'Kai Gong',sense:'Tendere l\u2019arco verso l\u2019aquila',cat:'Forza braccia',view:'f',keys:[arA,arB,arA,mirror(arB)],sec:16,breath:['Inspira, tendi','Espira, torna','Inspira, tendi','Espira, torna'],lvl:2,minPhase:1,mus:['spalle','braccia','schiena','cosce'],work:[1,.3,1,.3],trace:['hL','hR'],
+  scopo:'Rinforza spalle, braccia e schiena, apre il petto e corregge la postura curva.',
+  passi:['Piedi larghi, ginocchia appena flesse come per sederti su uno sgabello alto.','Incrocia le mani davanti al petto.','Inspirando, un braccio si allunga di lato all’altezza della spalla con l’indice in alto; l’altro gomito tira indietro come a tendere la corda. Lo sguardo va verso la mano tesa.','Espirando, torna al centro, poi l’altro lato.'],
+  knee:'Piegamento da sgabello alto, mai più basso.',heart:'L’arco è immaginato: tensione morbida, mai a fiato trattenuto.',seated:'Stesso movimento delle braccia da seduto.',reps:[0,4,6,6]},
+ {id:'montagna',name:'Spingere la montagna',trad:'Tui Shan',sense:'Spingere la montagna',cat:'Forza braccia',view:'s',keys:[ex7A,ex7B],sec:8,breath:['Espira, spingi','Inspira, torna'],lvl:2,mus:['petto','braccia','spalle','cosce'],work:[1,.3],trace:['hN'],
+  scopo:'Tonifica petto, spalle e braccia insieme al trasferimento del peso.',
+  passi:['Un piede avanti di mezzo passo, l’altro dietro, tallone a terra.','Peso sulla gamba dietro, mani davanti al petto con i palmi in avanti.','Espirando, porta il peso avanti e allunga le braccia come contro un muro morbido, gomiti mai del tutto tesi.','Inspirando, torna indietro. A metà delle ripetizioni cambia gamba.'],
+  knee:'Il ginocchio davanti resta sopra la caviglia.',heart:'Qui la spinta è solo immaginata. La versione con il muro vero è "Flessioni al muro".',seated:'Spinta delle mani in avanti da seduto, con lo stesso respiro.',reps:[5,6,8,10]},
+ {id:'passo',name:'Passo laterale',trad:'Ce Bu',sense:'Il passo di lato',cat:'Cardio dolce',view:'f',keys:[F,paB,F,mirror(paB)],sec:6,breath:'Respira normalmente',lvl:2,mus:['fianchi','cosce'],work:[.9,.4,.9,.4],trace:['fL','fR'],
+  scopo:'Alza un po’ il ritmo del cuore e attiva i muscoli laterali delle anche, che tengono il ginocchio allineato.',
+  passi:['Piedi uniti, sedia a portata di mano.','Porta un piede di lato di un passo e appoggia la punta; le braccia si aprono leggermente.','Riporta il piede al centro, poi l’altro lato.','Ritmo tranquillo: un tocco ogni tre secondi circa.'],
+  knee:'La gamba che tocca è distesa ma non bloccata. Nessun piegamento.',heart:'Deve restare possibile parlare.',seated:'Da seduto apri e chiudi una gamba alla volta.',reps:[6,10,12,14]},
+ {id:'tallone',name:'Tocco del tallone',trad:'Deng Jiao',sense:'Puntare il tallone',cat:'Cardio dolce',view:'s',keys:[S,taB,S,taC],sec:6,breath:'Respira normalmente',lvl:2,mus:['cosce','polpacci','braccia'],work:[.9,.4,.9,.4],trace:['fN'],
+  scopo:'Lavora cosce e caviglie e coordina braccia e gambe.',
+  passi:['In piedi, sedia a portata di mano.','Porta un piede avanti e appoggia solo il tallone, punta verso l’alto; insieme spingi le mani in avanti all’altezza del petto.','Torna al centro, poi l’altra gamba.','La gamba d’appoggio resta morbida.'],
+  knee:'Non caricare il peso sul tallone avanti: appoggialo soltanto.',heart:'Ritmo regolare, senza accelerare.',seated:'Da seduto allunga una gamba avanti col tallone a terra, alternando.',reps:[6,10,12,14]},
+ {id:'talloni',name:'Talloni al cielo',trad:'Qi Dian',sense:'Sette scosse, cento mali via',cat:'Polpacci',view:'s',prop:'chair',keys:[SC,ex8B],sec:5,breath:['Espira, sali','Inspira, scendi'],lvl:2,mus:['polpacci'],work:[1,.5],trace:['head'],
+  scopo:'Rinforza i polpacci, migliora l’equilibrio e aiuta il sangue a tornare al cuore.',
+  passi:['In piedi dietro la sedia, mani sullo schienale.','Espirando, sali lentamente sulle punte in circa due secondi.','Inspirando, scendi in due o tre secondi.','Peso al centro del piede, senza sbilanciarti in avanti.'],
+  knee:'Gambe tese ma non bloccate.',heart:'Movimento ritmico, favorisce la circolazione.',seated:'Talloni su e giù da seduto, piedi ben appoggiati.',reps:[6,10,12,15],sets:[1,1,2,2]},
+ {id:'squat',name:'Mezzo piegamento alla sedia',trad:'Ma Bu',sense:'Il passo del cavaliere',cat:'Forza gambe',view:'s',prop:'chair',keys:[SC,ex9B],sec:6,breath:['Inspira, scendi','Espira, sali'],lvl:3,mus:['cosce','glutei'],work:[.6,1],trace:['p'],
+  scopo:'Rinforza le cosce: muscoli forti proteggono il ginocchio e consumano più energia.',
+  passi:['Dietro la sedia, mani sullo schienale, piedi alla larghezza delle anche.','Inspirando, porta i glutei indietro come per sederti e piega pochissimo le ginocchia: un quarto di piegamento.','Espirando, torna su spingendo dai talloni.','Nessuna pausa in basso.'],
+  knee:'Escursione piccola e senza dolore. Se fa male, sostituisci con la versione seduta.',heart:'Espira sempre mentre sali.',seated:'Estensione della gamba: da seduto distendi lentamente un ginocchio, poi l’altro.',reps:[5,8,10,12],sets:[1,1,2,2]},
+ {id:'gru',name:'Ginocchio della gru',trad:'Jin Ji Du Li',sense:'Il gallo d\u2019oro su una zampa',cat:'Equilibrio',view:'s',prop:'chair',keys:[ex10A,ex10B],sec:8,breath:['Inspira, sali','Espira, scendi'],lvl:2,mus:['cosce','glutei','addome'],work:[1,.4],trace:['kN'],
+  scopo:'Equilibrio su una gamba e forza delle anche: previene le cadute.',
+  passi:['Di fianco alla sedia, una mano sullo schienale.','Porta il peso su una gamba e solleva lentamente l’altro ginocchio fin dove è comodo.','Resta due secondi respirando, poi riappoggia la punta.','Metà ripetizioni per lato, poi giraci intorno e cambia mano.'],
+  knee:'La gamba d’appoggio resta morbida, non bloccata.',heart:'Respiro libero anche durante l’equilibrio.',seated:'Da seduto, solleva un ginocchio alla volta di qualche centimetro.',reps:[4,6,8,8],sets:[1,1,2,2]},
+ {id:'anca',name:'Gamba di lato alla sedia',trad:'Ce Tai Tui',sense:'La gamba si apre di lato',cat:'Equilibrio',view:'f',prop:'chair',keys:[anA,anB],sec:6,breath:['Espira, apri','Inspira, torna'],lvl:2,minPhase:1,mus:['fianchi','glutei'],work:[1,.5],trace:['fL'],
+  scopo:'Rinforza i muscoli laterali dell’anca, che tengono il ginocchio allineato e prevengono le cadute.',
+  passi:['In piedi di fianco alla sedia, una mano sullo schienale.','Espirando, allontana lentamente la gamba esterna di lato, punta del piede in avanti, di 20–30 cm.','Inspirando, riportala vicino all’altra senza appoggiarci il peso.','Busto dritto, non inclinarti verso la sedia. Metà ripetizioni, poi cambia lato.'],
+  knee:'Entrambe le ginocchia distese ma morbide.',heart:'Movimento lento, respiro regolare.',seated:'Da seduto apri le ginocchia verso l’esterno e richiudile lentamente.',reps:[0,8,10,10],sets:[1,1,2,2]},
+ {id:'muro',name:'Flessioni al muro',trad:'Tui Qiang',sense:'Spingere il muro',cat:'Forza braccia',view:'s',prop:'wall',keys:[muA,muB],sec:6,breath:['Inspira, scendi','Espira, spingi'],lvl:3,minPhase:1,mus:['petto','braccia','addome'],work:[.6,1],trace:['head'],
+  scopo:'Tonifica petto, braccia e addome con poco carico e senza scendere a terra.',
+  passi:['Di fronte a un muro, a una distanza poco maggiore della lunghezza di un braccio.','Mani sul muro all’altezza delle spalle, un po’ più larghe.','Inspirando, piega i gomiti e avvicina il petto al muro tenendo il corpo dritto come una tavola.','Espirando, spingi e torna indietro.'],
+  knee:'Ginocchia distese ma non bloccate, piedi ben appoggiati.',heart:'Espira sempre mentre spingi e non fermarti a metà. Più sei vicino al muro, più è facile.',seated:'Spinta delle mani in avanti da seduto, come in "Spingere la montagna".',reps:[0,8,10,12],sets:[1,1,2,2]},
+ {id:'remare',name:'Remare la barca',trad:'Hua Chuan',sense:'Remare la barca',cat:'Schiena',view:'s',keys:[reA,reB],sec:8,breath:['Espira, tira','Inspira, allunga'],lvl:2,mus:['schiena','braccia','spalle'],work:[1,.4],trace:['hN'],
+  scopo:'Rinforza la schiena e migliora la postura, bilanciando le ore passate seduto.',
+  passi:['Un piede avanti di mezzo passo.','Braccia avanti all’altezza del petto, come a impugnare i remi.','Espirando, porta il peso indietro e tira i gomiti lungo i fianchi, avvicinando le scapole.','Inspirando, torna avanti allungando le braccia. Cambia gamba a metà.'],
+  knee:'Il ginocchio davanti resta sopra la caviglia.',heart:'Il tiro è immaginato, spalle basse.',seated:'Identico, seduto sul bordo della sedia.',reps:[6,8,10,10]},
+ {id:'collo',name:'Collo che si scioglie',trad:'Song Jing',sense:'Il collo si scioglie',cat:'Riscaldamento',view:'f',keys:[coA,F,coB,F],sec:12,breath:['Espira, inclina','Inspira, torna','Espira, inclina','Inspira, torna'],lvl:1,mus:['spalle'],work:[.7,.2,.7,.2],trace:['head'],
+  scopo:'Allenta la tensione di collo e spalle, che si accumula nelle ore alla scrivania e con lo stress.',
+  passi:['In piedi o seduto, schiena dritta, spalle basse e rilassate.','Espirando, inclina lentamente la testa verso la spalla destra, come per avvicinare l’orecchio. La spalla non sale.','Inspirando, torna al centro.','Ripeti verso sinistra. Movimento piccolo e lento.'],
+  knee:'Nessun carico sulle gambe.',heart:'Niente rotazioni complete della testa e mai indietro: solo inclinazioni laterali.',seated:'Identico da seduto.',reps:[4,6,6,6]},
+ {id:'orso',name:'Il dondolio dell’orso',trad:'Xiong Huang',sense:'L’orso che dondola',cat:'Mobilità',view:'f',keys:[orA,orB,orC,orD],sec:12,breath:'Respira libero',lvl:1,mus:['addome','fianchi'],work:[.8,.5,.8,.5],trace:['head'],
+  scopo:'Dal Gioco dei cinque animali: il busto disegna un cerchio lento che massaggia l’addome e scioglie la schiena bassa.',
+  passi:['Piedi larghi, ginocchia morbide, mani appoggiate sulla pancia.','Porta il busto verso sinistra, poi in basso verso il centro, poi a destra, poi su: un cerchio lento.','Il bacino segue appena; la testa resta in linea con il busto.','Metà dei giri in un senso, metà nell’altro.'],
+  knee:'Le ginocchia restano ferme e morbide: si muove il busto, non le gambe.',heart:'Cerchio piccolo e lento, respiro libero.',seated:'Da seduto, cerchi del busto con le mani sulla pancia.',reps:[4,5,6,6]},
+ {id:'sfera',name:'Ruotare la sfera',trad:'Bao Qiu',sense:'Abbracciare la sfera di luce',cat:'Coordinazione',view:'f',keys:[sfA,mirror(sfA)],sec:10,breath:['Inspira','Espira'],lvl:2,minPhase:1,mus:['spalle','braccia','addome'],work:[.8,.8],trace:['hL','hR'],
+  scopo:'Le mani tengono una grande sfera e la girano: coordina braccia e busto e tonifica le spalle.',
+  passi:['Piedi larghi, ginocchia morbide.','Una mano sopra all’altezza del petto con il palmo in giù, l’altra sotto all’altezza dell’ombelico con il palmo in su: tieni una sfera.','Ruota il busto verso un lato e scambia le mani, come se la sfera girasse.','Torna verso l’altro lato. Spalle sempre basse.'],
+  knee:'Peso stabile sui due piedi, ginocchia sopra le punte.',heart:'La mano alta non supera il petto.',seated:'Stesso movimento delle mani da seduto.',reps:[0,6,8,10]},
+ {id:'tigre',name:'La tigre alza le zampe',trad:'Hu Ju',sense:'La tigre solleva le zampe',cat:'Forza braccia',view:'f',keys:[tiA,tiB],sec:10,breath:['Inspira, solleva','Espira, abbassa'],lvl:2,minPhase:1,mus:['braccia','spalle','schiena'],work:[1,.5],trace:['hL','hR'],
+  scopo:'Dal Gioco dei cinque animali: le mani a zampa di tigre salgono e scendono. Rinforza braccia, spalle e la parte alta della schiena.',
+  passi:['Piedi alla larghezza delle spalle, mani davanti alla pancia con le dita piegate come artigli.','Inspirando, solleva lentamente le mani davanti al corpo fino all’altezza della fronte, aprendo le dita.','Espirando, richiudi le dita ad artiglio e abbassa le mani spingendo verso il basso, come a premere qualcosa.','La forza è nelle mani, le spalle restano rilassate.'],
+  knee:'Ginocchia sbloccate, nessun piegamento.',heart:'Le mani si fermano alla fronte, mai sopra la testa.',seated:'Identico da seduto.',reps:[0,5,6,8]},
+ {id:'gatto',name:'Il gatto sulla sedia',trad:'Mao Shen Yao',sense:'Il gatto stira la schiena',cat:'Schiena',view:'s',prop:'seat',keys:[gaA,gaB],sec:10,breath:['Inspira, apri il petto','Espira, arrotonda'],lvl:1,mus:['schiena','addome'],work:[.6,.9],trace:['head'],
+  scopo:'Muove tutta la colonna vertebrale da seduto, senza alcun carico sulle ginocchia.',
+  passi:['Seduto sul bordo della sedia, piedi a terra, mani sulle ginocchia.','Inspirando, apri il petto in avanti e guarda leggermente in alto, scapole vicine.','Espirando, arrotonda la schiena come un gatto, mento verso il petto, ombelico verso la schiena.','Passa da una posizione all’altra lentamente.'],
+  knee:'Seduto, ginocchia a 90 gradi: nessun carico.',heart:'Respiro ampio e continuo.',seated:'È già un esercizio da seduto.',reps:[5,6,8,8]},
+ {id:'passogatto',name:'Il passo del gatto',trad:'Mao Bu',sense:'Il passo silenzioso del gatto',cat:'Equilibrio',view:'s',keys:[pgA,pgB,pgC,pgB],sec:14,breath:['Inspira, appoggia il tallone','Espira, porta il peso avanti','Inspira, torna indietro','Espira, ritira il piede'],lvl:2,minPhase:1,mus:['cosce','glutei','polpacci'],work:[.6,1,.6,.4],trace:['fN'],
+  scopo:'Il passo del Tai Chi: si appoggia il piede prima di fidarsi a caricarlo. Allena equilibrio e controllo delle gambe.',
+  passi:['In piedi con la sedia di fianco, peso sulla gamba dietro, ginocchio morbido.','Porta l’altro piede avanti di mezzo passo e appoggia solo il tallone, senza peso.','Abbassa la pianta e porta lentamente il peso in avanti, poi torna indietro.','Ritira il piede. Metà ripetizioni per gamba.'],
+  knee:'Il ginocchio davanti non supera la punta del piede e resta allineato.',heart:'Lento, come camminare sul ghiaccio. Respiro regolare.',seated:'Da seduto, appoggia alternati tallone e pianta avanti.',reps:[0,4,6,8]},
+ {id:'chiusura',name:'Ritorno alla quiete',trad:'Shou Shi',sense:'Il ritorno alla quiete',cat:'Respiro',view:'f',keys:[chA,chB],sec:12,breath:['Inspira, sali','Espira, scendi'],lvl:1,mus:['addome'],work:[.5,.3],trace:['hL','hR'],
+  scopo:'Chiude ogni sessione: il respiro si allunga, il battito torna lentamente a riposo.',
+  passi:['Piedi alla larghezza delle anche, ginocchia morbide.','Inspirando, porta le mani davanti al petto con i palmi verso il basso.','Espirando lentamente, spingi le mani verso il basso fino all’altezza dell’ombelico, come a posare qualcosa.','Allunga l’espirazione più dell’inspirazione.'],
+  knee:'Nessun piegamento.',heart:'Fermati sentendo il respiro calmarsi. Se il cuore batte ancora forte, resta seduto qualche minuto.',seated:'Identico da seduto.',reps:[4,5,6,6]}
+];
+const ORDER=['marcia','collo','spalle','apertura','onde','orso','albero','peso','nuvole','sfera','cielo','arco','tigre','montagna','gatto','passo','tallone','talloni','squat','gru','passogatto','anca','muro','remare','chiusura'];
+EX.sort((a,b)=>ORDER.indexOf(a.id)-ORDER.indexOf(b.id));
+const EXM=Object.fromEntries(EX.map(e=>[e.id,e]));
+const MUSN={spalle:'Spalle',braccia:'Braccia',petto:'Petto',schiena:'Schiena',addome:'Addome',fianchi:'Fianchi',glutei:'Glutei',cosce:'Cosce',polpacci:'Polpacci'};
+
+/* ---------- Disegno ---------- */
+const R=n=>Math.round(n*10)/10, pt=p=>R(p[0])+','+R(p[1]);
+const mix=(a,b,t)=>[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];
+const off=(a,v,k)=>[a[0]+v[0]*k,a[1]+v[1]*k];
+const unit=(a,b)=>{const dx=b[0]-a[0],dy=b[1]-a[1],l=Math.hypot(dx,dy)||1;return[dx/l,dy/l]};
+function limb(pts,col,w){const d=pts.map(pt).join(' ');return `<polyline points="${d}" class="lo" stroke-width="${w+4}"/><polyline points="${d}" class="lf" stroke="var(${col})" stroke-width="${w}"/>`}
+const segM=(a,b,w,op)=>op>.03?`<line x1="${R(a[0])}" y1="${R(a[1])}" x2="${R(b[0])}" y2="${R(b[1])}" class="mu" stroke-width="${w}" opacity="${R(op*100)/100}"/>`:'';
+const seg=(a,b,t0,t1,w,op)=>segM(mix(a,b,t0),mix(a,b,t1),w,op);
+const blob=(c,rx,ry,op,rot=0)=>op>.03?`<ellipse cx="${R(c[0])}" cy="${R(c[1])}" rx="${rx}" ry="${ry}" class="mf" opacity="${R(op*100)/100}" transform="rotate(${R(rot)} ${R(c[0])} ${R(c[1])})"/>`:'';
+function propSVG(kind){
+  if(kind==='seat')return `<path d="M70 98 V222 M70 162 H116 M114 162 V222" class="fg-chair"/>`;
+  if(kind==='chair')return `<path d="M150 108 V222 M150 168 H186 M184 168 V222" class="fg-chair"/>`;
+  if(kind==='wall'){let s=`<line x1="178" y1="-8" x2="178" y2="224" class="fg-chair"/>`;for(let y=2;y<224;y+=18)s+=`<line x1="181" y1="${y+8}" x2="192" y2="${y}" class="fg-hatch"/>`;return s}
+  return '';
+}
+function headFront(h,neck,ex){
+  const [x,y]=h,dx=Math.max(-6,Math.min(6,(x-neck[0])*1.3));
+  let s=`<circle cx="${x-14}" cy="${y+2}" r="4" class="fg-face"/><circle cx="${x+14}" cy="${y+2}" r="4" class="fg-face"/>`;
+  s+=`<circle cx="${x}" cy="${y}" r="15" class="fg-face"/>`;
+  s+=`<path d="M${x-15},${y+1} Q${x-15},${y-17} ${x},${y-16} Q${x+15},${y-17} ${x+15},${y+1} Q${x+12},${y-8} ${x},${y-8} Q${x-12},${y-8} ${x-15},${y+1}Z" class="fg-hair"/>`;
+  s+=`<circle cx="${R(x-5+dx)}" cy="${y+1}" r="1.9" class="fg-eye"/><circle cx="${R(x+5+dx)}" cy="${y+1}" r="1.9" class="fg-eye"/>`;
+  s+=ex?`<ellipse cx="${R(x+dx)}" cy="${y+8}" rx="2.2" ry="2.6" class="fg-eye"/><path d="M${R(x+dx+7)},${y+12} q4,3 8,1 M${R(x+dx+9)},${y+18} q4,3 8,1" class="fg-breath"/>`
+        :`<path d="M${R(x+dx-3.5)},${y+7.5} Q${R(x+dx)},${y+9.5} ${R(x+dx+3.5)},${y+7.5}" class="fg-line"/>`;
+  return s;
+}
+function headSide(h,ex){
+  const [x,y]=h;
+  let s=`<path d="M${x+12},${y-4} L${x+19},${y+4} L${x+13},${y+6}Z" class="fg-face j"/>`;
+  s+=`<circle cx="${x}" cy="${y}" r="15" class="fg-face"/>`;
+  s+=`<path d="M${x-15},${y+4} Q${x-17},${y-16} ${x},${y-16} Q${x+12},${y-16} ${x+14},${y-6} Q${x+2},${y-9} ${x-5},${y-1} Q${x-9},${y+4} ${x-15},${y+4}Z" class="fg-hair"/>`;
+  s+=`<circle cx="${x-5}" cy="${y+3}" r="3.2" class="fg-face"/><circle cx="${x+8}" cy="${y-1}" r="1.9" class="fg-eye"/>`;
+  s+=ex?`<ellipse cx="${x+12}" cy="${y+9}" rx="1.8" ry="2.3" class="fg-eye"/><path d="M${x+21},${y+6} q4,2 0,5 M${x+27},${y+4} q5,3 0,7 M${x+33},${y+3} q6,4 0,9" class="fg-breath"/>`
+        :`<path d="M${x+8},${y+9.5} L${x+13},${y+9}" class="fg-line"/>`;
+  return s;
+}
+function label(o){
+  if(!o.label)return '';
+  const n=o.label.name,fs=n.length>22?11.5:13.5;
+  return `<text x="100" y="-13" text-anchor="middle" class="fg-name" font-size="${fs}">${n}</text>`+(o.label.trad?`<text x="100" y="1" text-anchor="middle" class="fg-trad">${o.label.trad}</text><text x="100" y="13" text-anchor="middle" class="fg-sense">«${o.label.sense}»</text>`:'');
+}
+function drawFront(p,o){
+  const m=k=>o.mus&&o.mus.has(k)?o.op:0;
+  const cS=mix(p.sL,p.sR,.5),cP=mix(p.pL,p.pR,.5),mid=mix(cS,cP,.62),c1=mix(cS,cP,.25);
+  let s=`<line x1="22" y1="225" x2="178" y2="225" class="fg-ground"/>`+propSVG(o.prop)+(o.trail||'');
+  s+=`<path d="M${pt([p.pL[0]-7,p.pL[1]-4])} L${pt([p.pR[0]+7,p.pR[1]-4])} L${pt([p.pR[0]+5,p.pR[1]+12])} L${pt([p.pL[0]-5,p.pL[1]+12])}Z" class="fg-pants"/>`;
+  [['pL','kL','fL',-1],['pR','kR','fR',1]].forEach(([a,b,c,sd])=>{
+    s+=limb([p[a],p[b],p[c]],'--pants',15);
+    s+=seg(p[a],p[b],.2,.82,9,m('cosce'))+seg(p[b],p[c],.12,.55,7,m('polpacci'));
+    s+=`<ellipse cx="${R(p[c][0]+sd*3)}" cy="${R(p[c][1]+1)}" rx="11" ry="5.5" class="fg-shoe"/>`;
+  });
+  s+=limb([p.neck,[cS[0],cS[1]-2]],'--skin',10);
+  const L0=[p.pL[0]-6,p.pL[1]+3],R0=[p.pR[0]+6,p.pR[1]+3];
+  s+=`<path d="M${pt(p.sL)} Q${pt([cS[0],p.sL[1]-4])} ${pt(p.sR)} C${pt([p.sR[0]+5,p.sR[1]+24])} ${pt([R0[0]+12,mid[1]+10])} ${pt(R0)} Q${pt([cP[0],cP[1]+14])} ${pt(L0)} C${pt([L0[0]-12,mid[1]+10])} ${pt([p.sL[0]-5,p.sL[1]+24])} ${pt(p.sL)}Z" class="fg-shirt"/>`;
+  s+=`<path d="M${pt([cS[0]-6,cS[1]-2])} L${pt([cS[0],cS[1]+6])} L${pt([cS[0]+6,cS[1]-2])}" class="fg-line"/>`;
+  s+=`<path d="M${pt([L0[0]+5,L0[1]-9])} Q${pt([cP[0],cP[1]+4])} ${pt([R0[0]-5,R0[1]-9])}" class="fg-line soft"/>`;
+  const hw=(p.sR[0]-p.sL[0])/2,c2=mix(cS,cP,.45),fi=Math.max(m('fianchi'),m('glutei'));
+  s+=blob([c1[0]-9,c1[1]],8,6.5,m('petto'))+blob([c1[0]+9,c1[1]],8,6.5,m('petto'));
+  s+=blob(mix(cS,cP,.7),13,12,m('addome'));
+  s+=blob([c2[0]-hw+2,c2[1]],4,14,m('schiena'))+blob([c2[0]+hw-2,c2[1]],4,14,m('schiena'));
+  s+=blob([L0[0]+2,L0[1]-6],5,10,fi)+blob([R0[0]-2,R0[1]-6],5,10,fi);
+  [['sL','eL','hL'],['sR','eR','hR']].forEach(([a,b,c])=>{
+    s+=limb([p[a],p[b],p[c]],'--skin',9)+limb([p[a],mix(p[a],p[b],.42)],'--shirt',13);
+    s+=blob(p[a],7,7,m('spalle'))+seg(p[a],p[b],.5,.95,6,m('braccia'));
+    s+=`<circle cx="${R(p[c][0])}" cy="${R(p[c][1])}" r="5.5" class="fg-face"/>`;
+  });
+  return s+headFront(p.head,p.neck,o.exhale)+label(o);
+}
+function drawSide(p,o){
+  const m=k=>o.mus&&o.mus.has(k)?o.op:0;
+  const uT=unit(p.s,p.p),nT=[uT[1],-uT[0]],rot=Math.atan2(uT[1],uT[0])*180/Math.PI-90;
+  let s=`<line x1="22" y1="225" x2="178" y2="225" class="fg-ground"/>`+propSVG(o.prop)+(o.trail||'');
+  s+=`<g class="fg-far">`+limb([p.p,p.kF,p.fF],'--pants',15)+limb([p.fF,p.tF],'--ink',9)+limb([p.s,p.eF,p.hF],'--skin',9)+`<circle cx="${R(p.hF[0])}" cy="${R(p.hF[1])}" r="5.5" class="fg-face"/></g>`;
+  s+=`<ellipse cx="${R(p.p[0])}" cy="${R(p.p[1]+2)}" rx="15" ry="11" class="fg-pants"/>`;
+  s+=limb([p.p,p.kN,p.fN],'--pants',15)+limb([p.fN,p.tN],'--ink',9);
+  const uS=unit(p.kN,p.fN),nS=[uS[1],-uS[0]];
+  s+=seg(p.p,p.kN,.2,.82,9,m('cosce'))+segM(off(mix(p.kN,p.fN,.15),nS,-3),off(mix(p.kN,p.fN,.6),nS,-3),7,m('polpacci'));
+  s+=limb([p.neck,p.s],'--skin',10);
+  const bt=off(p.s,nT,-11),ft=off(p.s,nT,12),bel=off(mix(p.s,p.p,.66),nT,22),fb=off(p.p,nT,14),bb=off(p.p,nT,-14);
+  s+=`<path d="M${pt(bt)} L${pt(ft)} C${pt(off(ft,uT,18))} ${pt(off(bel,uT,-16))} ${pt(bel)} C${pt(off(bel,uT,10))} ${pt(off(fb,uT,-4))} ${pt(fb)} L${pt(bb)} C${pt(off(bb,uT,-18))} ${pt(off(bt,uT,20))} ${pt(bt)}Z" class="fg-shirt"/>`;
+  s+=`<path d="M${pt(off(fb,uT,-14))} Q${pt(off(mix(fb,bb,.4),uT,-6))} ${pt(off(bb,uT,-3))}" class="fg-line soft"/>`;
+  s+=blob(off(p.p,nT,-12),8,10,Math.max(m('glutei'),m('fianchi')),rot);
+  s+=blob(off(mix(p.s,p.p,.22),nT,9),6,8,m('petto'),rot)+blob(off(mix(p.s,p.p,.62),nT,13),8,13,m('addome'),rot)+blob(off(mix(p.s,p.p,.4),nT,-7),5,15,m('schiena'),rot);
+  s+=limb([p.s,p.eN,p.hN],'--skin',9)+limb([p.s,mix(p.s,p.eN,.42)],'--shirt',13);
+  s+=blob(p.s,7,7,m('spalle'))+seg(p.s,p.eN,.5,.95,6,m('braccia'));
+  s+=`<circle cx="${R(p.hN[0])}" cy="${R(p.hN[1])}" r="5.5" class="fg-face"/>`;
+  return s+headSide(p.head,o.exhale)+label(o);
+}
+function lerp(a,b,t){const r={};for(const k in a){const B=b[k]||a[k];r[k]=[a[k][0]+(B[0]-a[k][0])*t,a[k][1]+(B[1]-a[k][1])*t]}return r}
+function poseAt(ex,t,snap){
+  const k=ex.keys,n=k.length,per=ex.sec;
+  const ph=(((t%per)+per)%per)/per*n,i=Math.floor(ph)%n,f=ph-Math.floor(ph);
+  if(snap)return {pose:k[f<.5?i:(i+1)%n],seg:i,f:.5};
+  return {pose:lerp(k[i],k[(i+1)%n],(1-Math.cos(Math.PI*f))/2),seg:i,f};
+}
+const breathAt=(ex,seg)=>Array.isArray(ex.breath)?ex.breath[seg%ex.breath.length]:ex.breath;
+const trailCache={};
+function trailSVG(ex){
+  if(trailCache[ex.id]!==undefined)return trailCache[ex.id];
+  let s='';const N=64;
+  (ex.trace||[]).forEach(k=>{
+    const pts=[];for(let i=0;i<=N;i++)pts.push(poseAt(ex,ex.sec*i/N).pose[k]);
+    s+=`<polyline points="${pts.map(pt).join(' ')}" class="trail"/>`;
+    [Math.round(N*.18),Math.round(N*.68)].forEach(i=>{
+      const a=pts[i],b=pts[Math.min(N,i+3)];if(Math.hypot(b[0]-a[0],b[1]-a[1])<1)return;
+      const u=unit(a,b),n=[-u[1],u[0]],tip=off(a,u,5),bk=off(a,u,-3);
+      s+=`<path d="M${pt(tip)} L${pt(off(bk,n,4.5))} L${pt(off(bk,n,-4.5))}Z" class="trail-h"/>`;
+    });
+  });
+  return trailCache[ex.id]=s;
+}
+const draw=(ex,p,o={})=>{o.prop=ex.prop;return ex.view==='f'?drawFront(p,o):drawSide(p,o)};
+// Fotogramma animato: muscoli che si accendono con lo sforzo, respiro, percorso e nome
+function frame(ex,t,opt={}){
+  const r=poseAt(ex,t,opt.snap);
+  const w=(ex.work||[])[r.seg]??.8;
+  const op=opt.snap?.55:.12+.78*w*Math.sin(Math.PI*r.f);
+  return {svg:draw(ex,r.pose,{mus:new Set(ex.mus),op,exhale:/Espira/.test(breathAt(ex,r.seg)),trail:opt.trail?trailSVG(ex):'',label:opt.label?{name:ex.name,trad:ex.trad,sense:ex.sense}:null}),seg:r.seg};
+}
+const still=(ex,k,lab)=>draw(ex,ex.keys[k],{mus:new Set(ex.mus),op:.55,label:lab?{name:ex.name,trad:ex.trad,sense:ex.sense}:null});
+
+/* ---------- Programma ---------- */
+const PHASES=[
+ {name:'Adattamento',weeks:'Settimane 1–4',from:1,to:4,days:5,rpe:'3–4',rest:20,walk:10,
+  goals:['Fare almeno 16 delle 20 sessioni previste','Nessun dolore al ginocchio il giorno dopo','Imparare i 10 movimenti a memoria','Camminare 10 minuti al giorno'],
+  note:'Se ti serve, usa la versione da seduto per tutta la sessione. Conta la regolarità, non l’intensità.'},
+ {name:'Costruzione',weeks:'Settimane 5–10',from:5,to:10,days:6,rpe:'4',rest:15,walk:20,
+  goals:['Fare tutta la sequenza in piedi','Marciare 2 minuti di fila restando a sforzo 4','10 "Talloni al cielo" senza appoggiarti di peso','Camminare 20 minuti al giorno'],
+  note:'Le ripetizioni crescono, il ritmo resta lento. Un giorno di riposo completo a settimana.'},
+ {name:'Tonificazione',weeks:'Settimane 11–20',from:11,to:20,days:6,rpe:'5',rest:15,walk:30,
+  goals:['Due serie degli esercizi di forza','Primo traguardo di peso: −5%','Equilibrio su una gamba 15 secondi con un dito sulla sedia','Camminare 30 minuti al giorno'],
+  note:'Qui il corpo cambia: più tono nelle cosce, nelle braccia e nel busto. Verifica col cardiologo che lo sforzo 5 vada bene.'},
+ {name:'Mantenimento e longevità',weeks:'Dalla settimana 21, per sempre',from:21,to:Infinity,days:6,rpe:'5',rest:15,walk:30,
+  goals:['Flusso del mattino con due giri della sequenza centrale','Ogni 6 settimane, una settimana leggera con un terzo in meno di ripetizioni','Test di controllo ogni 4 settimane','Controllo dal cardiologo almeno una volta l’anno'],
+  note:'L’obiettivo diventa durare: farlo a 60, 70 e 80 anni. Nei giorni no, anche la sola sessione del mattino conta.'}
+];
+const SESS={
+ mattina:{name:'Flusso del mattino',when:'Mattina',hint:'Dopo colazione, attendi almeno un’ora',
+   list:p=>p===3?['marcia','collo','spalle','apertura','onde','orso','albero','peso','nuvole','sfera','cielo','arco','tigre','montagna','nuvole','arco','chiusura']:['marcia','collo','spalle','apertura','onde','orso','albero','peso','nuvole','sfera','cielo','arco','tigre','montagna','chiusura']},
+ pomeriggio:{name:'Forza ed equilibrio',when:'Pomeriggio',hint:'Prima di cena, a stomaco leggero',
+   list:()=>['marcia','gatto','passo','tallone','talloni','squat','gru','passogatto','anca','muro','remare','chiusura']}
+};
+for(const k in SESS){const s=SESS[k];s.ids=p=>s.list(p).filter(id=>(EXM[id].minPhase||0)<=p)}
+function startDate(){let s=store.get('start',null);if(!s){s=todayISO();store.set('start',s)}return s}
+function weekNum(){const s=new Date(startDate()+'T00:00'),t=new Date(todayISO()+'T00:00');return Math.max(1,Math.floor((t-s)/864e5/7)+1)}
+function phaseIdx(){const o=store.get('phase','auto');if(o!=='auto')return +o;const w=weekNum();return PHASES.findIndex(p=>w>=p.from&&w<=p.to)}
+function buildSteps(key,ph){
+  const steps=[],ids=SESS[key].ids(ph);
+  ids.forEach((id,ix)=>{
+    const e=EXM[id],sets=e.sets?e.sets[ph]:1;
+    for(let s=0;s<sets;s++){
+      if(steps.length) steps.push({rest:true,dur:PHASES[ph].rest,next:id});
+      steps.push({ex:id,reps:e.reps[ph],dur:e.reps[ph]*e.sec,set:s+1,sets});
+    }
+  });
+  return steps;
+}
+const sessDur=(k,ph)=>buildSteps(k,ph).reduce((a,s)=>a+s.dur,0);
+
+/* ---------- Diario ---------- */
+/* ---------- Memoria dei progressi ----------
+   Ogni sessione è un documento; si salva all'avvio e dopo ogni esercizio fatto.
+   Copia locale nel browser + copia nel tuo account (privata, data/users/<id>). */
+const SYNC_KEYS=['start','phase','w0','weights','musOn','musSel','musVol'];
+const cloud={db:null,stateRef:null,sessCol:null,ready:false,chains:{},pending:0,status:'local',stTimer:null};
+const sessions=()=>store.get('sessions',{});
+const isCounted=x=>x.saved||(x.doneIdx||[]).length>=3;
+const logs=()=>Object.values(sessions()).filter(isCounted).sort((a,b)=>a.startedAt-b.startedAt);
+(function migrate(){
+  const old=store.get('logs',null);if(!Array.isArray(old)||!old.length||store.get('migr1',false))return;
+  const m=sessions();old.forEach((l,i)=>{const id='v1-'+l.d+'-'+l.s+'-'+i;m[id]={id,d:l.d,s:l.s,startedAt:Date.parse(l.d+'T12:00')+i,planned:0,doneIdx:[],doneEx:[],dur:l.dur||0,bp:l.bp||'',rpe:l.rpe,knee:l.knee,saved:true,rev:1}});
+  store.raw('sessions',m);store.raw('migr1',true);
+})();
+function setSync(st){
+  cloud.status=st;
+  const t={ok:'\u2713 Progressi salvati nel tuo account',sync:'Salvataggio\u2026',local:'\u2713 Progressi salvati su questo dispositivo',err:'Salvataggio non riuscito: riprovo al prossimo esercizio',full:'Spazio di salvataggio esaurito'}[st];
+  document.querySelectorAll('.sync').forEach(el=>{el.textContent=t;el.dataset.st=st});
+}
+function chain(path,fn){
+  cloud.pending++;setSync('sync');
+  const run=async()=>{try{await fn()}catch(e){if(e&&e.code==='unavailable'){await new Promise(r=>setTimeout(r,400+Math.random()*600));await fn()}else throw e}};
+  cloud.chains[path]=(cloud.chains[path]||Promise.resolve()).then(run).then(()=>{cloud.pending--;if(!cloud.pending)setSync('ok')},e=>{cloud.pending--;setSync(e&&e.code==='quota_exceeded'?'full':'err')});
+  return cloud.chains[path];
+}
+function stateBody(){const o={updatedAt:Date.now()};SYNC_KEYS.forEach(k=>{const v=store.get(k,undefined);if(v!==undefined)o[k]=v});return o}
+function onStoreSet(k){
+  if(!cloud.ready||!SYNC_KEYS.includes(k))return;
+  clearTimeout(cloud.stTimer);cloud.stTimer=setTimeout(()=>chain(cloud.stateRef.path,()=>cloud.stateRef.set(stateBody())),700);
+}
+function putSession(o){
+  o.rev=(o.rev||0)+1;o.updatedAt=Date.now();
+  const m=sessions();m[o.id]=o;store.raw('sessions',m);
+  if(cloud.ready){const body=JSON.parse(JSON.stringify(o));chain('s/'+o.id,()=>cloud.sessCol.doc(o.id).set(body))}
+}
+function dropSession(id){
+  const m=sessions();delete m[id];store.raw('sessions',m);
+  if(cloud.ready)chain('s/'+id,()=>cloud.sessCol.doc(id).delete());
+}
+function applyState(d){SYNC_KEYS.forEach(k=>{if(d[k]!==undefined)store.raw(k,d[k])});musOn=store.get('musOn',true)}
+function mergeSessions(remote){
+  const m=sessions();let changed=false;
+  for(const id in remote){const r=remote[id];if(!m[id]||(r.rev||0)>(m[id].rev||0)){m[id]=r;changed=true}}
+  if(changed)store.raw('sessions',m);return changed;
+}
+function refreshView(){
+  if(!player.hidden)return;
+  const tab=document.querySelector('section[data-tab].on')?.dataset.tab;
+  ({oggi:renderToday,programma:renderProgram,diario:renderDiary})[tab]?.();
+}
+async function cloudInit(){
+  setSync('local');
+  if(!window.claude||typeof window.claude.use!=='function')return;
+  try{
+    const [db,user]=await Promise.all([window.claude.use('db'),window.claude.use('user')]);
+    if(!db||!user)return;
+    const uid=await user.id();if(!uid)return;
+    cloud.db=db;cloud.stateRef=db.doc('data/users/'+uid+'/state');cloud.sessCol=cloud.stateRef.collection('sessions');
+    setSync('sync');
+    const st=await cloud.stateRef.get();
+    if(st.exists)applyState(st.data());else await cloud.stateRef.set(stateBody());
+    const qs=await cloud.sessCol.get(),remote={};qs.docs.forEach(d=>remote[d.id]=d.data());
+    const local=sessions();
+    for(const id in local){const r=remote[id];if(!r||(local[id].rev||0)>(r.rev||0))await cloud.sessCol.doc(id).set(JSON.parse(JSON.stringify(local[id])))}
+    mergeSessions(remote);
+    cloud.ready=true;setSync('ok');refreshView();
+    cloud.stateRef.onSnapshot(sn=>{if(sn.exists&&!sn.metadata.hasPendingWrites&&!cloud.pending){applyState(sn.data());refreshView()}},()=>{});
+    cloud.sessCol.onSnapshot(q=>{if(q.metadata.hasPendingWrites)return;const r={};q.docs.forEach(d=>r[d.id]=d.data());if(mergeSessions(r))refreshView()},()=>{});
+  }catch(e){cloud.ready=false;setSync(e&&e.code==='quota_exceeded'?'full':'local')}
+}
+const weights=()=>store.get('weights',[]);
+
+/* ---------- OGGI ---------- */
+function renderToday(){
+  const ph=phaseIdx(),P0=PHASES[ph],w=weekNum();
+  const d=new Date();
+  document.getElementById('todayDate').textContent=d.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
+  const h=d.getHours();
+  document.getElementById('greet').textContent=(h<13?'Buongiorno':h<18?'Buon pomeriggio':'Buonasera');
+  document.getElementById('phaseLine').innerHTML=`Settimana <b class="num">${w}</b> · Fase ${ph+1}: <b>${P0.name}</b> · sforzo ${P0.rpe} su 10`;
+  const prog=P0.to===Infinity?1:Math.min(1,(w-P0.from+1)/(P0.to-P0.from+1));
+  document.getElementById('phaseBar').innerHTML=PHASES.map((_,i)=>i<ph?'<span class="done"></span>':i===ph?`<span class="cur" style="--p:${Math.round(prog*100)}%"></span>`:'<span></span>').join('');
+  document.getElementById('walkMin').textContent=P0.walk;
+
+  const L0=logs(),today=todayISO();
+  document.getElementById('sessions').innerHTML=Object.entries(SESS).map(([k,s])=>{
+    const done=L0.some(l=>l.d===today&&l.s===k&&(l.saved||l.doneIdx.length>=l.planned));
+    const part=!done&&resumable(k);
+    const ids=[...new Set(s.ids(ph))];
+    return `<div class="card session ${done?'done':''}">
+      <div class="when">${s.when}<div class="num" style="font-size:1.1rem;margin-top:2px">${Math.round(sessDur(k,ph)/60)}′</div></div>
+      <div class="stack" style="gap:8px;min-width:0">
+        <div><h3>${s.name}</h3><p class="muted" style="font-size:.9rem">${s.hint}</p></div>
+        <ol>${ids.map(i=>`<li>${EXM[i].name}</li>`).join('')}</ol>
+        <div class="row">${done?'<span class="chip">Fatta oggi ✓</span><button class="btn ghost" data-start="'+k+'">Ripeti</button>':part?`<span class="chip warn num">A metà: ${part.doneIdx.length} di ${part.planned}</span><button class="btn" data-start="${k}">Riprendi</button>`:'<button class="btn" data-start="'+k+'">Inizia</button>'}</div>
+      </div></div>`;
+  }).join('');
+
+  // settimana lun-dom
+  const mon=new Date(d);mon.setDate(d.getDate()-((d.getDay()+6)%7));
+  let cnt=0,html='';
+  ['L','M','M','G','V','S','D'].forEach((n,i)=>{
+    const x=new Date(mon);x.setDate(mon.getDate()+i);const xs=iso(x);
+    const c=new Set(L0.filter(l=>l.d===xs).map(l=>l.s)).size;cnt+=c;
+    html+=`<div class="d ${xs===today?'today':''}">${n}<i class="${c>=2?'full':c===1?'half':''}">${x.getDate()}</i></div>`;
+  });
+  document.getElementById('weekDots').innerHTML=html;
+  document.getElementById('weekCount').textContent=`${cnt} di ${P0.days*2} sessioni`;
+
+  // consigli automatici dagli ultimi diari
+  const last=L0.slice(-3);let adv='';
+  if(last.length&&last.slice(-2).filter(l=>l.knee==='dolore').length>=1) adv=`<div class="note stack" style="gap:4px"><b>Ginocchia</b><p>Nell’ultima sessione hai segnato dolore. Oggi riduci l’ampiezza dei piegamenti e usa la versione da seduto per "Mezzo piegamento alla sedia". Se il dolore dura più di due giorni, senti il medico.</p></div>`;
+  else if(last.some(l=>l.rpe>=7)) adv=`<div class="note stack" style="gap:4px"><b>Sforzo alto</b><p>Hai segnato uno sforzo di 7 o più. Oggi muoviti più lentamente e fai meno ripetizioni. Se succede di nuovo, parlane con il cardiologo.</p></div>`;
+  else if(!L0.length) adv=`<div class="note stack" style="gap:4px"><b>Prima volta</b><p>Prima di iniziare il programma parlane con il cardiologo (trovi le domande nella scheda Sicurezza). Poi guarda i tutorial nella scheda Esercizi e prova i movimenti senza fretta.</p></div>`;
+  document.getElementById('advice').innerHTML=adv;
+}
+
+/* ---------- Musica (generata nel browser, scale pentatoniche cinesi) ---------- */
+const NOTE={D3:146.83,E3:164.81,F3:174.61,G3:196,A3:220,C4:261.63,D4:293.66,E4:329.63};
+const MODES={gong:[0,2,4,7,9],shang:[0,2,5,7,10],jue:[0,3,5,8,10],zhi:[0,2,5,7,9],yu:[0,3,5,7,10]};
+const MODEN={gong:'Gong',shang:'Shang',jue:'Jue',zhi:'Zhi',yu:'Yu'};
+const INSTN={zheng:'guzheng',xiao:'flauto xiao',bell:'campane del tempio',zx:'guzheng e flauto xiao',quiet:'bordone e campane'};
+const MUS={
+ marcia:{t:'Passi sul sentiero di bambù',m:'gong',r:'D4',i:'zheng',d:.8,wb:1},
+ spalle:{t:'Vento tra i salici',m:'zhi',r:'G3',i:'xiao',d:.65},
+ apertura:{t:'Alba sul lago',m:'gong',r:'C4',i:'xiao',d:.55,b:1},
+ onde:{t:'Il fiume lento',m:'yu',r:'A3',i:'zheng',d:.6},
+ albero:{t:'Respiro del pino',m:'shang',r:'D4',i:'xiao',d:.55},
+ peso:{t:'Pioggia sulla montagna',m:'yu',r:'D4',i:'zheng',d:.55},
+ nuvole:{t:'Nuvole sul monte Wudang',m:'zhi',r:'D4',i:'zx',d:.6},
+ cielo:{t:'Tra cielo e terra',m:'gong',r:'F3',i:'xiao',d:.6,b:1},
+ arco:{t:'Volo dell’aquila',m:'shang',r:'G3',i:'zx',d:.65},
+ montagna:{t:'La montagna immobile',m:'yu',r:'D3',i:'zheng',d:.5,b:1},
+ passo:{t:'Danza delle canne',m:'zhi',r:'A3',i:'zheng',d:.8,wb:1},
+ tallone:{t:'Gocce sul sasso',m:'gong',r:'E3',i:'zheng',d:.75,wb:1},
+ talloni:{t:'Campane del tempio',m:'gong',r:'C4',i:'bell',d:.5},
+ squat:{t:'Il cavaliere paziente',m:'yu',r:'G3',i:'zheng',d:.6},
+ gru:{t:'La gru sullo stagno',m:'jue',r:'C4',i:'xiao',d:.5},
+ anca:{t:'Ponte di pietra',m:'shang',r:'A3',i:'zheng',d:.6},
+ muro:{t:'Muro di giada',m:'zhi',r:'F3',i:'zheng',d:.6},
+ remare:{t:'Barca sul Lago dell’Ovest',m:'yu',r:'D4',i:'zx',d:.65},
+ collo:{t:'Foglie sul torrente',m:'zhi',r:'E4',i:'xiao',d:.55},
+ orso:{t:'L\u2019orso nel bosco di bambù',m:'yu',r:'D3',i:'zheng',d:.55},
+ sfera:{t:'La perla del drago',m:'gong',r:'G3',i:'zx',d:.6},
+ tigre:{t:'La tigre sulla montagna',m:'yu',r:'A3',i:'zx',d:.65,b:1},
+ gatto:{t:'Gatto al sole',m:'jue',r:'A3',i:'zheng',d:.55},
+ passogatto:{t:'Passi nella neve',m:'shang',r:'E3',i:'zheng',d:.7,wb:1},
+ chiusura:{t:'Ritorno alla quiete',m:'gong',r:'C4',i:'xiao',d:.5,b:1},
+ quiet:{t:'Silenzio del giardino',m:'gong',r:'C4',i:'quiet',d:.3}
+};
+let musOn=store.get('musOn',true);
+const music=(()=>{
+  let ctx=null,master,bus,noise,drone=null;
+  const st={active:false,mode:null,ex:null,pc:null,t0:0,k:0,N:8,step:1,preview:null,cache:{}};
+  const hash=s=>{let h=2166136261;for(const c of s)h=Math.imul(h^c.charCodeAt(0),16777619);return h>>>0};
+  const rng=seed=>()=>{seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+  const vol=()=>store.get('musVol',.6);
+  function ensure(){
+    if(!ctx){
+      const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return false;
+      try{ctx=new AC()}catch(e){return false}
+      const comp=ctx.createDynamicsCompressor();comp.threshold.value=-20;comp.ratio.value=4;comp.connect(ctx.destination);
+      master=ctx.createGain();master.gain.value=0;master.connect(comp);
+      bus=ctx.createGain();const dry=ctx.createGain();dry.gain.value=.7;const wet=ctx.createGain();wet.gain.value=.5;
+      const cv=ctx.createConvolver();const r=ctx.sampleRate,n=Math.floor(r*3.4),ib=ctx.createBuffer(2,n,r);
+      for(let c=0;c<2;c++){const d=ib.getChannelData(c);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,3.5)}
+      cv.buffer=ib;bus.connect(dry);dry.connect(master);bus.connect(cv);cv.connect(wet);wet.connect(master);
+      noise=ctx.createBuffer(1,r*2,r);const nd=noise.getChannelData(0);for(let i=0;i<nd.length;i++)nd[i]=Math.random()*2-1;
+      setInterval(sched,60);
+    }
+    if(ctx.state!=='running')ctx.resume().catch(()=>{});
+    return true;
+  }
+  const fade=(v,tc)=>{master.gain.cancelScheduledValues(ctx.currentTime);master.gain.setTargetAtTime(v,ctx.currentTime,tc)};
+  function env(g,t,a,peak,dec){g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(peak,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+a+dec)}
+  // Guzheng: corda pizzicata, con il tipico glissando verso la nota
+  function zheng(t,f,v,bend){
+    const g=ctx.createGain(),lp=ctx.createBiquadFilter();lp.type='lowpass';
+    lp.frequency.setValueAtTime(Math.min(9000,f*9),t);lp.frequency.exponentialRampToValueAtTime(Math.max(300,f*1.6),t+1.5);
+    lp.connect(g);g.connect(bus);env(g,t,.004,v,2.6);
+    [['triangle',1,1],['sine',2,.35],['sine',3,.14],['sine',4.01,.06]].forEach(([ty,h,a])=>{
+      const o=ctx.createOscillator(),og=ctx.createGain();o.type=ty;og.gain.value=a;
+      if(bend){o.frequency.setValueAtTime(f*h*.944,t);o.frequency.exponentialRampToValueAtTime(f*h,t+.15)}else o.frequency.setValueAtTime(f*h,t);
+      o.connect(og);og.connect(lp);o.start(t);o.stop(t+2.8);
+    });
+  }
+  // Flauto xiao: suono soffiato con vibrato lento
+  function xiao(t,f,v,dur){
+    const g=ctx.createGain();g.connect(bus);const end=t+dur+.45;
+    g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.2);g.gain.setValueAtTime(v,t+Math.max(.22,dur-.25));g.gain.exponentialRampToValueAtTime(.0001,end);
+    const o=ctx.createOscillator();o.type='sine';o.frequency.value=f;
+    const o2=ctx.createOscillator();o2.type='triangle';o2.frequency.value=f*2;const g2=ctx.createGain();g2.gain.value=.07;
+    const lfo=ctx.createOscillator(),lg=ctx.createGain();lfo.frequency.value=4.6;lg.gain.setValueAtTime(0,t);lg.gain.linearRampToValueAtTime(f*.007,t+.6);
+    lfo.connect(lg);lg.connect(o.frequency);
+    const n=ctx.createBufferSource();n.buffer=noise;n.loop=true;const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=f*2;bp.Q.value=1.4;const ng=ctx.createGain();ng.gain.value=.1;
+    n.connect(bp);bp.connect(ng);ng.connect(g);o.connect(g);o2.connect(g2);g2.connect(g);
+    [o,o2,lfo,n].forEach(x=>{x.start(t);x.stop(end)});
+  }
+  // Campana del tempio: armonici inarmonici e coda lunga
+  function bell(t,f,v){
+    [[1,1,4.5],[2.76,.45,2.6],[5.4,.2,1.4],[8.93,.08,.8]].forEach(([h,a,d])=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=f*h;g.connect(bus);env(g,t,.003,v*a,d);o.connect(g);o.start(t);o.stop(t+d+.1)});
+  }
+  // Muyu: blocco di legno, segna il passo negli esercizi di cardio dolce
+  function block(t,v){const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(880,t);o.frequency.exponentialRampToValueAtTime(560,t+.07);g.connect(bus);env(g,t,.002,v,.1);o.connect(g);o.start(t);o.stop(t+.18)}
+  function setDrone(root,level){
+    if(!drone){
+      drone={g:ctx.createGain(),os:[]};const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=650;
+      const trem=ctx.createGain();trem.gain.value=1;const lfo=ctx.createOscillator(),lg=ctx.createGain();lfo.frequency.value=.09;lg.gain.value=.25;lfo.connect(lg);lg.connect(trem.gain);lfo.start();
+      drone.g.gain.value=0;lp.connect(trem);trem.connect(drone.g);drone.g.connect(bus);
+      [[1,.5,'sine'],[1.5,.28,'sine'],[2.003,.1,'triangle']].forEach(([h,a,ty])=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type=ty;g.gain.value=a;o.connect(g);g.connect(lp);o.frequency.value=root/2*h;o.start();drone.os.push([o,h])});
+    }
+    drone.os.forEach(([o,h])=>o.frequency.setTargetAtTime(root/2*h,ctx.currentTime,.5));
+    drone.g.gain.setTargetAtTime(level,ctx.currentTime,1);
+  }
+  const fq=(pc,deg)=>{const iv=MODES[pc.m],o=Math.floor(deg/5),i=((deg%5)+5)%5;return NOTE[pc.r]*Math.pow(2,o+iv[i]/12)};
+  // Frase deterministica: sale quando si inspira, scende quando si espira. Ripete ogni 4 cicli.
+  function phrase(pc,ex,cv){
+    const key=pc.t+'|'+ex.id+'|'+cv+'|'+st.N;if(st.cache[key])return st.cache[key];
+    const R=rng(hash(key)),n=ex.keys.length,N=st.N,per=N/n,out=[];let pos=4;
+    for(let j=0;j<N;j++){
+      const seg=Math.floor(j/per),lab=breathAt(ex,seg),dir=/Inspira/.test(lab)?1:/Espira/.test(lab)?-1:0,first=j%per===0;
+      const play=first||R()<pc.d;
+      if(play){const r=R();pos+=dir?(r<.65?dir:r<.85?0:-dir):(r<.3?-1:r<.6?1:r<.8?2:-2);pos=Math.max(0,Math.min(8,pos))}
+      out.push({play,deg:pos,first,seg,dir,bend:R()<.2,len:1});
+    }
+    for(let j=0;j<N;j++)if(out[j].play){let l=1;while(j+l<N&&!out[j+l].play&&!out[j+l].first)l++;out[j].len=l}
+    return st.cache[key]=out;
+  }
+  function slot(t,k){
+    const pc=st.pc;
+    if(st.mode==='rest'){const R=rng(k*7919);if(k%3===0)bell(t,fq(pc,[2,4,5,7][Math.floor(R()*4)]),.05);return}
+    const ex=st.ex,N=st.N,j=((k%N)+N)%N,cyc=Math.floor(k/N),ph=phrase(pc,ex,((cyc%4)+4)%4)[j],f=fq(pc,ph.deg),segLen=N/ex.keys.length;
+    if(pc.wb&&ph.first)block(t,.06);
+    if(pc.b&&j===0)bell(t,fq(pc,5),.05);
+    if(ph.first&&pc.i!=='quiet')zheng(t,fq(pc,ph.seg%2?-2:-5),.07,false);
+    if(pc.i==='quiet'){if(ph.first)bell(t,fq(pc,ph.dir>0?7:ph.dir<0?2:4),.06);return}
+    if(!ph.play)return;
+    if(pc.i==='zheng')zheng(t,f,ph.first?.15:.11,ph.bend&&!ph.first);
+    else if(pc.i==='xiao')xiao(t,f*(NOTE[pc.r]<200?2:1),.065,st.step*ph.len*.95);
+    else if(pc.i==='bell')bell(t,fq(pc,ph.deg+2),.075);
+    else if(pc.i==='zx'){zheng(t,f,.11,ph.bend&&!ph.first);if(ph.first)xiao(t,fq(pc,Math.round(ph.deg/2)*2)*(NOTE[pc.r]<200?2:1),.045,st.step*segLen*.9)}
+  }
+  function sched(){
+    if(!ctx||!st.active)return;
+    const now=ctx.currentTime,hz=now+.3;
+    for(;;){const t=st.t0+st.k*st.step;if(t>hz)break;if(t>=now-.02)slot(t,st.k);st.k++}
+  }
+  function play(exId,tAnim,isPreview){
+    if(!ensure())return false;
+    const ex=EXM[exId],sel=isPreview?(isPreview===true?exId:isPreview):store.get('musSel','auto'),pc=MUS[sel==='auto'?exId:sel]||MUS[exId];
+    const n=ex.keys.length,tgt=pc.i==='xiao'?1.3:pc.i==='bell'||pc.i==='quiet'?1:.62;
+    st.ex=ex;st.pc=pc;st.mode='ex';st.preview=isPreview?exId:null;
+    st.N=n*Math.max(1,Math.round(ex.sec/n/tgt));st.step=ex.sec/st.N;
+    st.t0=ctx.currentTime+.06-tAnim;st.k=Math.ceil((ctx.currentTime+.06-st.t0)/st.step);
+    setDrone(NOTE[pc.r],.05);st.active=true;fade(vol()*.9,.3);return true;
+  }
+  function rest(nextId){
+    if(!ensure())return;
+    st.pc=MUS.quiet;st.mode='rest';st.step=1.6;st.t0=ctx.currentTime+.1;st.k=0;st.preview=null;
+    const nx=MUS[store.get('musSel','auto')==='auto'?nextId:store.get('musSel','auto')]||MUS.quiet;
+    setDrone(NOTE[nx.r],.045);st.active=true;fade(vol()*.9,.3);
+  }
+  function pause(){if(!ctx)return;st.active=false;if(drone)drone.g.gain.setTargetAtTime(.02,ctx.currentTime,.5)}
+  function stop(){if(!ctx)return;st.active=false;st.preview=null;fade(0,.35);if(drone)drone.g.gain.setTargetAtTime(0,ctx.currentTime,.4)}
+  return {ensure,play,rest,pause,stop,setVol:()=>{if(ctx&&st.active)fade(vol()*.9,.1)},
+    preview:()=>st.preview,stopPreview:()=>{if(st.preview){stop();setListenUI(null)}},
+    title:()=>st.mode==='rest'?MUS.quiet.t:st.pc?st.pc.t:''};
+})();
+function setListenUI(id){
+  document.querySelectorAll('[data-listen]').forEach(b=>{const on=b.dataset.listen===id;b.textContent=on?'■ Ferma il brano':'♪ Ascolta il brano';b.setAttribute('aria-pressed',on)});
+  const t=document.getElementById('musTry');if(t)t.textContent=id==='__try'?'■ Ferma':'♪ Prova';
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-listen]');if(!b)return;
+  e.preventDefault();const id=b.dataset.listen;
+  if(music.preview()===id){music.stop();setListenUI(null)}
+  else if(music.play(id,performance.now()/1000,true))setListenUI(id);
+});
+
+/* ---------- ESERCIZI ---------- */
+const lvlHTML=l=>`<span class="lvl" title="Intensità">${[1,2,3].map(i=>`<i class="${i<=l?'on':''}"></i>`).join('')}<span>${LVL[l]}</span></span>`;
+const musHTML=e=>e.mus.map(m=>`<span class="chip eff">${MUSN[m]}</span>`).join('');
+function renderExercises(){
+  document.getElementById('exCount').textContent=`I ${EX.length} movimenti`;
+  document.getElementById('exList').innerHTML=EX.map((e,i)=>{
+    const kk=e.keys.length===4?[1,3]:[0,1];
+    const from=e.minPhase?`<span class="chip warn">Dalla fase ${e.minPhase+1}</span>`:'';
+    return `
+   <details class="card ex" id="ex-${e.id}">
+    <summary class="ex">
+      <div class="ex-head"><span class="n num">${i+1}</span><h2>${e.name}</h2><span class="chip">${e.cat}</span>${from}</div>
+      <p class="trad"><b>${e.trad}</b> — <i>«${e.sense}»</i></p>
+      <div class="ex-figs">
+        <div class="fig big"><svg viewBox="${VB}" class="anim" data-ex="${e.id}" role="img" aria-label="Animazione: ${e.name}">${frame(e,0,{label:true,trail:true,snap:true}).svg}</svg><small>${reduced?'Posizione di partenza':'Movimento al ritmo giusto'}</small></div>
+        ${kk.map((k,j)=>`<div class="fig"><svg viewBox="${VB}" aria-hidden="true">${still(e,k,false)}</svg><small>Posizione ${j+1}</small></div>`).join('')}
+      </div>
+      <div class="row" style="gap:6px">${musHTML(e)}</div>
+      ${lvlHTML(e.lvl)}
+      <div class="song"><button class="btn secondary sm" type="button" data-listen="${e.id}" aria-pressed="false">♪ Ascolta il brano</button><span><b>${MUS[e.id].t}</b><br><span class="muted">${INSTN[MUS[e.id].i]} · modo ${MODEN[MUS[e.id].m]}</span></span></div>
+      <p>${e.scopo}</p>
+      <span class="more">Apri il tutorial ›</span>
+    </summary>
+    <div class="ex-body" style="margin-top:12px">
+      <div><div class="eyebrow">Come si fa</div><ol>${e.passi.map(p=>`<li>${p}</li>`).join('')}</ol></div>
+      <p><b>Respiro:</b> ${Array.isArray(e.breath)?[...new Set(e.breath)].join(' · '):e.breath}. Ritmo: un ciclo completo ogni ${e.sec} secondi circa.</p>
+      <p><b>Dove lo devi sentire:</b> ${e.mus.map(m=>MUSN[m].toLowerCase()).join(', ')}. Un lavoro leggero e caldo, mai un dolore.</p>
+      <div class="tips">
+        <div class="tip k"><b>Ginocchia</b>${e.knee}</div>
+        <div class="tip h"><b>Cuore</b>${e.heart}</div>
+        <div class="tip"><b>Versione da seduto</b>${e.seated}</div>
+        <div class="tip"><b>Ripetizioni per fase</b><span class="num">${e.reps.map(r=>r||'—').join(' → ')}</span>${e.sets?' (fasi 3–4: due serie)':''}</div>
+      </div>
+    </div>
+   </details>`}).join('');
+}
+function animLoop(now){
+  const t=now/1000;
+  document.querySelectorAll('section.on svg.anim').forEach(svg=>{
+    const r=svg.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)return;
+    svg.innerHTML=frame(EXM[svg.dataset.ex],t,{label:true,trail:true}).svg;
+  });
+  if(document.querySelector('section[data-tab="oggi"].on'))document.getElementById('heroFig').innerHTML=frame(EXM.apertura,t,{}).svg;
+  requestAnimationFrame(animLoop);
+}
+
+/* ---------- PROGRAMMA ---------- */
+function renderProgram(){
+  const cur=phaseIdx();
+  document.getElementById('startDate').value=startDate();
+  document.getElementById('phaseOverride').value=store.get('phase','auto');
+  document.getElementById('musOn').checked=musOn;
+  document.getElementById('musVol').value=store.get('musVol',.6);
+  const ms=document.getElementById('musSel');
+  ms.innerHTML='<option value="auto">Adatta a ogni esercizio (consigliato)</option>'+EX.map(e=>`<option value="${e.id}">${MUS[e.id].t} · ${INSTN[MUS[e.id].i]}</option>`).join('')+`<option value="quiet">${MUS.quiet.t} · minimale</option>`;
+  ms.value=store.get('musSel','auto');
+  document.getElementById('phaseList').innerHTML=PHASES.map((p,i)=>`
+   <div class="card phase ${i===cur?'cur':''}">
+     <div class="row" style="justify-content:space-between"><div class="eyebrow">Fase ${i+1} · ${p.weeks}</div>${i===cur?'<span class="chip">Sei qui</span>':''}</div>
+     <h2>${p.name}</h2>
+     <div class="facts num">
+       <div class="fact"><b>${p.days}</b><span>giorni a settimana</span></div>
+       <div class="fact"><b>${Math.round(sessDur('mattina',i)/60)}′ + ${Math.round(sessDur('pomeriggio',i)/60)}′</b><span>mattina + pomeriggio</span></div>
+       <div class="fact"><b>${p.rpe}</b><span>sforzo su 10</span></div>
+     </div>
+     <div><div class="eyebrow" style="margin-bottom:4px">Obiettivi</div><ul>${p.goals.map(g=>`<li>${g}</li>`).join('')}</ul></div>
+     <p class="muted" style="font-size:.93rem">${p.note}</p>
+   </div>`).join('');
+  const w0=store.get('w0',100);document.getElementById('w0').value=w0;
+  const rows=[['Primo traguardo (−5%)',w0*.95,'3–4 mesi'],['Secondo traguardo (−10%)',w0*.90,'9–12 mesi'],['Mantenimento','stabile per almeno 1 anno','dopo il secondo traguardo']];
+  document.getElementById('wGoals').innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td class="num"><b>${typeof r[1]==='number'?r[1].toFixed(1).replace('.',',')+' kg':r[1]}</b></td><td>${r[2]}</td></tr>`).join('');
+}
+
+/* ---------- DIARIO ---------- */
+function renderDiary(){
+  const W0=weights().sort((a,b)=>a.d<b.d?-1:1);
+  document.getElementById('wDate').value=todayISO();
+  const box=document.getElementById('wChart');
+  const w0=store.get('w0',100),goal=w0*.95;
+  if(!W0.length){box.innerHTML=`<div class="empty">Nessuna misura ancora. Pesati una volta a settimana, sempre lo stesso giorno al mattino, e aggiungi qui il valore: apparirà il grafico con la linea del primo traguardo (${goal.toFixed(1).replace('.',',')} kg).</div>`}
+  else{
+    const vals=W0.map(x=>x.kg),mn=Math.min(...vals,goal)-1.5,mx=Math.max(...vals,w0)+1.5;
+    const Wd=600,H=220,l=46,r=16,t=14,b=30;
+    const X=i=>l+(W0.length===1?(Wd-l-r)/2:i*(Wd-l-r)/(W0.length-1)),Y=v=>t+(mx-v)/(mx-mn)*(H-t-b);
+    const ticks=[];const step=(mx-mn)>12?4:2;for(let v=Math.ceil(mn/step)*step;v<=mx;v+=step)ticks.push(v);
+    let s=`<svg viewBox="0 0 ${Wd} ${H}" role="img" aria-label="Andamento del peso">`;
+    ticks.forEach(v=>{s+=`<line x1="${l}" x2="${Wd-r}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="${l-8}" y="${Y(v)+4}" text-anchor="end" font-size="13" fill="var(--muted)" class="num">${v}</text>`});
+    s+=`<line x1="${l}" x2="${Wd-r}" y1="${Y(goal)}" y2="${Y(goal)}" stroke="var(--ok)" stroke-width="2" stroke-dasharray="6 5"/><text x="${Wd-r}" y="${Y(goal)-6}" text-anchor="end" font-size="13" fill="var(--ok)" font-weight="700">traguardo −5%</text>`;
+    const pts=W0.map((x,i)=>`${X(i)},${Y(x.kg)}`).join(' ');
+    if(W0.length>1) s+=`<polygon points="${X(0)},${H-b} ${pts} ${X(W0.length-1)},${H-b}" fill="var(--accent)" opacity=".12"/><polyline points="${pts}" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linejoin="round"/>`;
+    W0.forEach((x,i)=>{s+=`<circle cx="${X(i)}" cy="${Y(x.kg)}" r="${i===W0.length-1?6:4}" fill="var(--accent)"/>`});
+    [0,W0.length-1].filter((v,i,a)=>a.indexOf(v)===i).forEach(i=>{s+=`<text x="${X(i)}" y="${H-8}" text-anchor="${W0.length===1?'middle':i===0?'start':'end'}" font-size="13" fill="var(--muted)">${fmtDate(W0[i].d)}</text>`});
+    s+='</svg>';
+    const lastW=W0[W0.length-1],diff=lastW.kg-W0[0].kg,waist=[...W0].reverse().find(x=>x.waist);
+    s+=`<div class="row" style="margin-top:8px;justify-content:space-between"><span>Ultimo: <b class="num">${lastW.kg.toFixed(1).replace('.',',')} kg</b>${waist?` · vita <b class="num">${waist.waist} cm</b>`:''}</span><span class="num muted">${W0.length>1?(diff<=0?'':'+')+diff.toFixed(1).replace('.',',')+' kg dall’inizio':''}</span></div>`;
+    s+=`<button class="btn ghost" id="wUndo" style="align-self:flex-start;margin-top:8px">Elimina l’ultima misura</button>`;
+    box.innerHTML=s;
+    document.getElementById('wUndo').onclick=()=>{const a=weights().sort((a,b)=>a.d<b.d?-1:1);a.pop();store.set('weights',a);renderDiary()};
+  }
+  const L0=[...logs()].reverse();
+  const kneeTxt={bene:'Ginocchia bene',fastidio:'Lieve fastidio',dolore:'Dolore'};
+  document.getElementById('logList').innerHTML=L0.length?L0.slice(0,30).map(l=>`
+    <div class="log"><span class="chip num">${fmtDate(l.d)}</span><div style="min-width:0"><b>${SESS[l.s].name}</b><div class="muted" style="font-size:.88rem">${[l.planned?`${l.doneIdx.length} di ${l.planned} esercizi`:'',kneeTxt[l.knee]||'',Math.round((l.dur||0)/60)+' min',l.bp?'pressione '+l.bp:''].filter(Boolean).join(' · ')}</div></div>${l.rpe!=null?`<span class="num" title="Sforzo percepito"><b>${l.rpe}</b>/10</span>`:'<span class="chip warn">a metà</span>'}</div>`).join('')
+    :`<div class="empty">Qui compariranno le sessioni completate, con lo sforzo percepito e come stavano le ginocchia. Inizia dalla scheda Oggi.</div>`;
+}
+document.getElementById('wAdd').onclick=()=>{
+  const kg=parseFloat(document.getElementById('wKg').value.replace(',','.')),d=document.getElementById('wDate').value||todayISO();
+  const wa=parseFloat((document.getElementById('wWaist').value||'').replace(',','.'));
+  if(!(kg>30&&kg<300)){document.getElementById('wKg').focus();return}
+  const a=weights().filter(x=>x.d!==d);a.push({d,kg,waist:wa>40?wa:null});store.set('weights',a);
+  document.getElementById('wKg').value='';document.getElementById('wWaist').value='';renderDiary();
+};
+
+/* ---------- Schede ---------- */
+function go(tab){
+  music.stopPreview();
+  document.querySelectorAll('section[data-tab]').forEach(s=>s.classList.toggle('on',s.dataset.tab===tab));
+  document.querySelectorAll('[data-go]').forEach(b=>b.setAttribute('aria-selected',b.dataset.go===tab));
+  ({oggi:renderToday,programma:renderProgram,diario:renderDiary})[tab]?.();
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+document.getElementById('startDate').onchange=e=>{if(e.target.value){store.set('start',e.target.value);renderProgram()}};
+document.getElementById('phaseOverride').onchange=e=>{store.set('phase',e.target.value);renderProgram()};
+document.getElementById('musOn').onchange=e=>{musOn=e.target.checked;store.set('musOn',musOn)};
+document.getElementById('musVol').oninput=e=>{store.set('musVol',+e.target.value);music.setVol()};
+document.getElementById('musSel').onchange=e=>{store.set('musSel',e.target.value);if(music.preview()){music.stop();setListenUI(null)}};
+document.getElementById('musTry').onclick=()=>{
+  if(music.preview()){music.stop();setListenUI(null);return}
+  const sel=store.get('musSel','auto'),ex=(sel==='auto'||sel==='quiet')?'apertura':sel;
+  if(music.play(ex,performance.now()/1000,sel==='auto'?true:sel))setListenUI('__try');
+};
+document.getElementById('w0').onchange=e=>{const v=parseFloat(e.target.value);if(v>30){store.set('w0',v);renderProgram()}};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-start]');if(b)openCheck(b.dataset.start)});
+
+/* ---------- Lettore della sessione ---------- */
+const player=document.getElementById('player'),pw=document.getElementById('pWrap');
+let run=null,wake=null;
+function closePlayer(){music.stop();run=null;player.hidden=true;document.body.style.overflow='';try{wake&&wake.release()}catch(e){}wake=null;renderToday()}
+function resumable(key){
+  const ph=phaseIdx(),planned=buildSteps(key,ph).filter(x=>!x.rest).length,today=todayISO();
+  return Object.values(sessions()).filter(x=>x.d===today&&x.s===key&&!x.saved&&x.phase===ph&&x.planned===planned&&x.doneIdx.length>0&&x.doneIdx.length<planned).sort((a,b)=>b.startedAt-a.startedAt)[0]||null;
+}
+function openCheck(key){
+  const res=resumable(key);
+  player.hidden=false;document.body.style.overflow='hidden';
+  const items=['Mi sento bene: nessun dolore al petto, fiato corto, capogiri o palpitazioni','Ho preso i farmaci come prescritto','Non ho mangiato nell’ultima ora','Ho una sedia stabile vicino e il telefono a portata di mano'];
+  pw.innerHTML=`<div class="ptop"><div class="eyebrow">${SESS[key].name}</div><button class="btn ghost" id="pClose" style="min-height:44px;padding:8px 16px">Chiudi</button></div>
+    <h1>Prima di iniziare</h1>
+    <div class="card stack" style="gap:8px"><b>Pressione a riposo, da seduto</b>
+      <div class="row"><input type="number" id="bpS" inputmode="numeric" placeholder="massima" aria-label="Pressione massima" style="width:110px"><span>/</span><input type="number" id="bpD" inputmode="numeric" placeholder="minima" aria-label="Pressione minima" style="width:110px"><span class="muted">mmHg</span></div>
+      <p id="bpMsg" class="muted" style="font-size:.93rem">Sotto 160/100 puoi allenarti, salvo diversa indicazione del medico.</p>
+    </div>
+    <div class="stack" style="gap:8px">${items.map((t,i)=>`<label class="check"><input type="checkbox" id="chk${i}"><span>${t}</span></label>`).join('')}</div>
+    <label class="toggle"><input type="checkbox" id="seatedMode"> Oggi faccio la versione da seduto</label>
+    ${res?`<label class="toggle" for="resume"><input type="checkbox" id="resume" checked> Riprendi da dove eri rimasto: <b class="num">${res.doneIdx.length} di ${res.planned}</b>&nbsp;esercizi già fatti</label>`:''}
+    <button class="btn" id="pGo" disabled>${res?'Continua la sessione':'Inizia la sessione'}</button>
+    <button class="btn danger" id="pNo">Oggi qualcosa non va</button>`;
+  const boxes=[...pw.querySelectorAll('.check input')];
+  const bpS=document.getElementById('bpS'),bpD=document.getElementById('bpD'),bpMsg=document.getElementById('bpMsg');
+  const evalGo=()=>{
+    const s=+bpS.value,d=+bpD.value,ok=s>=70&&s<=260&&d>=40&&d<=160;
+    const high=ok&&(s>=160||d>=100);
+    if(!ok){bpMsg.className='muted';bpMsg.textContent='Sotto 160/100 puoi allenarti, salvo diversa indicazione del medico.'}
+    else if(high){bpMsg.className='note alert';bpMsg.innerHTML='<b>Pressione troppo alta per allenarti adesso.</b> Resta seduto, ricontrolla tra 15 minuti. Se resta alta, avvisa il medico. Con dolore al petto, mal di testa forte o disturbi della vista chiama il 112.'}
+    else{bpMsg.className='muted';bpMsg.textContent='Valori adatti alla sessione.'}
+    document.getElementById('pGo').disabled=!(ok&&!high&&boxes.every(x=>x.checked));
+  };
+  boxes.forEach(b=>b.onchange=evalGo);bpS.oninput=evalGo;bpD.oninput=evalGo;
+  document.getElementById('pClose').onclick=closePlayer;
+  document.getElementById('pNo').onclick=()=>{pw.innerHTML=`<div class="ptop"><div class="eyebrow">Oggi riposo</div><button class="btn ghost" id="pClose">Chiudi</button></div>
+    <h1>Oggi non allenarti</h1><p>Va bene saltare: un giorno di riposo non cambia il programma.</p>
+    <div class="note alert"><p>Se hai dolore o oppressione al petto, fiato corto a riposo, svenimento o battito molto irregolare, <b>chiama subito il 112</b>.</p></div>
+    <p>Per disturbi lievi o se hai saltato i farmaci, senti il tuo medico prima della prossima sessione.</p>`;document.getElementById('pClose').onclick=closePlayer};
+  document.getElementById('pGo').onclick=()=>startRun(key,document.getElementById('seatedMode').checked,bpS.value+'/'+bpD.value,res&&document.getElementById('resume').checked?res:null);
+}
+async function startRun(key,seated,bp,resume){
+  if(musOn)music.ensure();
+  const ph=phaseIdx(),steps=buildSteps(key,ph);
+  let sess,i0=0;
+  if(resume){sess=resume;sess.bp=bp;i0=steps.findIndex((x,i)=>!x.rest&&!sess.doneIdx.includes(i));if(i0<0)i0=0}
+  else sess={id:todayISO()+'-'+key+'-'+Date.now().toString(36),d:todayISO(),s:key,startedAt:Date.now(),phase:ph,planned:steps.filter(x=>!x.rest).length,doneIdx:[],doneEx:[],dur:0,bp,seated,saved:false,rev:0};
+  putSession(sess);
+  run={key,seated,bp,musI:-1,steps,i:i0,el:0,paused:false,last:0,total:0,sess,base:sess.dur||0};
+  try{wake=await navigator.wakeLock?.request('screen')}catch(e){wake=null}
+  pw.innerHTML=`<div class="ptop"><div class="eyebrow num" id="pStep"></div><div class="row" style="gap:6px"><button class="btn ghost" type="button" id="pMusic" style="min-height:44px;padding:8px 14px"></button><button class="btn ghost" id="pClose" style="min-height:44px;padding:8px 16px">Termina</button></div></div>
+   <div class="prog"><div id="pProg"></div></div>
+   <div><h2 id="pTitle"></h2><p class="muted" id="pSub" style="font-size:.95rem"></p></div>
+   <div class="pfig"><svg viewBox="0 -28 200 268" id="pFig" role="img" aria-label="Figura dell’esercizio"></svg></div>
+   <div class="breath" id="pBreath" aria-live="polite"></div>
+   <p class="song-now" id="pSong"></p>
+   <p class="saved-toast" id="pSaved" aria-live="polite"></p>
+   <div class="pstats"><div><b class="num" id="pRep"></b><span id="pRepL">ripetizione</span></div><div><b class="num" id="pTime"></b><span>tempo rimasto</span></div></div>
+   <div class="row" id="pMus" style="justify-content:center;gap:6px"></div>
+   <p id="pCue" style="text-align:center"></p>
+   <div class="pctrl"><button class="btn ghost" id="pPrev">‹ Indietro</button><button class="btn" id="pPause">Pausa</button><button class="btn ghost" id="pNext">Avanti ›</button></div>
+   <button class="btn danger" id="pStop">Non mi sento bene</button>`;
+  document.getElementById('pClose').onclick=()=>finish(true);
+  const mb=document.getElementById('pMusic'),mbl=()=>{mb.textContent=musOn?'♪ Musica sì':'♪ Musica no';mb.setAttribute('aria-pressed',musOn)};mbl();
+  mb.onclick=()=>{musOn=!musOn;store.set('musOn',musOn);mbl();if(musOn){music.ensure();if(run)run.musI=-1}else music.stop()};
+  document.getElementById('pPause').onclick=()=>{run.paused=!run.paused;document.getElementById('pPause').textContent=run.paused?'Riprendi':'Pausa'};
+  document.getElementById('pNext').onclick=()=>stepTo(run.i+1);
+  document.getElementById('pPrev').onclick=()=>stepTo(Math.max(0,run.i-(run.el<2?1:0)));
+  document.getElementById('pStop').onclick=()=>{run.paused=true;stopScreen()};
+  requestAnimationFrame(tick);
+}
+function markDone(idx){
+  const sess=run.sess,st=run.steps[idx];
+  if(!st||st.rest||sess.doneIdx.includes(idx))return;
+  sess.doneIdx.push(idx);sess.doneEx.push(st.ex);sess.dur=Math.round(run.base+run.total);sess.seated=run.seated;
+  putSession(sess);
+  const el=document.getElementById('pSaved');
+  if(el){el.textContent='\u2713 '+EXM[st.ex].name+' salvato \u00b7 '+sess.doneIdx.length+' di '+sess.planned;el.classList.add('on');clearTimeout(markDone.t);markDone.t=setTimeout(()=>el.classList.remove('on'),2600)}
+}
+function stepTo(i){
+  if(!run)return;
+  const cur=run.steps[run.i];
+  if(i>run.i&&cur&&!cur.rest&&run.el>=cur.dur*.5)markDone(run.i);
+  if(i>=run.steps.length){finish(false);return}
+  run.i=i;run.el=0;run.musI=-1;
+}
+function tick(now){
+  if(!run||!document.getElementById('pFig'))return;
+  const dt=run.last?Math.min(.25,(now-run.last)/1000):0;run.last=now;
+  if(!run.paused){run.el+=dt;run.total+=dt}
+  const st=run.steps[run.i];
+  if(run.el>=st.dur){stepTo(run.i+1);if(!run||!document.getElementById('pFig'))return}
+  const s=run.steps[run.i],N=run.steps.length;
+  const exSteps=run.steps.filter(x=>!x.rest),exIdx=run.steps.slice(0,run.i+1).filter(x=>!x.rest).length;
+  document.getElementById('pStep').textContent=`Esercizio ${exIdx} di ${exSteps.length}`;
+  document.getElementById('pProg').style.width=(run.i/N*100+(run.el/s.dur)*(100/N))+'%';
+  document.getElementById('pTime').textContent=mmss(s.dur-run.el);
+  const fig=document.getElementById('pFig');
+  if(musOn&&(run.musI!==run.i||run.musP!==run.paused)){
+    run.musI=run.i;run.musP=run.paused;
+    if(run.paused)music.pause();else if(s.rest)music.rest(s.next);else music.play(s.ex,run.el);
+  }
+  document.getElementById('pSong').textContent=musOn&&!run.paused?'♪ '+music.title():'';
+  if(s.rest){
+    const e=EXM[s.next];
+    document.getElementById('pTitle').textContent='Pausa';
+    document.getElementById('pSub').textContent='Prossimo: '+e.name;
+    fig.innerHTML=still(e,0,true);
+    document.getElementById('pMus').innerHTML=musHTML(e)+' '+lvlHTML(e.lvl);
+    document.getElementById('pBreath').textContent='Respira con calma';
+    document.getElementById('pRep').textContent='—';document.getElementById('pRepL').textContent='riposo';
+    document.getElementById('pCue').textContent=run.seated?'Prepara la versione da seduto: '+e.seated:e.passi[0];
+  }else{
+    const e=EXM[s.ex],fr=frame(e,run.el,{label:true,trail:true,snap:reduced}),r={seg:fr.seg};
+    document.getElementById('pTitle').textContent=e.name;
+    document.getElementById('pSub').textContent=(s.sets>1?`Serie ${s.set} di ${s.sets} · `:'')+e.trad+' — «'+e.sense+'»';
+    fig.innerHTML=fr.svg;
+    document.getElementById('pMus').innerHTML=musHTML(e)+' '+lvlHTML(e.lvl);
+    document.getElementById('pBreath').textContent=run.paused?'In pausa':breathAt(e,r.seg);
+    document.getElementById('pRep').textContent=Math.min(s.reps,Math.floor(run.el/e.sec)+1)+' / '+s.reps;
+    document.getElementById('pRepL').textContent='ripetizione';
+    document.getElementById('pCue').innerHTML=run.seated?'<b>Da seduto:</b> '+e.seated:e.passi[Math.min(e.passi.length-1,1+Math.floor(run.el/e.sec)%Math.max(1,e.passi.length-1))];
+  }
+  requestAnimationFrame(tick);
+}
+function stopScreen(){
+  music.stop();
+  pw.innerHTML=`<h1>Fermati e siediti</h1>
+   <div class="note alert stack" style="gap:8px"><p>Se hai <b>dolore o oppressione al petto</b>, fiato corto che non passa, capogiri forti o battito molto irregolare: se ti è stata prescritta una terapia d’emergenza usala come indicato, e <b>chiama il 112</b> se non passa in pochi minuti.</p></div>
+   <p>Se era solo stanchezza o fiato più corto del solito e ora stai bene, la sessione per oggi è finita lo stesso. Riprendi domani con meno ripetizioni.</p>
+   <button class="btn secondary" id="pEnd">Chiudi la sessione</button>`;
+  document.getElementById('pEnd').onclick=()=>finish(true);
+}
+function finish(early){
+  music.stop();
+  if(!run)return closePlayer();
+  const key=run.key,sess=run.sess;run.paused=true;
+  sess.dur=Math.round(run.base+run.total);const dur=sess.dur;
+  run=null;
+  if(!sess.doneIdx.length&&dur<60&&!sess.saved){dropSession(sess.id);closePlayer();return}
+  putSession(sess);
+  early=sess.doneIdx.length<sess.planned;
+  let rpe=null,knee=null;
+  pw.innerHTML=`<div class="eyebrow">${SESS[key].name}${early?' · interrotta':''}</div>
+   <h1>${early?'Sessione salvata a metà':'Sessione completata'}</h1>
+   <p class="muted num">${sess.doneIdx.length} di ${sess.planned} esercizi \u00b7 ${Math.round(dur/60)} minuti di movimento.${early?' Puoi riprenderla oggi dalla scheda Oggi.':''}</p>
+   <div class="stack" style="gap:8px"><b>Quanto è stato faticoso? (0 = niente, 10 = massimo)</b>
+   <div class="rpe num">${[0,1,2,3,4,5,6,7,8,9,10].map(n=>`<button data-rpe="${n}" aria-pressed="false">${n}</button>`).join('')}</div></div>
+   <div class="stack" style="gap:8px"><b>Come stanno le ginocchia?</b>
+   <div class="opts"><button data-knee="bene" aria-pressed="false">Bene</button><button data-knee="fastidio" aria-pressed="false">Lieve fastidio</button><button data-knee="dolore" aria-pressed="false">Dolore</button></div></div>
+   <p id="pFb" class="muted"></p>
+   <button class="btn" id="pSave" disabled>Salva nel diario</button>`;
+  const upd=()=>{document.getElementById('pSave').disabled=rpe===null||!knee;
+    let fb='';if(rpe!==null){fb=rpe<=2?'Molto leggero: la prossima volta puoi muoverti con più ampiezza.':rpe<=5?'Sforzo giusto per il tuo programma.':rpe===6?'Al limite: la prossima volta rallenta un poco.':'Troppo intenso. Riduci le ripetizioni e parlane con il cardiologo se si ripete.'}
+    if(knee==='dolore')fb+=' Per le ginocchia: domani usa la versione da seduto per i piegamenti.';
+    document.getElementById('pFb').textContent=fb};
+  pw.querySelectorAll('[data-rpe]').forEach(b=>b.onclick=()=>{rpe=+b.dataset.rpe;pw.querySelectorAll('[data-rpe]').forEach(x=>x.setAttribute('aria-pressed',x===b));upd()});
+  pw.querySelectorAll('[data-knee]').forEach(b=>b.onclick=()=>{knee=b.dataset.knee;pw.querySelectorAll('[data-knee]').forEach(x=>x.setAttribute('aria-pressed',x===b));upd()});
+  document.getElementById('pSave').onclick=()=>{sess.rpe=rpe;sess.knee=knee;sess.saved=!early;putSession(sess);closePlayer()};
+  pw.insertAdjacentHTML('beforeend','<button class="btn ghost" id="pSkip">Chiudi senza voto</button>');
+  document.getElementById('pSkip').onclick=closePlayer;
+}
+
+/* ---------- Avvio ---------- */
+renderExercises();renderToday();cloudInit();
+if(location.hash&&/^#[a-z]+$/.test(location.hash)&&document.querySelector(`section[data-tab="${location.hash.slice(1)}"]`))go(location.hash.slice(1));
+if(!reduced)requestAnimationFrame(animLoop);
+else document.getElementById('heroFig').innerHTML=still(EXM.apertura,1,false);
+</script>
+
+<script>
+/* note del test da sforzo: solo sul dispositivo */
+(function(){const t=document.getElementById('ergo');if(!t)return;t.value=store.get('ergo','');let k=null;
+  t.addEventListener('input',()=>{clearTimeout(k);k=setTimeout(()=>{store.set('ergo',t.value);document.getElementById('ergoSaved').textContent='\u2713 Salvato su questo dispositivo'},400)});})();
+/* copia unica (licenze + Tai Chi) su File / iCloud */
+(function(){
+  const pad2=n=>String(n).padStart(2,'0'),td=()=>{const d=new Date();return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate())};
+  const info=()=>{const el=document.getElementById('bkInfo');if(!el)return;let last=null;try{last=localStorage.getItem('tc_lastBackup')}catch(e){}
+    el.textContent=(TCM.ok===false?'Attenzione: la copia nel database del dispositivo non riesce. ':'')+(last?'Ultima copia: '+new Date(JSON.parse(last)).toLocaleString('it-IT'):'Nessuna copia salvata finora.')};
+  document.getElementById('bkSave').onclick=async()=>{
+    let S={};try{S=JSON.parse(localStorage.getItem('licenze-marco-v1')||'{}')}catch(e){}
+    S.taichi=TCM.dump();const data=JSON.stringify(S,null,1),filename='marco-backup-'+td()+'.json';
+    const done=()=>{try{localStorage.setItem('tc_lastBackup',JSON.stringify(new Date().toISOString()))}catch(e){}info()};
+    try{const file=new File([data],filename,{type:'application/json'});
+      if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'Copia licenze e Tai Chi'});done();return}}catch(e){if(e&&e.name==='AbortError')return}
+    try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));a.download=filename;document.body.appendChild(a);a.click();a.remove();done()}catch(e){}
+  };
+  info();setTimeout(info,1500);
+})();
+/* aggiornamento automatico e silenzioso (stesso sistema de "Il mondo di Valentina") */
+window.APP_VERSION="38006b1b4b";
+if('serviceWorker' in navigator && location.protocol.startsWith('http') && window.top===window && !window.claude){
+  navigator.serviceWorker.register('sw.js').then(reg=>{
+    const check=()=>{reg.update().catch(()=>{});fetch('version.json',{cache:'no-store'}).then(r=>r.json()).then(v=>{
+      if(v&&v.v&&v.v!==window.APP_VERSION&&document.getElementById('player').hidden){TCM.flush().finally(()=>location.reload())}}).catch(()=>{})};
+    check();
+    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')check()});
+    setInterval(check,30*60*1000);
+  }).catch(()=>{});
+}
+</script>
+</body>
+</html>
