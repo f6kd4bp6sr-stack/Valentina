@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Licenze">
+<meta name="apple-mobile-web-app-title" content="Le mie app">
 <meta name="theme-color" content="#EDF1EF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#101715" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="manifest.webmanifest">
@@ -1447,9 +1447,10 @@ else document.getElementById('heroFig').innerHTML=still(EXM.apertura,1,false);
 /* copia unica (licenze + Tai Chi) su File / iCloud */
 (function(){
   const pad2=n=>String(n).padStart(2,'0'),td=()=>{const d=new Date();return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate())};
-  const info=()=>{const el=document.getElementById('bkInfo');if(!el)return;let last=null;try{last=localStorage.getItem('tc_lastBackup')}catch(e){}
+  const info=()=>{const el=document.getElementById('bkInfo');if(!el)return;let last=null;try{last=localStorage.getItem('tc_lastBackup');const m=localStorage.getItem('mie-app-lastBackup');if(m&&(!last||m>JSON.parse(last)))last=JSON.stringify(m)}catch(e){}
     el.textContent=(TCM.ok===false?'Attenzione: la copia nel database del dispositivo non riesce. ':'')+(last?'Ultima copia: '+new Date(JSON.parse(last)).toLocaleString('it-IT'):'Nessuna copia salvata finora.')};
   document.getElementById('bkSave').onclick=async()=>{
+    if(window.__exportAll){window.__exportAll();setTimeout(info,1500);return}
     let S={};try{S=JSON.parse(localStorage.getItem('licenze-marco-v1')||'{}')}catch(e){}
     S.taichi=TCM.dump();const data=JSON.stringify(S,null,1),filename='marco-backup-'+td()+'.json';
     const done=()=>{try{localStorage.setItem('tc_lastBackup',JSON.stringify(new Date().toISOString()))}catch(e){}info()};
@@ -1461,7 +1462,7 @@ else document.getElementById('heroFig').innerHTML=still(EXM.apertura,1,false);
 })();
 window.__flush=()=>{ try{ TCM.flush(); }catch(e){} };
 </script>
-<script>window.APP_VERSION="bd7c9e1959";window.APP_BUILD="2026-10-03T11:23+02:00";</script>
+<script>window.APP_VERSION="4f6df4fffc";window.APP_BUILD="2026-10-03T14:08+02:00";</script>
 <script>
 /* ===== Aggiornamento automatico e controllo versione (uguale in Licenze, Tai Chi e Progressi) =====
    - all'apertura, al ritorno sull'app e ogni 30 minuti legge version.json saltando ogni copia vecchia (anche quella del server di GitHub);
@@ -1478,6 +1479,7 @@ window.__flush=()=>{ try{ TCM.flush(); }catch(e){} };
   function paint(){
     var bars=document.querySelectorAll(".updbar");
     for(var i=0;i<bars.length;i++){var b=bars[i];
+      var sv=b.querySelector(".u-sv"); if(sv)sv.innerHTML=svTxt();
       b.querySelector(".u-st").textContent=TXT[st.state]+(st.last&&st.state==="ok"?" (verificato alle "+st.last.toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"})+")":"");
       b.dataset.st=st.state;}
   }
@@ -1489,13 +1491,51 @@ window.__flush=()=>{ try{ TCM.flush(); }catch(e){} };
       ".updbar[data-st=ok] .u-st{color:#2e8b57}.updbar[data-st=new] .u-st,.updbar[data-st=wait] .u-st{color:#c2410c;font-weight:700}";
     document.head.appendChild(css);
     var d=document.createElement("div");d.className="updbar";
-    d.innerHTML="<span>Versione <b>"+V+"</b>"+(BUILT?" del "+fmtBuilt():"")+"</span><span class=\"u-st\"></span><button type=\"button\">Cerca aggiornamenti</button>";
-    d.querySelector("button").addEventListener("click",function(){check(true);});
-    var mains=document.querySelectorAll("main");
+    d.innerHTML="<span class=\"u-sv\" style=\"flex-basis:100%\"></span><button type=\"button\" class=\"u-bk\">💾 Salva copia su File / iCloud</button><span>Versione <b>"+V+"</b>"+(BUILT?" del "+fmtBuilt():"")+"</span><span class=\"u-st\"></span><button type=\"button\">Cerca aggiornamenti</button>";
+    d.querySelector(".u-bk").addEventListener("click",exportAll);
+    d.querySelectorAll("button")[1].addEventListener("click",function(){check(true);});
     // nelle sezioni con più pagine la barra va in fondo al documento, sopra la barra delle schede
     document.body.insertBefore(d,document.querySelector("nav.tabs")||null);
     paint();
   }
+  /* ---------- salvataggio automatico comune a tutte le sezioni ----------
+     Ogni sezione salva subito le proprie modifiche sul dispositivo. Qui, da qualsiasi sezione:
+     copia giornaliera completa (Licenze + Tai Chi + Progressi) negli ultimi 30 giorni e copia su File / iCloud. */
+  function lsJ(k){try{return JSON.parse(localStorage.getItem(k)||"null");}catch(e){return null;}}
+  function dumpAll(){
+    var S=lsJ("licenze-marco-v1"), tc={}, n=0;
+    try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("tc_")===0){tc[k]=localStorage.getItem(k);n++;}}}catch(e){}
+    var pack=lsJ("prog-vale-v1"), link=lsJ("prog-link-v1");
+    var pg=pack||link?{pack:pack,hist:lsJ("prog-vale-hist-v1")||[],link:link}:null;
+    if(!S&&!n&&!pg)return null;
+    var o={}; if(S)for(var x in S)o[x]=S[x]; o.taichi=tc; o.progressi=pg; o.app="le-mie-app"; return o;
+  }
+  function kvDb(){return new Promise(function(res,rej){try{var r=indexedDB.open("licenze-marco",1);r.onupgradeneeded=function(){if(!r.result.objectStoreNames.contains("kv"))r.result.createObjectStore("kv");};r.onsuccess=function(){res(r.result);};r.onerror=function(){rej(r.error);};}catch(e){rej(e);}});}
+  function today(){var d=new Date();return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2);}
+  var snapBusy=false;
+  function snapAll(){
+    if(snapBusy)return; var o=dumpAll(); if(!o)return; snapBusy=true;
+    kvDb().then(function(db){return new Promise(function(res){
+      var tx=db.transaction("kv","readwrite"),st=tx.objectStore("kv"),k="snap-"+today();
+      st.put(JSON.stringify(o),k);
+      var q=st.getAllKeys(); q.onsuccess=function(){var ks=q.result.map(String).filter(function(x){return x.indexOf("snap-")===0&&x.indexOf("~")<0;});if(ks.indexOf(k)<0)ks.push(k);ks.sort();ks.slice(0,Math.max(0,ks.length-30)).forEach(function(old){st.delete(old);});};
+      tx.oncomplete=function(){try{localStorage.setItem("mie-app-lastSnap",new Date().toISOString());}catch(e){}res();paint();};tx.onerror=function(){res();};
+    });}).catch(function(){}).then(function(){snapBusy=false;});
+  }
+  function exportAll(){
+    var b=document.getElementById("bExport"); if(b){b.click();setTimeout(paint,1500);return;}   // in Licenze usa il pulsante della pagina
+    var o=dumpAll(); if(!o){alertBar("Ancora nessun dato da salvare");return;}
+    var data=JSON.stringify(o,null,1), fn="marco-backup-"+today()+".json";
+    var done=function(){var t=new Date().toISOString();try{localStorage.setItem("mie-app-lastBackup",t);localStorage.setItem("tc_lastBackup",JSON.stringify(t));}catch(e){}paint();};
+    try{var f=new File([data],fn,{type:"application/json"});if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:"Copia Le mie app"}).then(done,function(){});return;}}catch(e){}
+    try{var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type:"application/json"}));a.download=fn;document.body.appendChild(a);a.click();a.remove();done();}catch(e){}
+  }
+  function alertBar(t){var e=document.querySelector(".updbar .u-sv");if(e)e.textContent=t;}
+  function when(t){if(!t)return "mai";var d=new Date(t),o=new Date();return d.toDateString()===o.toDateString()?"oggi "+d.toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"}):d.toLocaleDateString("it-IT",{day:"numeric",month:"short"});}
+  function svTxt(){var sn=null,bk=null;try{sn=localStorage.getItem("mie-app-lastSnap");bk=localStorage.getItem("mie-app-lastBackup");var S=lsJ("licenze-marco-v1");if(S&&S.lastBackup&&(!bk||S.lastBackup>bk))bk=S.lastBackup;}catch(e){}
+    var old=!bk||(Date.now()-new Date(bk).getTime())>7*864e5;
+    return "💾 Salvataggio automatico attivo · copia del giorno: "+when(sn)+" · copia su File/iCloud: <span"+(old?" style=\"color:#c2410c;font-weight:700\"":"")+">"+when(bk)+"</span>";}
+
   function apply(v){
     try{if(typeof window.__flush==="function")window.__flush();}catch(e){}
     setTimeout(function(){location.replace(location.pathname+"?v="+encodeURIComponent(v));},350);
@@ -1514,6 +1554,12 @@ window.__flush=()=>{ try{ TCM.flush(); }catch(e){} };
   }
   setInterval(function(){if(st.pending&&!busy()){st.pending=false;st.state="new";paint();apply(st.remote);}},5000);
   if(location.search.indexOf("v=")>=0&&history.replaceState){try{history.replaceState(null,"",location.pathname+location.hash);}catch(e){}}
+  setTimeout(snapAll,3000);
+  document.addEventListener("visibilitychange",function(){if(document.visibilityState==="hidden")snapAll();else paint();});
+  window.addEventListener("pagehide",snapAll);
+  setInterval(snapAll,15*60*1000);
+  window.__snapAll=snapAll;
+  window.__exportAll=exportAll;
   if(window.claude||window.top!==window){ // dentro Claude: niente aggiornamento automatico, solo la versione
     if(document.readyState!=="loading")bar();else document.addEventListener("DOMContentLoaded",bar);
     return;
