@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<script>window.APP_VERSION="c14b8c882e";</script>
+<script>window.APP_VERSION="5d6b86224f";</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://f6kd4bp6sr-stack.github.io; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self' data: blob:; connect-src 'self' https://api.github.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
 <meta name="robots" content="noindex, nofollow, noarchive">
@@ -8873,7 +8873,7 @@ function loadSync() {
   return new Promise(res => {
     if (window.__mondoSyncOpen) return res(true);
     const sc = document.createElement('script');
-    sc.src = location.protocol.startsWith('http') && location.pathname.indexOf('/mie-app/') >= 0 ? 'licenze/mondo-sync.js' : SYNC_URL;
+    sc.src = (location.protocol.startsWith('http') && location.pathname.indexOf('/mie-app/') >= 0 ? 'licenze/mondo-sync.js' : SYNC_URL) + '?t=' + Date.now();
     sc.onload = () => res(!!window.__mondoSyncOpen); sc.onerror = () => res(false);
     document.head.appendChild(sc); setTimeout(() => res(!!window.__mondoSyncOpen), 8000);
   });
@@ -9598,6 +9598,6 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
     setInterval(check, 30 * 60 * 1000);
   }).catch(() => {}));
 }</script>
-<script src="licenze/mondo-sync.js" defer></script>
+<script>/* collegamento genitori: sempre la versione più recente */(function(){var s=document.createElement("script");s.src="licenze/mondo-sync.js?t="+Date.now();s.defer=true;document.head.appendChild(s);})();</script>
 </body>
 </html>
