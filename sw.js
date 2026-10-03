@@ -1,8 +1,8 @@
-// Il mio mondo: funziona anche senza internet. Versione 8dc1773d92
-const CACHE = 'mondo-8dc1773d92';
+// Il mio mondo: funziona anche senza internet. Versione 7faf6b6583
+const CACHE = 'mondo-7faf6b6583';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting())); });
-self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE && !k.startsWith('licenze-')).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
+self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
   if (new URL(e.request.url).pathname.includes('/licenze/')) return; // app separata (Licenze e presenze): non toccarla
