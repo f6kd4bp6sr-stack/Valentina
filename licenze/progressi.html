@@ -353,7 +353,32 @@ function render(pack,hist){
 
 /* ---------- avvio ---------- */
 let STATE={pack:null,hist:[]};
+/* i dati non si perdono mai: ogni nuovo arrivo si UNISCE a quelli già salvati (i contatori tengono il valore più alto,
+   i giorni si sommano). Così un iPad reinstallato o un'app aggiornata non cancellano lo storico. */
+const LATEST=new Set(["gems","piggy","path-day","quests","dragon"]);
+function mergeVal(o,n,key){
+  if(n===undefined||n===null)return o;if(o===undefined||o===null)return n;
+  if(typeof o==="number"&&typeof n==="number")return Math.max(o,n);
+  if(Array.isArray(o)&&Array.isArray(n)){if(o.every(x=>typeof x!=="object")&&n.every(x=>typeof x!=="object"))return [...new Set(o.concat(n))].sort();return n.length>=o.length?n:o;}
+  if(typeof o==="object"&&typeof n==="object"&&!Array.isArray(o)&&!Array.isArray(n)){const r=Object.assign({},o);Object.keys(n).forEach(k=>{r[k]=mergeVal(o[k],n[k],k);});return r;}
+  return n;
+}
+function mergeData(od,nd){
+  const r=Object.assign({},od||{});
+  Object.keys(nd||{}).forEach(k=>{
+    if(LATEST.has(k)){r[k]=nd[k];return;}
+    if(k==="dragon"&&od&&od.dragon){r[k]=Object.assign({},nd[k],{energy:Math.max(+od.dragon.energy||0,+nd[k].energy||0)});return;}
+    if(k==="path"&&od&&od.path&&nd.path){const sumL=x=>Object.values((x&&x.sum)||{}).reduce((a,e)=>a+(+e.l||0),0);r[k]=sumL(nd.path)>=sumL(od.path)?nd.path:Object.assign({},od.path,{ref:nd.path.ref});return;}
+    r[k]=mergeVal(od?od[k]:undefined,nd[k],k);
+  });
+  if(od&&od.dragon&&nd&&nd.dragon)r.dragon=Object.assign({},nd.dragon,{energy:Math.max(+od.dragon.energy||0,+nd.dragon.energy||0)});
+  return r;
+}
+async function archive(pack){try{const r=await kv("readonly","progressi-archivio");const a=r?JSON.parse(r):[];a.push({at:new Date().toISOString(),pack});await kv("readwrite","progressi-archivio",JSON.stringify(a.slice(-20)));}catch(e){}}
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist();}catch(e){}
 async function accept(pack,from,quiet){
+  archive(pack);
+  if(STATE.pack&&STATE.pack.data&&pack.data){const keepSaved=pack.saved;pack={saved:keepSaved,loaded:pack.loaded,data:mergeData(STATE.pack.data,pack.data)};}
   pack.from=from; const A=analyze(pack); const s=summary(A);
   const hist=(STATE.hist||[]).filter(h=>h.d!==s.d); hist.push(s); hist.sort((a,b)=>a.d<b.d?-1:1);
   STATE={pack,hist:hist.slice(-60)}; await saveAll(STATE.pack,STATE.hist); render(STATE.pack,STATE.hist); if(!quiet)toast("Progressi aggiornati");
