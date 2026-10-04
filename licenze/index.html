@@ -82,9 +82,105 @@ button,input,select,textarea{font:inherit}
 @media (prefers-color-scheme:dark){:root{--bg:#0f1216;--card:#1a1e24;--ink:#eef0f3;--muted:#9aa3ae;--line:#2a3038;--seg:#242a32;--ok-bg:#16301f;--warn-bg:#3a1b19;--soon-bg:#33270f;--lp-bg:#3a2218;--fam-bg:#271f3d;--ben-bg:#14302f;--euro-bg:#172739}
   .form input,.form select,.form textarea,.chk,.mood button{background:#12161b;color:var(--ink)}.day.together{background:linear-gradient(180deg,#1a1e24,#14261b)}}
 </style>
-<script>window.APP_VERSION="67299c2371";window.APP_BUILD="2026-10-04T16:12+02:00";</script>
+<script>window.APP_VERSION="189ebf2411";window.APP_BUILD="2026-10-04T16:42+02:00";</script>
 </head>
 <body>
+<style id="lockCss">
+html.locked body>*:not(#lockScr){visibility:hidden!important}
+#lockScr{position:fixed;inset:0;z-index:2147483000;display:none;place-items:center;background:#f3f4f7;font:16px/1.4 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;color:#15181d;padding:24px}
+html.locked #lockScr{display:grid}
+#lockScr .lk{max-width:380px;width:100%;text-align:center;display:grid;gap:14px}
+#lockScr .lk-i{font-size:64px}
+#lockScr h1{margin:0;font-size:26px}
+#lockScr p{margin:0;color:#6b7280}
+#lockScr button{font:inherit;font-weight:800;text-transform:none;letter-spacing:0;border:0;border-radius:14px;padding:14px 18px;cursor:pointer}
+#lockScr .go{background:#1f5fae;color:#fff;font-size:18px}
+#lockScr .alt{background:#e6e8ee;color:#15181d}
+#lockScr input{font:inherit;font-size:22px;text-align:center;letter-spacing:6px;border:1px solid #e4e6eb;border-radius:12px;padding:10px;width:100%;box-sizing:border-box}
+#lockScr .err{color:#b3261e;font-weight:700;min-height:1.3em}
+@media (prefers-color-scheme:dark){#lockScr{background:#0f1216;color:#eef0f3}#lockScr .alt{background:#242a32;color:#eef0f3}#lockScr input{background:#12161b;color:#eef0f3;border-color:#2a3038}}
+</style>
+<div id="lockScr" role="dialog" aria-modal="true" aria-label="App bloccata"><div class="lk">
+  <div class="lk-i">🔒</div><h1>Pianificazione</h1><p id="lkMsg">Sblocca con Face ID per continuare.</p>
+  <button type="button" class="go" id="lkGo">Sblocca con Face ID</button>
+  <div id="lkPinBox" hidden><input id="lkPin" type="password" inputmode="numeric" autocomplete="off" maxlength="8" placeholder="codice di riserva"><div class="err" id="lkErr"></div><button type="button" class="go" id="lkPinGo">Entra</button></div>
+  <button type="button" class="alt" id="lkAlt">Usa il codice di riserva</button>
+</div></div>
+<script>
+/* ================= BLOCCO CON FACE ID (comune a tutte le pagine di Pianificazione) =================
+   - usa una passkey del dispositivo (WebAuthn): l'iPad chiede Face ID, o il codice dell'iPad se il volto non viene riconosciuto;
+   - nessun server: la chiave pubblica resta su questo dispositivo e la firma si verifica qui;
+   - codice di riserva (4–8 cifre) se la passkey non fosse disponibile;
+   - si riblocca dopo 5 minuti fuori dall'app. I dati restano dove sono: il blocco protegge l'apertura, non cifra i dati. */
+(function(){
+  "use strict";
+  var KEY="pn-lock", SES="pn-unlocked", IDLE=5*60*1000;
+  function cfg(){try{return JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){return null;}}
+  var C=cfg(), root=document.documentElement;
+  function unlocked(){try{var t=+sessionStorage.getItem(SES)||0;return t&&Date.now()-t<IDLE;}catch(e){return false;}}
+  function mark(){try{sessionStorage.setItem(SES,String(Date.now()));}catch(e){}}
+  if(C&&C.on&&!unlocked())root.classList.add("locked");
+  var b64=function(buf){var s="",a=new Uint8Array(buf);for(var i=0;i<a.length;i++)s+=String.fromCharCode(a[i]);return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");};
+  var unb64=function(s){s=s.replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";var r=atob(s),a=new Uint8Array(r.length);for(var i=0;i<r.length;i++)a[i]=r.charCodeAt(i);return a;};
+  function rnd(n){var a=new Uint8Array(n);crypto.getRandomValues(a);return a;}
+  async function sha(t){var h=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t));return b64(h);}
+  // firma ES256 (DER) → formato grezzo r|s per WebCrypto
+  function der2raw(d){var i=2;if(d[1]&0x80)i+=d[1]&0x7f;function int(){i++;var l=d[i++];var v=d.slice(i,i+l);i+=l;while(v.length>32&&v[0]===0)v=v.slice(1);var o=new Uint8Array(32);o.set(v,32-v.length);return o;}var r=int(),s=int(),out=new Uint8Array(64);out.set(r,0);out.set(s,32);return out;}
+  async function verify(pkB64,authData,clientJSON,sig){
+    try{var key=await crypto.subtle.importKey("spki",unb64(pkB64),{name:"ECDSA",namedCurve:"P-256"},false,["verify"]);
+      var ch=new Uint8Array(await crypto.subtle.digest("SHA-256",clientJSON)),ad=new Uint8Array(authData),data=new Uint8Array(ad.length+ch.length);data.set(ad,0);data.set(ch,ad.length);
+      return await crypto.subtle.verify({name:"ECDSA",hash:"SHA-256"},key,der2raw(new Uint8Array(sig)),data);}catch(e){return null;}
+  }
+  function done(){mark();root.classList.remove("locked");try{window.dispatchEvent(new Event("pn-unlocked"));}catch(e){}}
+  function msg(t){var e=document.getElementById("lkMsg");if(e)e.textContent=t;}
+  var busy=false;
+  async function faceId(){
+    C=cfg(); if(!C||!C.id){showPin();return;}
+    if(busy)return; busy=true; msg("Guarda l’iPad…");
+    try{
+      var chal=rnd(32);
+      var a=await navigator.credentials.get({publicKey:{challenge:chal,rpId:location.hostname,allowCredentials:[{type:"public-key",id:unb64(C.id)}],userVerification:"required",timeout:60000}});
+      var r=a.response,cj=JSON.parse(new TextDecoder().decode(r.clientDataJSON));
+      if(cj.type!=="webauthn.get"||cj.challenge!==b64(chal))throw new Error("risposta non valida");
+      var flags=new Uint8Array(r.authenticatorData)[32];if(!(flags&4))throw new Error("verifica del volto non fatta");
+      if(C.pk){var ok=await verify(C.pk,r.authenticatorData,r.clientDataJSON,r.signature);if(ok===false)throw new Error("firma non valida");}
+      done();
+    }catch(e){msg(e&&e.name==="NotAllowedError"?"Tocca «Sblocca con Face ID» per riprovare, o usa il codice di riserva.":"Non riuscito: riprova o usa il codice di riserva.");}
+    busy=false;
+  }
+  function showPin(){var b=document.getElementById("lkPinBox");if(b){b.hidden=false;var i=document.getElementById("lkPin");if(i)i.focus();}}
+  async function pin(){var v=(document.getElementById("lkPin").value||"").trim();C=cfg();
+    if(C&&C.pin&&await sha("pn-pin:"+v)===C.pin){done();document.getElementById("lkPin").value="";document.getElementById("lkErr").textContent="";}
+    else{document.getElementById("lkErr").textContent="Codice sbagliato";}}
+  function wire(){
+    var g=document.getElementById("lkGo");if(!g)return;
+    g.onclick=faceId;document.getElementById("lkAlt").onclick=showPin;document.getElementById("lkPinGo").onclick=pin;
+    document.getElementById("lkPin").onkeydown=function(e){if(e.key==="Enter")pin();};
+    if(root.classList.contains("locked"))faceId();
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",wire);else wire();
+  // si riblocca dopo 5 minuti fuori dall'app
+  document.addEventListener("visibilitychange",function(){C=cfg();if(!C||!C.on)return;
+    if(document.visibilityState==="hidden"){if(!root.classList.contains("locked"))mark();}else if(!unlocked()){root.classList.add("locked");msg("Sblocca con Face ID per continuare.");faceId();}});
+  setInterval(function(){if(!root.classList.contains("locked")&&document.visibilityState==="visible")mark();},30000);
+
+  /* ---------- attivazione (usata dalla pagina Pianificazione → 🔒 Blocco) ---------- */
+  window.__pnLock={
+    cfg:cfg,
+    available:async function(){try{return !!(window.PublicKeyCredential&&await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable());}catch(e){return false;}},
+    enable:async function(pinCode){
+      if(!/^\d{4,8}$/.test(pinCode||""))throw new Error("Il codice di riserva deve avere da 4 a 8 cifre");
+      var c=await navigator.credentials.create({publicKey:{challenge:rnd(32),rp:{name:"Pianificazione",id:location.hostname},
+        user:{id:rnd(16),name:"pianificazione",displayName:"Pianificazione"},pubKeyCredParams:[{type:"public-key",alg:-7}],
+        authenticatorSelection:{authenticatorAttachment:"platform",userVerification:"required",residentKey:"preferred"},timeout:60000,attestation:"none"}});
+      var pk=null;try{pk=c.response.getPublicKey?b64(c.response.getPublicKey()):null;}catch(e){}
+      localStorage.setItem(KEY,JSON.stringify({on:true,id:b64(c.rawId),pk:pk,pin:await sha("pn-pin:"+pinCode),at:new Date().toISOString()}));mark();return true;
+    },
+    disable:function(){localStorage.removeItem(KEY);try{sessionStorage.removeItem(SES);}catch(e){}},
+    lockNow:function(){try{sessionStorage.removeItem(SES);}catch(e){}if(cfg())root.classList.add("locked");msg("Sblocca con Face ID per continuare.");}
+  };
+})();
+</script>
 <nav class="appsw" aria-label="App"><a class="on" href="./" aria-current="page">🏠 Pianificazione</a><a href="licenze.html">📅 Licenze</a><a href="taichi.html">🧘 Tai Chi</a><a href="progressi.html">🐉 Progressi</a></nav>
 <div class="wrap">
   <nav class="side" id="side" aria-label="Sezioni"></nav>
@@ -278,13 +374,13 @@ function icsText(items){const L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Pian
   items.forEach(i=>{L.push("BEGIN:VEVENT","UID:"+i.uid+"@pianificazione","DTSTAMP:"+ds,...i.lines,"END:VEVENT");});L.push("END:VCALENDAR");return L.map(fold).join("\r\n")+"\r\n";}
 
 /* ---------- interfaccia ---------- */
-const SECT=[["oggi","🏠","Oggi"],["scad","📌","Scadenze"],["cal","📆","Calendario"],["fam","👨‍👧","Famiglia"],["conti","💶","Conti"],["ben","🧘","Benessere"]];
+const SECT=[["oggi","🏠","Oggi"],["scad","📌","Scadenze"],["cal","📆","Calendario"],["fam","👨‍👧","Famiglia"],["conti","💶","Conti"],["ben","🧘","Benessere"],["sic","🔒","Blocco"]];
 let cur=(location.hash||"").slice(1)||"oggi"; if(!SECT.some(x=>x[0]===cur))cur="oggi";
 let famWeek=monday(today()), editId=null;
 function side(){const late=scadOpen().filter(x=>scadState(x)==="warn").length;
   $("side").innerHTML=SECT.map(([k,i,t])=>`<button data-s="${k}" class="${k===cur?"on":""}"${k===cur?' aria-current="page"':""}><span class="ic">${i}</span>${t}${k==="scad"&&late?`<span class="n">${late}</span>`:""}</button>`).join("");}
 function go(k){cur=k;try{history.replaceState(null,"","#"+k);}catch(e){}render();window.scrollTo(0,0);}
-function render(){side();const m=$("main");m.innerHTML=({oggi:vOggi,scad:vScad,cal:vCal,fam:vFam,conti:vConti,ben:vBen}[cur]||vOggi)()+'<p class="saved" id="pnSaved"></p>';paintSaved();bind();}
+function render(){side();const m=$("main");m.innerHTML=({oggi:vOggi,scad:vScad,cal:vCal,fam:vFam,conti:vConti,ben:vBen,sic:vSic}[cur]||vOggi)()+'<p class="saved" id="pnSaved"></p>';paintSaved();bind();}
 
 function vOggi(){
   const t=today(),S=licS(),h=new Date().getHours();
@@ -416,8 +512,25 @@ function vBen(){
   <div class="btns"><a class="btn pri" href="taichi.html" style="text-decoration:none">🧘 Apri il Tai Chi</a></div>`;
 }
 
+function vSic(){
+  const L=window.__pnLock,c=L&&L.cfg();
+  return `<h1>🔒 Blocco con Face ID</h1><p class="sub">Quando apri l’app (Pianificazione, Licenze, Tai Chi, Progressi) l’iPad chiede il tuo volto. Dopo 5 minuti fuori dall’app si blocca di nuovo.</p>
+  ${c&&c.on?`<div class="card"><h3>✅ Attivo</h3><p class="lbl">Attivato il ${new Date(c.at).toLocaleDateString("it-IT",{day:"numeric",month:"long",year:"numeric"})}. Se Face ID non riconosce il volto, l’iPad propone il suo codice; in più c’è il tuo codice di riserva.</p>
+    <div class="btns"><button class="btn pri" id="lkNow">🔒 Blocca adesso</button><button class="btn danger" id="lkOff">Disattiva il blocco</button></div></div>`
+  :`<div class="card"><h3>Attiva il blocco</h3><p class="lbl" id="lkAv">Controllo se questo iPad può usare Face ID…</p><div class="form">
+    <label>Codice di riserva (4–8 cifre)<input id="lkP1" type="password" inputmode="numeric" maxlength="8" autocomplete="off"></label>
+    <label>Ripeti il codice<input id="lkP2" type="password" inputmode="numeric" maxlength="8" autocomplete="off"></label></div>
+    <div class="btns"><button class="btn pri" id="lkOn">🔒 Attiva con Face ID</button></div>
+    <p class="lbl">Il codice di riserva serve solo se la passkey non fosse disponibile (per esempio su un altro dispositivo): scrivilo in un posto sicuro.</p></div>`}
+  <div class="card"><h3>Che cosa protegge</h3><p class="lbl">Il blocco impedisce di aprire e guardare l’app a chi prende in mano l’iPad. I dati restano salvati sul dispositivo come prima (e nelle copie): la protezione più forte resta il codice e il Face ID dell’iPad stesso.</p></div>`;
+}
 /* ---------- eventi ---------- */
 function bind(){
+  if($("lkAv")&&window.__pnLock)window.__pnLock.available().then(ok=>{const e=$("lkAv");if(e)e.textContent=ok?"✓ Questo iPad può usare Face ID (o il suo codice).":"⚠️ Qui Face ID non è disponibile per le app web: puoi usare solo il codice di riserva.";});
+  if($("lkOn"))$("lkOn").onclick=async()=>{const a=$("lkP1").value.trim(),b=$("lkP2").value.trim();if(!/^\d{4,8}$/.test(a)){toast("Il codice deve avere da 4 a 8 cifre");return;}if(a!==b){toast("I due codici non coincidono");return;}
+    try{await window.__pnLock.enable(a);toast("🔒 Blocco attivato");render();}catch(e){toast(e&&e.name==="NotAllowedError"?"Face ID annullato":"Non riuscito: "+(e&&e.message||e));}};
+  if($("lkOff"))$("lkOff").onclick=()=>{if(!confirm("Disattivare il blocco con Face ID?"))return;window.__pnLock.disable();render();toast("Blocco disattivato");};
+  if($("lkNow"))$("lkNow").onclick=()=>window.__pnLock.lockNow();
   document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>go(b.dataset.s));
   document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
   document.querySelectorAll("[data-done]").forEach(b=>b.onclick=()=>doneScad(b.dataset.done));
