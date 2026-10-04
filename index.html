@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<script>window.APP_VERSION="109574ac19";</script>
+<script>window.APP_VERSION="1d3377d1ae";</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://f6kd4bp6sr-stack.github.io; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self' data: blob:; connect-src 'self' https://api.github.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
 <meta name="robots" content="noindex, nofollow, noarchive">
@@ -10556,6 +10556,15 @@ function backupCard() {
 }
 /* ---------- 🔗 collegamento con i genitori, dentro il riquadro dei salvataggi ---------- */
 window.MONDO_INLINE_LINK = true;
+/* il collegamento con i genitori è conservato anche nella memoria dell'app (e nelle copie): non si perde con gli aggiornamenti */
+function keepLink() {
+  try {
+    const ls = localStorage.getItem('msync-cfg'), st = store.get('link-cfg', null);
+    if (ls) { const o = JSON.parse(ls); if (JSON.stringify(o) !== JSON.stringify(st)) store.set('link-cfg', o); }
+    else if (st && st.gist) localStorage.setItem('msync-cfg', JSON.stringify(st));
+  } catch (e) {}
+}
+keepLink();
 function linkLoad() {
   return new Promise(res => {
     if (window.__mondoSyncApi) return res(true);
@@ -10578,7 +10587,7 @@ async function linkPaint() {
     el2.innerHTML = '<div class="bk-lk" style="margin-top:8px"><span>🔗 <b>Invio automatico attivo</b> · codice <b>' + esc(A.code()) + '</b> · ' + (c.err ? '⚠️ ' + esc(c.err) : 'ultimo invio ' + when(c.last)) + ' (invio automatico)</span>' +
       '<button type="button" class="btn small ghost" id="lk-now">Invia ora</button><button type="button" class="btn small ghost" id="lk-off">Scollega</button></div>';
     $('lk-now').addEventListener('click', async () => { $('lk-now').textContent = '⏳'; await A.push(true); linkPaint(); });
-    $('lk-off').addEventListener('click', () => { const b = $('lk-off'); if (b.dataset.sure) { A.off(); linkPaint(); } else { b.dataset.sure = 1; b.textContent = 'Tocca ancora'; } });
+    $('lk-off').addEventListener('click', () => { const b = $('lk-off'); if (b.dataset.sure) { A.off(); store.set('link-cfg', null); linkPaint(); } else { b.dataset.sure = 1; b.textContent = 'Tocca ancora'; } });
   } else {
     el2.innerHTML = '<details class="bk-lk-set"><summary>🔗 Invio automatico con GitHub (facoltativo, serve una chiave)</summary>' +
       '<input type="password" id="lk-tok" placeholder="Chiave GitHub (permesso gist)" autocomplete="off">' +
@@ -10589,11 +10598,11 @@ async function linkPaint() {
       if (!t) { m.textContent = 'Incolla la chiave GitHub.'; return; }
       if (String(k).trim().length < 6) { m.textContent = 'Scrivi il tuo codice (almeno 6 caratteri).'; return; }
       m.textContent = 'Collegamento in corso…'; $('lk-go').disabled = true;
-      try { await A.connect(t, k); linkPaint(); } catch (e) { m.textContent = 'Non riuscito: ' + e.message + '.'; $('lk-go').disabled = false; }
+      try { await A.connect(t, k); keepLink(); linkPaint(); } catch (e) { m.textContent = 'Non riuscito: ' + e.message + '.'; $('lk-go').disabled = false; }
     });
   }
 }
-window.onMondoSync = () => { if ($('bk-link') && !document.querySelector('#bk-link details[open]') && $('modal').hidden) linkPaint(); };
+window.onMondoSync = () => { keepLink(); if ($('bk-link') && !document.querySelector('#bk-link details[open]') && $('modal').hidden) linkPaint(); };
 /* ---------- 📱 QR per i genitori: i progressi passano inquadrando lo schermo ---------- */
 const QR_BASE = 'https://f6kd4bp6sr-stack.github.io/mie-app/licenze/progressi.html#';
 function qrData(days) {
