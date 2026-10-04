@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<script>window.APP_VERSION="dd9dbc5faf";</script>
+<script>window.APP_VERSION="1b173e1da2";</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://f6kd4bp6sr-stack.github.io; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://i.ytimg.com; font-src 'self' data:; media-src 'self' data: blob:; connect-src 'self' https://api.github.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src https://www.youtube-nocookie.com">
 <meta name="robots" content="noindex, nofollow, noarchive">
@@ -10654,6 +10654,7 @@ function qrData(days) {
   KEEP.forEach(k => { const v = store.get(k, undefined); if (v !== undefined) d[k] = v; });
   const ref = iso(addDays(new Date(), -days));
   const pd = store.get('prog-days', {}); d['prog-days'] = {}; Object.keys(pd).filter(x => x >= ref).forEach(x => d['prog-days'][x] = pd[x]);
+  const vl = store.get('vid-log', {}); d['vid-log'] = {}; Object.keys(vl).filter(x => x >= ref).forEach(x => d['vid-log'][x] = vl[x]);
   const di = store.get('diary', {}); if (di && typeof di === 'object') { d.diary = {}; Object.keys(di).filter(x => x >= ref).forEach(x => d.diary[x] = 1); }
   if (D) d.dragon = { name: D.name || '', energy: D.energy || 0 };
   try {
@@ -12536,6 +12537,7 @@ function notifPaint() {
   b.setAttribute('aria-label', n ? D.name + ' ti aspetta: ' + n + (n === 1 ? ' novità' : ' novità') : 'Novità del drago');
   b.innerHTML = '<span aria-hidden="true">🔔</span>' + (n ? dotDragon(n, n > notifLastN ? 'pop' : '') : '');
   notifLastN = n;
+  appBadge();
   /* linguette in basso */
   const tabs = {}; un.forEach(x => { const t = NEWS_TAB[x.k]; if (t) tabs[t] = 1; });
   document.querySelectorAll('#tabs .tab[data-t]').forEach(t => {
@@ -12568,13 +12570,24 @@ function openNews(greet) {
 }
 
 /* ---------- pallino sul simbolo dell'app ---------- */
-function appBadge(show) {
+function appBadge() {
   try {
     if (!('setAppBadge' in navigator)) return;
-    if (!show) { navigator.clearAppBadge && navigator.clearAppBadge(); return; }
-    const n = newsItems().filter(x => ['gotd', 'rip', 'quest', 'goal'].includes(x.k)).length;
-    n ? navigator.setAppBadge(n) : navigator.clearAppBadge();
+    const n = notifUnread().length;
+    n ? navigator.setAppBadge(n).catch(() => {}) : navigator.clearAppBadge().catch(() => {});
   } catch (e) {}
+}
+/* il pallino rosso sull'icona (come YouTube) richiede il permesso «Notifiche» dell'iPad: lo chiede il drago, una volta sola */
+const isInstalled = () => navigator.standalone === true || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
+function badgeInvite() {
+  if (!('Notification' in window) || !('setAppBadge' in navigator) || !isInstalled()) return;
+  if (Notification.permission !== 'default' || store.get('badge-asked', '') === todayIso() || (store.get('badge-asked-n', 0) >= 3)) return;
+  if (!$('modal').hidden || ($('lesson') && !$('lesson').hidden)) { setTimeout(badgeInvite, 4000); return; }
+  store.set('badge-asked', todayIso()); store.set('badge-asked-n', store.get('badge-asked-n', 0) + 1);
+  openModal('<div class="v2-greet"><div class="v2-gd">' + dragonSVG(Math.max(1, levelOf(D.energy)), D.color, 'bob') + '</div><div class="v2-gb">Posso mettere un <b style="color:#ff3b30">pallino rosso</b> sulla mia icona quando ho novità per te? Tocca «Sì» e poi «Consenti».</div></div>' +
+    '<div class="row center" style="gap:10px;margin-top:12px"><button type="button" class="btn ghost" id="bi-no">Più tardi</button><button type="button" class="btn" id="bi-ok" data-focus style="--bc:var(--v2-green)">Sì! 🔴</button></div>');
+  $('bi-no').addEventListener('click', closeModal);
+  $('bi-ok').addEventListener('click', async () => { const pr = Notification.requestPermission(); closeModal(); try { const r = await pr; if (r === 'granted') { toastV2('🔴 Fatto! Il drago ti chiamerà con il pallino rosso'); appBadge(); } } catch (e) {} });
 }
 async function askBadge() {
   if (!('Notification' in window)) { toastV2('Su questo iPad il pallino non è disponibile: serve l’app aggiunta alla schermata Home (iPadOS 16.4 o più)'); return; }
@@ -12582,7 +12595,7 @@ async function askBadge() {
 }
 
 /* ---------- avvio: saluto una volta al giorno, poi 🔔 ---------- */
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') { store.set('last-open', todayIso()); appBadge(true); } else { appBadge(false); notifPaint(); greetIfNew(); } });
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') { store.set('last-open', todayIso()); appBadge(); } else { notifPaint(); greetIfNew(); } });
 function greetIfNew() {
   if (!D) return;
   const today = todayIso();
@@ -12595,7 +12608,7 @@ function greetIfNew() {
 }
 (function notifBoot() {
   const r = renderTabs; renderTabs = function () { r(); notifPaint(); };
-  setTimeout(() => { notifPaint(); appBadge(false); greetIfNew(); }, 800);
+  setTimeout(() => { notifPaint(); greetIfNew(); setTimeout(badgeInvite, 6000); }, 800);
 })();
 
 /* video scelti (canali didattici italiani, verificati da ricerche: rev5/vid_*.json) */
@@ -12655,6 +12668,9 @@ function playVideo(id) {
   const x = VIDEOS.find(y => y.id === id); if (!x) return;
   const v = vidState(); if (v.tickets <= 0 || v.today >= VID_MAX_DAY) return;
   v.tickets--; v.today++; v.seen[id] = todayIso(); vidSave(v);
+  /* registro per la pagina Progressi del genitore: solo titolo, materia e se l'ha finito */
+  const lk = todayIso() + '|' + id, vlog = store.get('vid-log', {}); vlog[lk] = { t: x.t, u: x.u, f: 0 };
+  const cut = iso(addDays(new Date(), -60)); Object.keys(vlog).forEach(k => { if (k < cut) delete vlog[k]; }); store.set('vid-log', vlog);
   const src = 'https://www.youtube-nocookie.com/embed/' + id + '?rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&fs=1&enablejsapi=1&origin=' + encodeURIComponent(location.origin);
   closeModal();
   openModal('<div class="vd-play"><div class="row between" style="align-items:center;gap:8px"><b class="vd-pt">' + esc(x.t) + '</b><button type="button" class="btn ghost" id="vd-close">✕ Chiudi</button></div>' +
@@ -12664,7 +12680,8 @@ function playVideo(id) {
   let done = false, dur = 0, cur = 0;
   const fin = full => {
     if (done) return; done = true; window.removeEventListener('message', onMsg);
-    if (full) { Gems.add(3); try { questEv && questEv('vid', 1); } catch (e) {} }
+    if (full) { const vl = store.get('vid-log', {}); if (vl[lk]) { vl[lk].f = 1; store.set('vid-log', vl); } try { window.__mondoSyncPush && window.__mondoSyncPush(true); } catch (e) {}
+      Gems.add(3); try { questEv && questEv('vid', 1); } catch (e) {} }
     closeModal();
     setTimeout(() => toastV2(full ? '🎬 Bravissima! Video finito: +3 💎' : '🎬 Alla prossima!'), 300);
   };
