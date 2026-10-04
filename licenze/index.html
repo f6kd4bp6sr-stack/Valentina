@@ -82,7 +82,7 @@ button,input,select,textarea{font:inherit}
 @media (prefers-color-scheme:dark){:root{--bg:#0f1216;--card:#1a1e24;--ink:#eef0f3;--muted:#9aa3ae;--line:#2a3038;--seg:#242a32;--ok-bg:#16301f;--warn-bg:#3a1b19;--soon-bg:#33270f;--lp-bg:#3a2218;--fam-bg:#271f3d;--ben-bg:#14302f;--euro-bg:#172739}
   .form input,.form select,.form textarea,.chk,.mood button{background:#12161b;color:var(--ink)}.day.together{background:linear-gradient(180deg,#1a1e24,#14261b)}}
 </style>
-<script>window.APP_VERSION="26fca3c4d4";window.APP_BUILD="2026-10-04T15:59+02:00";</script>
+<script>window.APP_VERSION="67299c2371";window.APP_BUILD="2026-10-04T16:12+02:00";</script>
 </head>
 <body>
 <nav class="appsw" aria-label="App"><a class="on" href="./" aria-current="page">🏠 Pianificazione</a><a href="licenze.html">📅 Licenze</a><a href="taichi.html">🧘 Tai Chi</a><a href="progressi.html">🐉 Progressi</a></nav>
@@ -206,13 +206,36 @@ function setBen(s,k,v){const d=Object.assign({},P.ben.d[s]||{});if(v===""||v==nu
    Il Comando Rapido copia negli appunti una riga per evento: inizio§fine§titolo§calendario§tutto il giorno§luogo
    (date in ISO 8601). Qui si incollano: sostituiscono la copia precedente, senza doppioni. */
 const SC_NAME="Aggiorna Pianificazione";
+/* date come le scrive Comandi Rapidi: ISO 8601, «05/10/26, 09:50», «5 ott 2026 alle ore 09:50», «5 ottobre 2026, 9:50», «Oct 5, 2026 at 9:50 AM» */
+const MESI_IT=["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"],MESI_EN=["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
+function parseWhen(x){
+  x=String(x||"").trim().toLowerCase();if(!x)return null;
+  let m=x.match(/^(\d{4})-(\d{2})-(\d{2})(?:[t ](\d{2}):(\d{2}))?/);
+  if(m)return{d:m[1]+"-"+m[2]+"-"+m[3],t:m[4]?m[4]+":"+m[5]:""};
+  const tm=(x.match(/(\d{1,2})[:.](\d{2})(?:\s*([ap])\.?m\.?)?\s*$/)||x.match(/(?:alle|ore|at|,)\s*(?:ore\s*)?(\d{1,2})[:.](\d{2})(?:\s*([ap])\.?m\.?)?/));
+  let t="";if(tm){let h=+tm[1];if(tm[3]==="p"&&h<12)h+=12;if(tm[3]==="a"&&h===12)h=0;t=pad(h)+":"+tm[2];}
+  const Y=y=>{y=+y;return y<100?2000+y:y;};
+  m=x.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})/);
+  if(m)return{d:Y(m[3])+"-"+pad(+m[2])+"-"+pad(+m[1]),t};
+  m=x.match(/^(\d{1,2})\s+([a-zà-ù]{3,})\.?\s+(\d{4})/);
+  if(m){const k=MESI_IT.indexOf(m[2].slice(0,3));if(k>=0)return{d:m[3]+"-"+pad(k+1)+"-"+pad(+m[1]),t};}
+  m=x.match(/^([a-z]{3,})\.?\s+(\d{1,2}),?\s+(\d{4})/);
+  if(m){const k=MESI_EN.indexOf(m[1].slice(0,3));if(k>=0)return{d:m[3]+"-"+pad(k+1)+"-"+pad(+m[2]),t};}
+  return null;
+}
 function parseCal(txt){
   const out=[],seen=new Set();
-  String(txt||"").split(/\r?\n/).forEach(l=>{const f=l.split("§");if(f.length<3)return;
-    const s=(f[0]||"").trim(),e=(f[1]||"").trim(),t=(f[2]||"").trim();if(!/^\d{4}-\d{2}-\d{2}/.test(s)||!t)return;
-    if(/festivit|holiday/i.test(f[3]||""))return; // le festività le conosce già l'app
-    const ad=/^(s[iì]|yes|true|1|vero)$/i.test((f[4]||"").trim()),k=s.slice(0,16)+"|"+t;if(seen.has(k))return;seen.add(k);
-    out.push({k,d:s.slice(0,10),o:ad?"":s.slice(11,16),f:ad?"":(e.slice(0,10)===s.slice(0,10)?e.slice(11,16):""),ed:(ad&&e.slice(11,16)==="00:00"&&e.slice(0,10)>s.slice(0,10))?add(e.slice(0,10),-1):(e.slice(0,10)||s.slice(0,10)),t,cal:(f[3]||"").trim(),ad,loc:(f[5]||"").trim().split("\n")[0]});});
+  String(txt||"").split(/\r?\n/).forEach(l=>{const f=l.split("§").map(z=>z.trim());if(f.length<2)return;
+    // formati accettati: inizio§fine§titolo§calendario§luogo  (anche: inizio§titolo§calendario, e la vecchia riga con «tutto il giorno»)
+    let S=parseWhen(f[0]),E=parseWhen(f[1]),t,cal,loc,adf=null;
+    if(E){t=f[2]||"";cal=f[3]||"";if(/^(s[iì]|no|yes|true|false|1|0|vero|falso)$/i.test(f[4]||"")){adf=/^(s[iì]|yes|true|1|vero)$/i.test(f[4]);loc=f[5]||"";}else loc=f[4]||"";}
+    else{t=f[1]||"";cal=f[2]||"";loc=f[3]||"";E=S;}
+    if(!S||!t)return;
+    if(/festivit|holiday/i.test(cal))return; // le festività le conosce già l'app
+    const ad=adf!=null?adf:(!S.t||S.t==="00:00")&&(!E.t||E.t==="00:00"||E.t==="23:59");
+    const k=S.d+"T"+(S.t||"")+"|"+t;if(seen.has(k))return;seen.add(k);
+    let ed=E.d||S.d;if(ad&&E.t==="00:00"&&ed>S.d)ed=add(ed,-1);
+    out.push({k,d:S.d,o:ad?"":S.t,f:ad||E.d!==S.d?"":E.t,ed,t,cal,ad,loc:loc.split("\n")[0]});});
   return out.sort((a,b)=>(a.d+(a.o||""))<(b.d+(b.o||""))?-1:1);
 }
 function importCal(txt){const ev=parseCal(txt);if(!ev.length){toast("Negli appunti non ci sono eventi del Comando Rapido");return false;}
@@ -318,7 +341,7 @@ function vCalImport(){
   <p class="lbl">Un’app web non può leggere da sola il Calendario: lo fa un Comando Rapido, che copia gli eventi negli appunti. Si crea una volta sola.</p>
   <div class="row"><span class="pill">1</span><div class="grow">Apri <b>Comandi Rapidi</b> → <b>+</b> → chiamalo esattamente <b>${SC_NAME}</b>.</div></div>
   <div class="row"><span class="pill">2</span><div class="grow">Aggiungi <b>Trova eventi di Calendario</b>: tocca «Aggiungi filtro» → <b>Data di inizio</b> «è nei prossimi» <b>60 giorni</b>; nessun altro filtro (le festività le salta l’app, che le conosce già). Ordina per <b>Data di inizio</b>, limite 300.</div></div>
-  <div class="row"><span class="pill">3</span><div class="grow">Aggiungi <b>Ripeti con ognuno</b>. Dentro, aggiungi <b>Testo</b> e scrivi, usando le variabili di «Elemento ripetuto»:<br><code>Data di inizio§Data di fine§Titolo§Calendario§È tutto il giorno§Luogo</code><br>Per le due date tocca la variabile → <b>Formato data: ISO 8601</b> e attiva <b>Includi ora</b>. Il simbolo § si trova tenendo premuto il tasto &amp; (o copialo da qui).</div></div>
+  <div class="row"><span class="pill">3</span><div class="grow">Aggiungi <b>Ripeti con ognuno</b>. Dentro, aggiungi <b>Testo</b> e scrivi, usando le variabili di «Elemento ripetuto»:<br><code>Data di inizio§Data di fine§Titolo§Calendario§Luogo</code><br>Le date vanno bene così come le propone l’iPad, senza cambiare formato. Il simbolo § copialo con il pulsante qui sotto.</div></div>
   <div class="row"><span class="pill">4</span><div class="grow">Dopo «Fine ripetizione» aggiungi <b>Combina testo</b> (con «Nuova riga») e poi <b>Copia negli appunti</b>.</div></div>
   <div class="row"><span class="pill">5</span><div class="grow">Qui in Oggi tocca <b>🔄 Aggiorna dal Calendario</b>: parte il Comando Rapido; torna qui con «◀ Pianificazione» in alto a sinistra e tocca <b>📥 Tocca qui per inserire gli eventi</b> (iPad chiede «Incolla»: consenti).</div></div>
   <div class="row"><span class="pill">6</span><div class="grow">Facoltativo, ogni mattina da solo: Comandi Rapidi → <b>Automazione</b> → <b>Ora del giorno</b> 7:00 → <b>Esegui subito</b> → «${SC_NAME}». Poi in Pianificazione basta <b>📥 Incolla dagli appunti</b>.</div></div>
