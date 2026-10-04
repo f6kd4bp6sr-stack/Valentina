@@ -77,12 +77,14 @@ button,input,select,textarea{font:inherit}
 .amt.e{color:var(--ok)}.amt.u{color:var(--warn)}
 .hidden-amt .amt{filter:blur(6px)}
 .empty{color:var(--muted);padding:6px 0}
+.warnbox{margin-top:8px;padding:9px 12px;border-radius:10px;background:#fff4e8;border:1px solid #f0a35e;font-size:14px;line-height:1.4}@media(prefers-color-scheme:dark){.warnbox{background:#3a2a1c;border-color:#b8743c}}
+a.btn{text-decoration:none}
 .saved{font-size:12.5px;color:var(--muted);margin:6px 0 0}
-@media (max-width:820px){.wrap{grid-template-columns:1fr}.side{position:static;display:flex;overflow-x:auto;gap:6px}.side button{width:auto;white-space:nowrap;padding:8px 12px}.week{grid-template-columns:1fr}.day{min-height:auto}}
+@media (max-width:820px){.wrap{grid-template-columns:1fr}.side{position:static;display:flex;flex-wrap:wrap;gap:6px}.side button{width:auto;white-space:nowrap;padding:8px 12px}.week{grid-template-columns:1fr}.day{min-height:auto}}
 @media (prefers-color-scheme:dark){:root{--bg:#0f1216;--card:#1a1e24;--ink:#eef0f3;--muted:#9aa3ae;--line:#2a3038;--seg:#242a32;--ok-bg:#16301f;--warn-bg:#3a1b19;--soon-bg:#33270f;--lp-bg:#3a2218;--fam-bg:#271f3d;--ben-bg:#14302f;--euro-bg:#172739}
   .form input,.form select,.form textarea,.chk,.mood button{background:#12161b;color:var(--ink)}.day.together{background:linear-gradient(180deg,#1a1e24,#14261b)}}
 </style>
-<script>window.APP_VERSION="2a187db55a";window.APP_BUILD="2026-10-04T19:37+02:00";</script>
+<script>window.APP_VERSION="5fe4b87fe2";window.APP_BUILD="2026-10-04T20:53+02:00";</script>
 </head>
 <body>
 <style id="lockCss">
@@ -261,8 +263,37 @@ function absBlocks(S){ // assenze consecutive (con weekend e festivi in mezzo) d
   return out;
 }
 function tcSessions(){const m=lsJ("tc_sessions")||{};return Object.values(m).filter(x=>x&&(x.saved||(x.doneIdx||[]).length>=3));}
-function valeInfo(){const p=lsJ("prog-vale-v1");if(!p)return null;const d=(p.state&&p.state.data)||p.data||{};let l=0;try{Object.values((d.path&&d.path.sum)||{}).forEach(e=>l+=(+e.l||0));}catch(e){}
-  const days=Array.isArray(d.days)?d.days:Object.keys(d.days||{});const w=days.filter(x=>String(x)>=add(today(),-7)).length;return{saved:p.saved,l,w};}
+function valeSum(d){let l=0;try{Object.values((d.path&&d.path.sum)||{}).forEach(e=>l+=(+e.l||0));}catch(e){}
+  const pad=x=>{const m=String(x).match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);return m?m[1]+"-"+m[2].padStart(2,"0")+"-"+m[3].padStart(2,"0"):String(x);};
+  const days=(Array.isArray(d.days)?d.days:Object.keys(d.days||{})).map(pad).filter(x=>x>=add(today(),-14));return{l,days};}
+function valeInfo(){
+  const p=lsJ("prog-vale-v1"),inb=lsJ(VIN),L=lsJ("prog-link-v1");let o=null;
+  if(p){const d=(p.state&&p.state.data)||p.data||{};o=Object.assign({saved:p.saved},valeSum(d));}
+  if(inb&&inb.saved&&(!o||String(inb.saved)>String(o.saved||"")))o={saved:inb.saved,l:inb.l,days:inb.days||[]};
+  if(!o)return L&&L.gist?{linked:true,err:inb&&inb.err}:null;
+  o.w=(o.days||[]).filter(x=>String(x)>=add(today(),-7)).length;o.linked=!!(L&&L.gist);o.err=inb&&inb.err;
+  o.age=o.saved?(Date.now()-new Date(o.saved).getTime())/864e5:null;return o;}
+/* «Il mio mondo»: Oggi scarica da sola l'ultimo invio cifrato dell'iPad (stesso collegamento della sezione Progressi; massimo ogni 10 minuti) */
+const VIN="prog-vale-in";let valeBusy=false;
+const vub=s=>{s=String(s).replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";const b=atob(s),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a;};
+async function valePull(force){
+  const L=lsJ("prog-link-v1");if(!L||!L.gist||!L.key||valeBusy||navigator.onLine===false)return;
+  const inb=lsJ(VIN)||{};if(!force&&inb.checked&&Date.now()-new Date(inb.checked).getTime()<10*60e3)return;
+  valeBusy=true;const before=JSON.stringify(inb);
+  try{
+    const r=await fetch("https://api.github.com/gists/"+L.gist,{cache:"no-store",headers:{Accept:"application/vnd.github+json"}});
+    if(!r.ok)throw new Error(r.status===404?"collegamento non trovato: rifallo nella sezione Progressi":r.status===403?"troppi controlli in un’ora, riprovo più tardi":"errore "+r.status);
+    const g=await r.json(),f=g.files&&g.files["mondo.json"];if(!f)throw new Error("l’iPad non ha ancora inviato niente");
+    let txt=f.content;if(f.truncated&&f.raw_url)txt=await(await fetch(f.raw_url,{cache:"no-store"})).text();
+    const o=JSON.parse(txt);if(o.app!=="mondo-sync")throw new Error("contenuto non riconosciuto");
+    const k=await crypto.subtle.importKey("raw",vub(L.key),"AES-GCM",false,["decrypt"]);
+    const pt=JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:vub(o.iv)},k,vub(o.ct))));
+    const d=(pt.state&&pt.state.data)||pt.data||{},now=new Date().toISOString();
+    try{localStorage.setItem(VIN,JSON.stringify(Object.assign({saved:pt.saved,checked:now,err:""},valeSum(d))));}catch(e){}
+    L.sent=pt.saved;L.checked=now;L.err="";try{localStorage.setItem("prog-link-v1",JSON.stringify(L));}catch(e){}
+  }catch(e){inb.checked=new Date().toISOString();inb.err=e&&e.name==="OperationError"?"il codice non corrisponde: ricollega nella sezione Progressi":String((e&&e.message)||e);try{localStorage.setItem(VIN,JSON.stringify(inb));}catch(x){}}
+  finally{valeBusy=false;const now=lsJ(VIN)||{};if(cur==="oggi"&&(now.saved!==JSON.parse(before).saved||now.err!==JSON.parse(before).err))render();}
+}
 
 /* ---------- scadenze ---------- */
 const CAT={pratica:["📂","Pratiche"],documenti:["🪪","Documenti"],auto:["🚗","Auto"],casa:["🏠","Casa"],salute:["🩺","Salute"],famiglia:["👨‍👧","Famiglia"],soldi:["💶","Pagamenti"],altro:["📌","Altro"]};
@@ -886,8 +917,8 @@ function vOggi(){
   o+=`<div class="card"><h3>🧘 Benessere <button class="lnk" data-go="ben">Diario ›</button></h3><div class="lbl">Come ti senti oggi?</div><div class="mood" style="margin:6px 0">${UMORE.map((u,i)=>`<button data-mood="${i+1}" class="${+bd.umore===i+1?"on":""}" aria-label="umore ${i+1}">${u}</button>`).join("")}</div>
     <div class="row"><div class="grow">Tai Chi oggi</div><b>${tcToday?"✓ "+tcToday:"—"}</b></div><div class="row"><div class="grow">Sessioni questa settimana</div><b>${tcWeek}</b><a class="btn sm" href="taichi.html">Apri</a></div></div>`;
   // valentina
-  const v=valeInfo();
-  o+=`<div class="card"><h3>🐉 Il mio mondo <a href="progressi.html">Progressi ›</a></h3>${v?`<div class="row"><div class="grow">Nozioni imparate nel percorso</div><b>${v.l}</b></div><div class="row"><div class="grow">Giorni di studio negli ultimi 7</div><b>${v.w}</b></div><div class="row"><span class="lbl">Dati del ${v.saved?new Date(v.saved).toLocaleDateString("it-IT",{day:"numeric",month:"short"}):"—"}</span></div>`:'<p class="empty">Collega «Il mio mondo» nella sezione Progressi.</p>'}</div>`;
+  const v=valeInfo(),vd=v&&v.saved?new Date(v.saved):null;
+  o+=`<div class="card"><h3>🐉 Il mio mondo <a href="progressi.html">Progressi ›</a></h3>${v&&v.saved?`<div class="row"><div class="grow">Nozioni imparate nel percorso</div><b>${v.l}</b></div><div class="row"><div class="grow">Giorni di studio negli ultimi 7</div><b>${v.w}</b></div><div class="row"><span class="lbl">Ultimo invio dall’iPad: ${vd.toDateString()===new Date().toDateString()?"oggi alle "+vd.toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"}):vd.toLocaleDateString("it-IT",{weekday:"short",day:"numeric",month:"short"})}</span></div>`:v&&v.linked?'<p class="empty">Collegato: in attesa del primo invio dall’iPad.</p>':'<p class="empty">Collega «Il mio mondo» nella sezione Progressi.</p>'}${v&&(v.err||(v.age!=null&&v.age>1.5))?`<div class="warnbox">⚠️ ${v.err?esc(v.err)+".":`L’iPad non invia da ${Math.floor(v.age)} ${Math.floor(v.age)===1?"giorno":"giorni"}. Sull’iPad della bimba: <b>🐉 Io</b> → riquadro <b>💾 Salvataggi</b>; se c’è ⚠️, tocca <b>🔑 Nuova chiave</b>.`}</div>`:""}</div>`;
   return o+"</div>";
 }
 function vScad(){
@@ -1032,9 +1063,10 @@ async function exportIcs(all){
   try{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([txt],{type:"text/calendar"}));a.download=fn;document.body.appendChild(a);a.click();a.remove();mark();}catch(e){toast("Non riesco a creare il file");}
 }
 window.addEventListener("hashchange",()=>{const k=(location.hash||"").slice(1);if(k&&k!==cur&&SECT.some(x=>x[0]===k)){cur=k;render();}});
-document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")render();});
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"){render();valePull(false);}});
+window.addEventListener("online",()=>valePull(false));setInterval(()=>valePull(false),30*60e3);
 window.__pn={icsItems,icsText,licCalc,licS,absBlocks,nextPayments,monthTotals,proj:()=>projection(),get P(){return P;}};
-render(); recover();
+render(); recover(); setTimeout(()=>valePull(false),800);
 </script>
 <script>
 /* ===== Aggiornamento automatico e controllo versione (uguale in tutte le sezioni di Pianificazione: costruita da comune/barra.html) =====

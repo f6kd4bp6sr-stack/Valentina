@@ -77,6 +77,7 @@ button,.btn{font:inherit;border:0;border-radius:10px;padding:10px 14px;backgroun
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:999px;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:50}
 .toast.show{opacity:1}
 .dbars{display:grid;gap:4px;margin:8px 0 4px}.dbar{display:grid;grid-template-columns:72px 1fr 92px;gap:8px;align-items:center;font-size:13px}.dbar .dl{color:var(--mut,#7a8290)}.dbar .dn{text-align:right;font-variant-numeric:tabular-nums}.dt{display:flex;height:12px;border-radius:6px;background:rgba(127,127,127,.12);overflow:hidden}.dt .ok{background:#3aa66b}.dt .ko{background:#e06a5a}
+.lnkwarn{margin-top:8px;padding:10px 12px;border-radius:10px;background:#fff4e8;border:1px solid #f0a35e;color:#33241a}.lnkwarn ol{margin:6px 0 0;padding-left:20px}.lnkwarn li{margin:4px 0}@media(prefers-color-scheme:dark){.lnkwarn{background:#3a2a1c;border-color:#b8743c;color:#f3e3d3}}
 </style>
 </head>
 <body>
@@ -183,7 +184,7 @@ html.locked #lockScr{display:grid}
 
   <div class="card">
     <b>Carica i dati</b>
-    <div class="lbl"><b>Il modo più semplice:</b> sull’iPad apri Casa → 💾 Salvataggi → <b>📱 Mostra il QR</b>, poi qui tocca <b>📷 Leggi il QR dall’iPad</b> e inquadralo (niente internet, niente chiavi). In alternativa, sull’iPad di «Il mio mondo» ci sono due modi: <b>☁️ Salva i ricordi di oggi</b> crea la copia completa (<i>drago-progressi-…json</i>: utilizzo, materie, tabelline, risposte); <b>📊 Progressi → 📤 Condividi</b> manda il file <i>progressi-…csv</i> con le risposte giuste e sbagliate per materia. Salvali in File / iCloud Drive (o inviali con AirDrop) e aprili qui con «Carica la copia»: vanno bene tutti e due, e il CSV aggiorna le percentuali della copia già caricata. I dati restano solo su questo dispositivo.</div>
+    <div class="lbl"><b>Il modo più semplice:</b> sull’iPad apri <b>🐉 Io</b> → riquadro 💾 Salvataggi → <b>📱 Mostra il QR</b>, poi qui tocca <b>📷 Leggi il QR dall’iPad</b> e inquadralo (niente internet, niente chiavi). In alternativa, sull’iPad di «Il mio mondo» ci sono due modi: <b>🐉 Io → 💾 Salvataggi → 💾 Copia su iCloud</b> crea la copia completa (<i>drago-progressi-…json</i>: utilizzo, materie, tabelline, risposte); <b>🐉 Io → 📊 Progressi → 📤 Condividi</b> manda il file <i>progressi-…csv</i> con le risposte giuste e sbagliate per materia. Salvali in File / iCloud Drive (o inviali con AirDrop) e aprili qui con «Carica la copia»: vanno bene tutti e due, e il CSV aggiorna le percentuali della copia già caricata. I dati restano solo su questo dispositivo.</div>
     <div class="btns">
       <label class="btn primary" style="cursor:pointer">📂 Carica la copia<input type="file" id="fIn" accept="application/json,.json,text/csv,.csv,text/plain" hidden></label>
       <button id="fQR">📷 Leggi il QR dall’iPad</button>
@@ -198,13 +199,13 @@ html.locked #lockScr{display:grid}
     <b>🔗 Collegamento automatico con «Il mio mondo»</b>
     <div class="lbl" id="lnkSt">Non collegato: i dati arrivano solo caricando i file.</div>
     <div id="lnkSet">
-      <div class="lbl" style="margin-top:6px">Una volta sola: sull’iPad di «Il mio mondo» apri <b>📊 Progressi → 🔗 Per i genitori</b>, incolla la chiave GitHub e tocca «Collega»; poi copia qui il codice che compare (inizia con <i>MM1-</i>). Da quel momento l’iPad invia i progressi da solo, cifrati, ogni volta che l’app si apre e almeno una volta al giorno, e questa pagina li scarica da sola.</div>
+      <div class="lbl" style="margin-top:6px">Una volta sola: sull’iPad di «Il mio mondo» apri <b>🐉 Io</b> → riquadro <b>💾 Salvataggi</b> → <b>🔗 Invio automatico con GitHub</b>, incolla la chiave GitHub, scegli un codice (almeno 6 caratteri) e tocca «Collega»; poi scrivi qui lo stesso codice. Da quel momento l’iPad invia i progressi da solo, cifrati, ogni volta che l’app si apre e almeno una volta al giorno, e questa pagina li scarica da sola.</div>
       <details style="margin-top:8px"><summary class="lbl" style="cursor:pointer"><b>Come creare la chiave GitHub (5 minuti, una volta sola)</b></summary>
         <ol class="lbl" style="padding-left:20px;margin:6px 0">
           <li>In Safari apri <a href="https://github.com/settings/tokens/new?scopes=gist&amp;description=mie-app%20progressi" target="_blank" rel="noopener">github.com/settings/tokens/new</a> ed entra con il tuo account GitHub.</li>
           <li>In «Note» lascia <i>mie-app progressi</i>; in «Expiration» scegli <b>No expiration</b> (o un anno, e poi la rinnovi).</li>
           <li>Spunta <b>solo</b> la casella <b>gist</b>; tutto il resto vuoto.</li>
-          <li>Tocca <b>Generate token</b> e copia la chiave (inizia con <i>ghp_</i>): si vede una volta sola. Mandala all’iPad con AirDrop o Note e incollala in «Per i genitori».</li>
+          <li>Tocca <b>Generate token</b> e copia la chiave (inizia con <i>ghp_</i>): si vede una volta sola. Mandala all’iPad con AirDrop o Note e incollala in «🔗 Invio automatico con GitHub».</li>
         </ol>
         <div class="lbl">La chiave può solo scrivere note private («gist») sul tuo GitHub: non dà accesso al resto. I progressi viaggiano cifrati: senza il codice MM1 nessuno li può leggere.</div>
       </details>
@@ -892,7 +893,7 @@ function loadJsQR(){return new Promise((res,rej)=>{if(window.jsQR)return res();c
 async function scanQR(){
   try{await loadJsQR();}catch(e){toast("Non riesco a caricare il lettore: "+e.message);return;}
   const ov=document.createElement("div");ov.style.cssText="position:fixed;inset:0;z-index:9999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px";
-  ov.innerHTML='<video playsinline muted style="max-width:100%;max-height:70vh;border-radius:16px"></video><div style="color:#fff;font:600 17px system-ui;text-align:center">Inquadra il QR che l’iPad mostra in<br>Casa → 💾 Salvataggi → 📱 Mostra il QR</div><button class="primary" id="qrStop">Chiudi</button>';
+  ov.innerHTML='<video playsinline muted style="max-width:100%;max-height:70vh;border-radius:16px"></video><div style="color:#fff;font:600 17px system-ui;text-align:center">Inquadra il QR che l’iPad mostra in<br>🐉 Io → 💾 Salvataggi → 📱 Mostra il QR</div><button class="primary" id="qrStop">Chiudi</button>';
   document.body.appendChild(ov);const v=ov.querySelector("video");let stream=null,done=false;
   const stop=()=>{done=true;try{stream&&stream.getTracks().forEach(t=>t.stop());}catch(e){}ov.remove();};
   ov.querySelector("#qrStop").onclick=stop;
@@ -952,7 +953,7 @@ function paintLink(){
   if(!on){$("lnkSt").textContent="Non collegato: i dati arrivano solo caricando i file.";return;}
   const age=LINK.sent?(Date.now()-new Date(LINK.sent).getTime())/36e5:null;
   $("lnkSt").innerHTML=(LINK.err?`⚠️ ${esc(LINK.err)}<br>`:"")+`✅ Collegato. Ultimo invio dall’iPad: <b>${whenTxt(LINK.sent)}</b> · controllato ${whenTxt(LINK.checked)}`+
-    (age!=null&&age>36?`<br><b style="color:#c2410c">L’iPad non invia da ${Math.floor(age/24)} giorni: apri «Il mio mondo» con internet.</b>`:"");
+    (age!=null&&age>36?`<div class="lnkwarn"><b>⚠️ L’iPad non invia da ${Math.floor(age/24)} ${Math.floor(age/24)===1?"giorno":"giorni"}.</b> Perché succede e cosa fare:<ol><li>«Il mio mondo» non è stato aperto con internet: aprilo e aspetta 10 secondi.</li><li><b>La chiave GitHub è scaduta</b> (la causa più comune): sull’iPad della bimba vai in <b>🐉 Io</b> → riquadro <b>💾 Salvataggi</b>. Se vedi ⚠️, crea una chiave nuova su <a href="https://github.com/settings/tokens/new?scopes=gist&amp;description=mie-app%20progressi" target="_blank" rel="noopener">github.com/settings/tokens/new</a> (spunta solo <b>gist</b>, scadenza <b>No expiration</b>), tocca <b>🔑 Nuova chiave</b> e incollala. Qui non devi rifare niente.</li><li>Se in quel riquadro non c’è più «Invio automatico attivo», ricollega con <b>lo stesso codice</b>.</li></ol></div>`:"");
 }
 async function pull(manual){
   if(!LINK||!LINK.gist||pulling)return; pulling=true;
@@ -984,7 +985,7 @@ window.__analyze=analyze; window.__normalize=normalize;
 
 })();
 </script>
-<script>window.APP_VERSION="2a187db55a";window.APP_BUILD="2026-10-04T19:37+02:00";</script>
+<script>window.APP_VERSION="5fe4b87fe2";window.APP_BUILD="2026-10-04T20:53+02:00";</script>
 <script>
 /* ===== Aggiornamento automatico e controllo versione (uguale in tutte le sezioni di Pianificazione: costruita da comune/barra.html) =====
    - all'apertura, al ritorno sull'app e ogni 30 minuti legge version.json saltando ogni copia vecchia (anche quella del server di GitHub);
