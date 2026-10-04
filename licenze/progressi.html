@@ -306,6 +306,16 @@ function pathCard(A){
   return h;
 }
 
+/* ---------- 🎬 video guardati (premio dell'app) ---------- */
+function videoCard(A){
+  const L=A.D&&A.D["vid-log"]; if(!L||typeof L!=="object")return `<h2>🎬 Video</h2><div class="card lbl">Ancora nessun video guardato. La sezione Video si apre sull’iPad come premio (obiettivo del giorno o 3 lezioni); ogni lezione finita regala un biglietto.</div>`;
+  const rows=Object.entries(L).map(([k,v])=>({d:k.split("|")[0],id:k.split("|")[1],t:v&&v.t||"",u:v&&v.u||"",f:!!(v&&v.f)})).sort((a,b)=>b.d<a.d?-1:b.d>a.d?1:0);
+  const ref7=new Date(Date.now()-7*864e5).toISOString().slice(0,10), w=rows.filter(r=>r.d>=ref7), full=rows.filter(r=>r.f).length;
+  let h=`<h2>🎬 Video</h2><div class="kpi"><div><b>${w.length}</b><span>video negli ultimi 7 giorni</span></div><div><b>${rows.length}</b><span>video in tutto</span></div><div><b>${full}</b><span>guardati fino alla fine</span></div></div>`;
+  h+=`<div class="card" style="margin-top:12px"><b>Ultimi video</b>`+rows.slice(0,15).map(r=>`<div class="row"><span>${esc(r.t)}${r.u?` <span class="lbl">· ${esc(unitLabel(r.u))}</span>`:""}</span><span class="v">${new Date(r.d+"T12:00").toLocaleDateString("it-IT",{weekday:"short",day:"numeric",month:"short"})} ${r.f?"✅":"⏸️"} <a href="https://www.youtube.com/watch?v=${encodeURIComponent(r.id)}" target="_blank" rel="noopener noreferrer">▶</a></span></div>`).join("")+`<div class="lbl">✅ = guardato fino alla fine · ⏸️ = chiuso prima. Per nascondere un video: sull’iPad, sezione Video → 👨‍👧 Genitore (PIN).</div></div>`;
+  return h;
+}
+
 /* ---------- vista ---------- */
 function render(pack,hist){
   const out=$("out");
@@ -336,6 +346,7 @@ function render(pack,hist){
   <div class="card" style="margin-top:12px"><b>Giorni di utilizzo · ultime 8 settimane</b><div class="heat">${heat}</div><div class="lbl">Ogni quadratino è un giorno (righe: lunedì → domenica). Verde = app usata.</div></div>
 
   ${pathCard(A)}
+  ${videoCard(A)}
 
   <h2>In evidenza</h2>
   <div class="ev">

@@ -7,7 +7,7 @@
   "use strict";
   if (window.__mondoSyncLoaded) return; window.__mondoSyncLoaded = true;
   var CFG = "msync-cfg", API = "https://api.github.com", FILE = "mondo.json";
-  var KEEP = ["days", "prog", "prog-days", "math-done", "sci-done", "games-done", "tab-best", "simon-best", "clock-level", "cuoca-level", "moves-done", "dragon", "diary", "m-steps", "m-open", "m-frasi", "path-day", "gems", "piggy", "diff-level"];
+  var KEEP = ["days", "prog", "prog-days", "math-done", "sci-done", "games-done", "tab-best", "simon-best", "clock-level", "cuoca-level", "moves-done", "dragon", "diary", "m-steps", "m-open", "m-frasi", "path-day", "gems", "piggy", "diff-level", "vid-log"];
   var KEEP_PREFIX = ["deck-", "mis-"];
 
   function cfg() { try { return JSON.parse(localStorage.getItem(CFG) || "null"); } catch (e) { return null; } }
