@@ -82,7 +82,7 @@ button,input,select,textarea{font:inherit}
 @media (prefers-color-scheme:dark){:root{--bg:#0f1216;--card:#1a1e24;--ink:#eef0f3;--muted:#9aa3ae;--line:#2a3038;--seg:#242a32;--ok-bg:#16301f;--warn-bg:#3a1b19;--soon-bg:#33270f;--lp-bg:#3a2218;--fam-bg:#271f3d;--ben-bg:#14302f;--euro-bg:#172739}
   .form input,.form select,.form textarea,.chk,.mood button{background:#12161b;color:var(--ink)}.day.together{background:linear-gradient(180deg,#1a1e24,#14261b)}}
 </style>
-<script>window.APP_VERSION="2828c8dc88";window.APP_BUILD="2026-10-04T17:24+02:00";</script>
+<script>window.APP_VERSION="2828c8dc88";window.APP_BUILD="2026-10-04T19:13+02:00";</script>
 </head>
 <body>
 <style id="lockCss">
@@ -445,20 +445,21 @@ const AIUTO_BANCA={
   bbva:"Sito BBVA → Conto → Movimenti → esporta in Excel.",
   contanti:"I contanti si inseriscono a mano dai Movimenti.",altro:"Scarica i movimenti in Excel o CSV dal sito della banca."};
 const KCATS=[
-  ["casa","🏠","Casa e utenze",/affitto|mutuo|condomin|enel|iren|hera|a2a|edison|engie|sorgenia|acea|smat|tari\b|tim\b|telecom|fastweb|vodafone|iliad|windtre|wind tre|sky wifi|gas\b|luce\b/],
-  ["spesa","🛒","Spesa",/conad|coop\b|esselunga|carrefour|lidl|eurospin|\bpam\b|ipercoop|iper\b|bennet|penny|\bmd\b|aldi|famila|crai|despar|supermerc|unes|in'?s\b|simply/],
-  ["auto","🚗","Auto e carburante",/\beni\b|enilive|q8|\bip\b|tamoil|esso|\bapi\b|shell|telepass|autostrad|parchegg|leasys|ald\b|arval|ayvens|noleggio|assicuraz|revisione|gommist|officina|carrozz|bollo auto|aci\b/],
+  ["casa","🏠","Casa e utenze",/verisure|internet telefono|utenze|casa e|affitto|mutuo|condomin|enel|iren|hera|a2a|edison|engie|sorgenia|acea|smat|tari\b|tim\b|telecom|fastweb|vodafone|iliad|windtre|wind tre|sky wifi|gas\b|luce\b/],
+  ["spesa","🛒","Spesa",/alimentari|supermercat|conad|coop\b|esselunga|carrefour|lidl|eurospin|\bpam\b|ipercoop|iper\b|bennet|penny|\bmd\b|aldi|famila|crai|despar|supermerc|unes|in'?s\b|simply/],
+  ["auto","🚗","Auto e carburante",/carburant|arval|unipol|\beni\b|enilive|q8|\bip\b|tamoil|esso|\bapi\b|shell|telepass|autostrad|parchegg|leasys|ald\b|arval|ayvens|noleggio|assicuraz|revisione|gommist|officina|carrozz|bollo auto|aci\b/],
+  ["rate","📑","Rate, mutui e finanziamenti",/mutui|finanziament|prestito|leasing|unicredit|findomestic|agos|compass|cofidis|\brata\b/],
   ["trasporti","🚌","Trasporti",/\bgtt\b|trenitalia|italo|uber|taxi|bus\b|metro|frecciarossa|flixbus/],
-  ["salute","🩺","Salute",/farmac|ospedal|\basl\b|dentist|medic|ottica|analisi|ticket|sanitar|clinica|parafarm/],
-  ["figli","🧒","Figli, scuola e sport",/scuola|libreria|cartoleria|piscina|pattinaggio|palestra|sport|ludoteca|mensa|giocattol/],
-  ["ristoranti","☕","Bar e ristoranti",/\bbar\b|ristor|pizzer|trattoria|mcdonald|burger|deliveroo|glovo|just ?eat|caff[eè]|gelater|sushi|kebab/],
-  ["acquisti","🛍️","Acquisti",/amazon|zalando|ikea|decathlon|mediaworld|unieuro|euronics|leroy|obi\b|zara|h&m|primark|ovs|tigota|acqua e sapone/],
+  ["salute","🩺","Salute",/salute e benessere|farmac|ospedal|\basl\b|dentist|medic|ottica|analisi|ticket|sanitar|clinica|parafarm/],
+  ["figli","🧒","Figli, scuola e sport",/go.?fit|scuola|libreria|cartoleria|piscina|pattinaggio|palestra|sport|ludoteca|mensa|giocattol/],
+  ["ristoranti","☕","Bar e ristoranti",/ristoranti e bar|\bbar\b|ristor|pizzer|trattoria|mcdonald|burger|deliveroo|glovo|just ?eat|caff[eè]|gelater|sushi|kebab/],
+  ["acquisti","🛍️","Acquisti",/vinted|e-commerce|shopping|abbigliamento|amazon|zalando|ikea|decathlon|mediaworld|unieuro|euronics|leroy|obi\b|zara|h&m|primark|ovs|tigota|acqua e sapone/],
   ["abbonamenti","📺","Abbonamenti",/netflix|spotify|disney|apple\.com|itunes|google|prime video|amazon prime|dazn|now tv|\bsky\b|youtube|icloud|microsoft|claude|openai|anthropic/],
   ["svago","🎟️","Svago e viaggi",/cinema|teatro|museo|booking|airbnb|ryanair|easyjet|wizz|hotel|vacanz|viaggi/],
   ["tasse","🏛️","Tasse e bolli",/\bf24\b|agenzia entrate|\bimu\b|pagopa|comune di|tributi|imposta(?! di bollo)|multa/],
   ["banca","🏦","Banca e commissioni",/commission|canone|imposta di bollo|interessi passivi|spese tenuta|competenze/],
-  ["contanti","💵","Prelievi",/prelievo|prelev|atm\b|bancomat/],
-  ["stipendio","💼","Stipendio e pensione",/stipendio|emolument|noipa|cedolino|pensione|\binps\b|mef\b|ministero/],
+  ["contanti","💵","Prelievi e ricariche",/prelievo|prelev|atm\b|bancomat|satispay|top-up|ricarica (dell'app|carta prepagata)/],
+  ["stipendio","💼","Stipendio e pensione",/guardia di finanza|stipendio|emolument|noipa|cedolino|pensione|\binps\b|mef\b|ministero/],
   ["entrate","➕","Altre entrate",null],
   ["saldocarta","💳","Addebito carta di credito",/saldo carta|addebito carta|estratto conto carta|e\/c carta|carta di credito|carta credito|american express|amex|nexi|rata carta/],
   ["giro","🔁","Giroconti tra miei conti",/giroconto|giro conto|trasferimento tra|bonifico a me stesso|ricarica conto|ricarica n26|ricarica carta/],
@@ -473,10 +474,17 @@ function C(){const c=P.conti;["acc","mov","ric","rules"].forEach(k=>{if(!Array.i
 const cents=n=>Math.round((+n||0)*100);
 const normDesc=s=>String(s||"").toLowerCase().replace(/\s+/g," ").replace(/[^a-z0-9àèéìòù ]/g,"").trim();
 function movHash(acc,d,signed,desc){return acc+"|"+d+"|"+cents(signed)+"|"+normDesc(desc).slice(0,24);}
+/* bonifici verso o da sé stessi (es. Fineco → N26): giroconti, non spese. Il nome è letto dal file della banca e resta sull'iPad */
+function isOwn(desc,signed){const n=(C().own||"").toLowerCase().split(/\s+/).filter(w=>w.length>2);if(n.length<2)return false;const d=String(desc||"").toLowerCase();
+  // uscita: il beneficiario sono io; entrata: l'ordinante sono io (lo stipendio ha me come beneficiario, ma non è un giroconto)
+  const m=signed<0?d.match(/benef\w*:?\s*(.+?)(?:\s+(?:iban|ib|bic|causale|note)\b|·|$)/):d.match(/\bord(?:inante)?\.?:?\s*(.+?)(?:\s+ben\w*\b|·|$)/);
+  return !!m&&n.every(w=>m[1].includes(w));}
 function guessCat(desc,signed){const s=" "+String(desc||"").toLowerCase()+" ";
   for(const r of C().rules)if(r.k&&s.includes(r.k))return r.cat;
-  for(const c of KCATS)if(c[3]&&c[3].test(s)){if(signed>0&&!["stipendio","giro","saldocarta"].includes(c[0]))return "entrate";return c[0];}
-  return signed>0?"entrate":"altro";}
+  const IN=["stipendio","giro","saldocarta"];
+  if(signed>0){for(const c of KCATS)if(IN.includes(c[0])&&c[3].test(s))return c[0];return "entrate";}
+  for(const c of KCATS)if(c[3]&&c[0]!=="stipendio"&&c[3].test(s))return c[0];
+  return "altro";}
 const hasCardMov=()=>{const c=C();const cards=new Set(c.acc.filter(a=>a.tipo==="credito").map(a=>a.id));return c.mov.some(m=>cards.has(m.acc));};
 const isTransfer=m=>m.cat==="giro"||(m.cat==="saldocarta"&&hasCardMov());
 function accBal(a){const c=C();let b=+a.s0||0;c.mov.forEach(m=>{if(m.acc===a.id&&(!a.d0||m.d>a.d0))b+=m.tipo==="e"?+m.imp:-m.imp;});return b;}
@@ -499,15 +507,17 @@ function lastMonths(n){const out=[],d=parse(today());d.setDate(1);for(let i=n-1;
 const MESE=ym=>parse(ym+"-01").toLocaleDateString("it-IT",{month:"short",year:"2-digit"});
 
 /* ---------- importazione ---------- */
-const H={date:/^(data( operazione| contabile| movimento| registrazione)?|booking date|date|data op\.?)$/,valuta:/valuta|value date/,
-  amount:/^(importo( \(?eur\)?| in euro)?|amount( \(eur\))?|importo eur|ammontare)$/,credit:/^(entrate|avere|accrediti?|entrata)$/,debit:/^(uscite|dare|addebiti?|uscita)$/,
-  desc:/descrizione|causale|partner name|payee|payment reference|dettagli|beneficiario|operazione|merchant|esercente/,status:/^(stato( operazione)?|status)$/};
-const low=v=>String(v==null?"":v).trim().toLowerCase();
+const H={date:/^(data( dell'?)?( operazione| contabile| movimento| registrazione| transazione)?|booking date|transaction date|date|data op\.?)$/,valuta:/valuta|value date/,
+  amount:/^(importo( netto| in euro| eur| movimento)?|amount|ammontare|valore)$/,credit:/^(entrate|avere|accrediti?|entrata|importo avere)$/,debit:/^(uscite|dare|addebiti?|uscita|importo dare)$/,bcat:/^(categoria|moneymap|categoria moneymap|category)$/,
+  desc:/descrizione|causale|partner name|payee|payment reference|dettagli|beneficiario|tipologia|merchant|esercente/,status:/^(stato( operazione)?|status)$/};
+const low=v=>String(v==null?"":v).replace(/^\uFEFF/,"").trim().toLowerCase();
+/* intestazioni normalizzate: «Data_Operazione», «Entrate (€)», «Importo Netto (€)» → «data operazione», «entrate», «importo netto» */
+const hnorm=v=>low(v).replace(/[_]+/g," ").replace(/\((?:€|eur|euro)\)/g,"").replace(/[€:]/g,"").replace(/\s+/g," ").trim();
 function detect(rows){let best=null;
-  for(let i=0;i<Math.min(rows.length,40);i++){const r=(rows[i]||[]).map(low);let date=-1,amount=-1,credit=-1,debit=-1,status=-1;const desc=[];
-    r.forEach((h,j)=>{if(!h)return;if(date<0&&H.date.test(h))date=j;else if(amount<0&&H.amount.test(h))amount=j;else if(credit<0&&H.credit.test(h))credit=j;else if(debit<0&&H.debit.test(h))debit=j;else if(status<0&&H.status.test(h))status=j;else if(H.desc.test(h)&&!H.valuta.test(h))desc.push(j);});
+  for(let i=0;i<Math.min(rows.length,60);i++){const r=(rows[i]||[]).map(hnorm);let date=-1,amount=-1,credit=-1,debit=-1,status=-1,bcat=-1;const desc=[];
+    r.forEach((h,j)=>{if(!h)return;if(H.valuta.test(h))return;if(date<0&&H.date.test(h))date=j;else if(amount<0&&H.amount.test(h))amount=j;else if(credit<0&&H.credit.test(h))credit=j;else if(debit<0&&H.debit.test(h))debit=j;else if(status<0&&H.status.test(h))status=j;else if(bcat<0&&H.bcat.test(h))bcat=j;else if(H.desc.test(h))desc.push(j);});
     const score=(date>=0)*2+((amount>=0)||(credit>=0||debit>=0))*2+(desc.length>0);
-    if(date>=0&&(amount>=0||credit>=0||debit>=0)&&(!best||score>best.score))best={row:i,score,date,amount,credit,debit,status,desc:desc.slice(0,2)};}
+    if(date>=0&&(amount>=0||credit>=0||debit>=0)&&(!best||score>best.score))best={row:i,score,date,amount,credit,debit,status,bcat,desc:desc.slice(0,2)};}
   return best;}
 function parseDateCell(v){if(typeof v==="number"&&v>20000&&v<80000){const d=new Date(Date.UTC(1899,11,30)+v*864e5);return d.toISOString().slice(0,10);}
   const s=String(v||"").trim();let m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);if(m)return m[1]+"-"+m[2]+"-"+m[3];
@@ -526,7 +536,8 @@ function buildImport(){const I=IMP,a=C().acc.find(x=>x.id===I.acc),M=I.map,out=[
     const st=M.status>=0?low(r[M.status]):"",p=/autorizzat|in lavorazione|pending|prenotat|da contabilizzare/.test(st)?1:0;
     const h0=movHash(a.id,d,v,desc),nth=occ[h0]=(occ[h0]||0)+1,h=nth>1?h0+"#"+nth:h0; // due spese identiche nello stesso file contano entrambe
     if(seen.has(h)){dup++;continue;}if(p)pend++;
-    out.push({id:uid(),d,t:desc,imp:Math.round(Math.abs(v)*100)/100,tipo:v>0?"e":"u",cat:guessCat(desc,v),acc:a.id,h,src:"file",p});}
+    const bc=M.bcat>=0?String(r[M.bcat]||""):"";
+    out.push({id:uid(),d,t:desc,imp:Math.round(Math.abs(v)*100)/100,tipo:v>0?"e":"u",cat:isOwn(desc,v)?"giro":guessCat(desc+" | "+bc,v),acc:a.id,h,src:"file",p});}
   // nello stesso file: un movimento «in attesa» che compare anche contabilizzato si tiene una volta sola
   const booked=out.filter(m=>!m.p);const fin=out.filter(m=>!m.p||!booked.some(b=>b.tipo===m.tipo&&cents(b.imp)===cents(m.imp)&&Math.abs(diff(b.d,m.d))<=6&&!b._used&&(b._used=1)));
   booked.forEach(b=>delete b._used);const dropped=out.length-fin.length;
@@ -536,6 +547,7 @@ function commitImport(){const R=buildImport(),c=C();
   R.out.filter(m=>!m.p).forEach(m=>{const k=c.mov.findIndex(x=>x.p&&x.acc===m.acc&&x.tipo===m.tipo&&cents(x.imp)===cents(m.imp)&&Math.abs(diff(x.d,m.d))<=6);if(k>=0)c.mov.splice(k,1);});
   c.mov.push(...R.out);const a=c.acc.find(x=>x.id===IMP.acc);a.map=Object.assign({},IMP.map,{sig:IMP.sig});a.last=today();IMP=null;save();toast("📥 "+R.out.length+" movimenti importati"+(R.dup?" · "+R.dup+" già presenti":"")+(a.rec||a.tipo==="credito"?"":" · ora imposta il saldo con «Riconcilia»"));return R;}
 async function readImportFile(file,accId){const u8=new Uint8Array(await file.arrayBuffer());const rows=await Fogli.readTable(u8);
+  if(!C().own){for(const r of rows.slice(0,15)){const t=String((r||[])[0]||"");const m=t.match(/intestazi\w*[^:]*:\s*(.+)$/i)||t.match(/^intestatario:\s*(.+)$/i);if(m){C().own=m[1].trim();save();break;}}}
   const a=C().acc.find(x=>x.id===accId);const det=detect(rows);if(!det)throw new Error("Non trovo le colonne Data e Importo in questo file");
   const sig=(rows[det.row]||[]).map(low).join("|");const map=a.map&&a.map.sig===sig?Object.assign({},a.map):det;delete map.sig;
   IMP={acc:accId,rows,map,sig,file:file.name};}
