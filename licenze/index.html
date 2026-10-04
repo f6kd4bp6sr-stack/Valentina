@@ -82,7 +82,7 @@ button,input,select,textarea{font:inherit}
 @media (prefers-color-scheme:dark){:root{--bg:#0f1216;--card:#1a1e24;--ink:#eef0f3;--muted:#9aa3ae;--line:#2a3038;--seg:#242a32;--ok-bg:#16301f;--warn-bg:#3a1b19;--soon-bg:#33270f;--lp-bg:#3a2218;--fam-bg:#271f3d;--ben-bg:#14302f;--euro-bg:#172739}
   .form input,.form select,.form textarea,.chk,.mood button{background:#12161b;color:var(--ink)}.day.together{background:linear-gradient(180deg,#1a1e24,#14261b)}}
 </style>
-<script>window.APP_VERSION="eb535b29fb";window.APP_BUILD="2026-10-04T19:15+02:00";</script>
+<script>window.APP_VERSION="2a187db55a";window.APP_BUILD="2026-10-04T19:37+02:00";</script>
 </head>
 <body>
 <style id="lockCss">
@@ -453,7 +453,7 @@ const KCATS=[
   ["salute","🩺","Salute",/salute e benessere|farmac|ospedal|\basl\b|dentist|medic|ottica|analisi|ticket|sanitar|clinica|parafarm/],
   ["figli","🧒","Figli, scuola e sport",/go.?fit|scuola|libreria|cartoleria|piscina|pattinaggio|palestra|sport|ludoteca|mensa|giocattol/],
   ["ristoranti","☕","Bar e ristoranti",/ristoranti e bar|\bbar\b|ristor|pizzer|trattoria|mcdonald|burger|deliveroo|glovo|just ?eat|caff[eè]|gelater|sushi|kebab/],
-  ["acquisti","🛍️","Acquisti",/vinted|e-commerce|shopping|abbigliamento|amazon|zalando|ikea|decathlon|mediaworld|unieuro|euronics|leroy|obi\b|zara|h&m|primark|ovs|tigota|acqua e sapone/],
+  ["acquisti","🛍️","Acquisti",/paypal|vinted|e-commerce|shopping|abbigliamento|amazon|zalando|ikea|decathlon|mediaworld|unieuro|euronics|leroy|obi\b|zara|h&m|primark|ovs|tigota|acqua e sapone/],
   ["abbonamenti","📺","Abbonamenti",/netflix|spotify|disney|apple\.com|itunes|google|prime video|amazon prime|dazn|now tv|\bsky\b|youtube|icloud|microsoft|claude|openai|anthropic/],
   ["svago","🎟️","Svago e viaggi",/cinema|teatro|museo|booking|airbnb|ryanair|easyjet|wizz|hotel|vacanz|viaggi/],
   ["tasse","🏛️","Tasse e bolli",/\bf24\b|agenzia entrate|\bimu\b|pagopa|comune di|tributi|imposta(?! di bollo)|multa/],
@@ -545,7 +545,11 @@ function buildImport(){const I=IMP,a=C().acc.find(x=>x.id===I.acc),M=I.map,out=[
 function commitImport(){const R=buildImport(),c=C();
   // movimenti «in attesa» già presenti che ora arrivano contabilizzati: sostituiti
   R.out.filter(m=>!m.p).forEach(m=>{const k=c.mov.findIndex(x=>x.p&&x.acc===m.acc&&x.tipo===m.tipo&&cents(x.imp)===cents(m.imp)&&Math.abs(diff(x.d,m.d))<=6);if(k>=0)c.mov.splice(k,1);});
-  c.mov.push(...R.out);const a=c.acc.find(x=>x.id===IMP.acc);a.map=Object.assign({},IMP.map,{sig:IMP.sig});a.last=today();IMP=null;save();toast("📥 "+R.out.length+" movimenti importati"+(R.dup?" · "+R.dup+" già presenti":"")+(a.rec||a.tipo==="credito"?"":" · ora imposta il saldo con «Riconcilia»"));return R;}
+  if(!c.own){ // nome dell'intestatario: dal beneficiario degli accrediti (es. stipendio «Ben: Cognome Nome»), resta sull'iPad
+    const f={};R.out.filter(m=>m.tipo==="e").forEach(m=>{const x=String(m.t).toLowerCase().match(/\bben\w*:?\s+([a-zà-ù']+\s+[a-zà-ù']+)/);if(x)f[x[1]]=(f[x[1]]||0)+1;});
+    const top=Object.entries(f).sort((a,b)=>b[1]-a[1])[0];if(top&&top[1]>=2)c.own=top[0];}
+  c.mov.push(...R.out);
+  if(c.own)c.mov.forEach(m=>{if(m.cat!=="giro"&&isOwn(m.t,m.tipo==="e"?m.imp:-m.imp))m.cat="giro";});const a=c.acc.find(x=>x.id===IMP.acc);a.map=Object.assign({},IMP.map,{sig:IMP.sig});a.last=today();IMP=null;save();toast("📥 "+R.out.length+" movimenti importati"+(R.dup?" · "+R.dup+" già presenti":"")+(a.rec||a.tipo==="credito"?"":" · ora imposta il saldo con «Riconcilia»"));return R;}
 async function readImportFile(file,accId){const u8=new Uint8Array(await file.arrayBuffer());const rows=await Fogli.readTable(u8);
   if(!C().own){for(const r of rows.slice(0,15)){const t=String((r||[])[0]||"");const m=t.match(/intestazi\w*[^:]*:\s*(.+)$/i)||t.match(/^intestatario:\s*(.+)$/i);if(m){C().own=m[1].trim();save();break;}}}
   const a=C().acc.find(x=>x.id===accId);const det=detect(rows);if(!det)throw new Error("Non trovo le colonne Data e Importo in questo file");
@@ -575,11 +579,11 @@ function lineChart(rows){const W=640,Hh=170,vals=rows.map(r=>r.bal),mn=Math.min(
 
 /* ---------- viste ---------- */
 let CT=(()=>{try{return sessionStorage.getItem("pn-ct")||"pan";}catch(e){return "pan";}})(), movF={ym:today().slice(0,7),acc:"",cat:"",q:""};
-const CTABS=[["pan","Panoramica"],["mov","Movimenti"],["imp","📥 Importa"],["acc","Conti e carte"],["bud","Budget"],["ric","Ricorrenti e rate"],["proj","Dopo il congedo"]];
+const CTABS=[["pan","Panoramica"],["mov","Movimenti"],["imp","📥 Importa"],["acc","Conti e carte"],["bud","Budget"],["ric","Ricorrenti e rate"],["proj","Dopo il congedo"],["stat","📊 Statistiche"],["risp","💡 Risparmio"]];
 function vConti(){const c=C();
   let o=`<div class="${c.hide?"hidden-amt":""}"><h1>💶 Conti</h1><div class="btns" style="margin:0 0 12px">${CTABS.map(([k,t])=>`<button class="btn sm${k===CT?" pri":""}" data-ct="${k}">${t}</button>`).join("")}<button class="btn sm" id="cHide" style="margin-left:auto">${c.hide?"👁 Mostra":"🙈 Nascondi"} cifre</button></div>`;
   if(!c.acc.length&&CT!=="acc"&&CT!=="ric"&&CT!=="proj")o+=`<div class="card"><h3>👋 Comincia da qui</h3><p class="lbl">Aggiungi i tuoi conti e le tue carte (Fineco, BNL, N26, BBVA…): poi potrai importare i movimenti dai file della banca.</p><div class="btns"><button class="btn pri" data-ct="acc">Aggiungi conti e carte</button></div></div>`;
-  o+=({pan:cPan,mov:cMov,imp:cImp,acc:cAcc,bud:cBud,ric:cRic,proj:cProj}[CT]||cPan)();
+  o+=({pan:cPan,mov:cMov,imp:cImp,acc:cAcc,bud:cBud,ric:cRic,proj:cProj,stat:cStat,risp:cRisp}[CT]||cPan)();
   return o+"</div>";}
 function cPan(){const c=C(),t=today(),ym=t.slice(0,7),a=monthActual(ym),np=nextPayments(30),bud=Object.entries(c.bud).filter(([k,v])=>+v>0);
   let o=`<div class="kpi">${c.acc.map(x=>`<div><b class="amt ${accBal(x)>=0?"e":"u"}">${euro(accBal(x))}</b><span>${esc(x.n)}${x.tipo==="credito"?" · speso dal "+fmt(x.d0,{day:"numeric",month:"short"}):""}${!x.rec&&x.tipo!=="credito"?' · <b style="color:var(--soon)">saldo da impostare</b>':""}</span></div>`).join("")}${c.acc.filter(x=>x.tipo!=="credito").length>1?`<div style="border-color:var(--accent)"><b class="amt">${euro(totBal())}</b><span>totale sui conti</span></div>`:""}</div>
@@ -650,7 +654,7 @@ function cProj(){const c=C(),R=projection(),D=R.D,neg=R.rows.find(r=>r.bal<0),S=
 
 /* ---------- eventi ---------- */
 const num=v=>{const n=parseAmt(v);return n==null?null:n;};
-function bindConti(){const c=C();
+function bindConti(){const c=C();if(typeof bindStat==="function")bindStat();
   document.querySelectorAll("[data-ct]").forEach(b=>b.onclick=()=>{CT=b.dataset.ct;try{sessionStorage.setItem("pn-ct",CT);}catch(e){}if(cur!=="conti")go("conti");else render();});
   if($("cHide"))$("cHide").onclick=()=>{c.hide=!c.hide;save();render();};
   // movimenti
@@ -695,6 +699,72 @@ function bindConti(){const c=C();
   if($("xAdd"))$("xAdd").onclick=()=>{const t=$("xT").value.trim()||"Entrata",i=num($("xI").value),d=$("xD").value;if(!(i>0)||!d){toast("Scrivi importo e mese");return;}c.proj.extra=(c.proj.extra||[]).concat([{t,imp:i,d}]);save();render();};
   document.querySelectorAll("[data-xdel]").forEach(b=>b.onclick=()=>{c.proj.extra.splice(+b.dataset.xdel,1);save();render();});
 }
+
+/* ================= 📊 STATISTICHE e 💡 RISPARMIO =================
+   Calcoli fatti sui movimenti importati (giroconti tra i propri conti esclusi). Nessun consiglio di investimento:
+   numeri e strategie generali di gestione del bilancio, le decisioni restano dell'utente. */
+let SP=12; // periodo in mesi
+const STOP=/^(sepa|direct|debit|addebito|sdd|fattura|fattur|a|vs|carico|da|per|mand|srl|spa|s|p|a|sa|rl|sarl|et|ci|cie|carta|pagamento|visa|presso|it|lt|torino|bonifico|istantaneo|italia|estero|beneficiario|ord|ben|di|del|della|e|il|la|in|su|the)$/;
+function merchKey(t){let s=String(t||"").toLowerCase();if(s.includes(" · "))s=s.split(" · ").slice(1).join(" ");
+  const w=s.replace(/[^a-zàèéìòù ]/g," ").split(/\s+/).filter(x=>x.length>2&&!STOP.test(x));return w.slice(0,2).map(x=>x[0].toUpperCase()+x.slice(1)).join(" ")||"Altro";}
+function periodMonths(n){return lastMonths(n+1).slice(0,n);} // mesi completi (escluso il mese in corso)
+function outMov(ms){const set=new Set(ms);return C().mov.filter(m=>m.tipo==="u"&&!isTransfer(m)&&set.has(m.d.slice(0,7)));}
+function stats(n){const ms=periodMonths(n),A=ms.map(ym=>Object.assign({ym},monthActual(ym))).filter(x=>x.e||x.u);
+  const k=A.length||1,E=A.reduce((s,x)=>s+x.e,0)/k,U=A.reduce((s,x)=>s+x.u,0)/k;
+  const per={};A.forEach(x=>Object.entries(x.per).forEach(([c,v])=>per[c]=(per[c]||0)+v));
+  const half=Math.floor(A.length/2),rec=A.slice(-Math.min(3,half)),pre=A.slice(-2*Math.min(3,half),-Math.min(3,half));
+  const trend={};Object.keys(per).forEach(c=>{const r=rec.reduce((s,x)=>s+(x.per[c]||0),0)/(rec.length||1),p=pre.reduce((s,x)=>s+(x.per[c]||0),0)/(pre.length||1);trend[c]=p>0?(r-p)/p:null;});
+  const mv=outMov(ms),small=mv.filter(m=>m.imp<10);
+  const giro=C().mov.filter(m=>m.cat==="giro"&&m.tipo==="u"&&ms.includes(m.d.slice(0,7))).reduce((s,m)=>s+m.imp,0)/k;
+  const best=A.slice().sort((a,b)=>(b.e-b.u)-(a.e-a.u));
+  const merch={};mv.forEach(m=>{const key=merchKey(m.t);merch[key]=(merch[key]||0)+m.imp;});
+  return{ms,A,k,E,U,per,trend,small:{n:small.length,tot:small.reduce((s,m)=>s+m.imp,0)},giro,best:best[0],worst:best[best.length-1],merch:Object.entries(merch).sort((a,b)=>b[1]-a[1]).slice(0,10)};}
+/* addebiti che si ripetono quasi ogni mese con importi simili: spese fisse */
+function recurring(n){const ms=periodMonths(Math.max(n,6)),g={};outMov(ms).forEach(m=>{const k=merchKey(m.t);(g[k]=g[k]||[]).push(m);});
+  const out=[];Object.entries(g).forEach(([k,L])=>{const months=new Set(L.map(m=>m.d.slice(0,7)));if(months.size<Math.max(3,ms.length*.55))return;
+    const perM={};L.forEach(m=>perM[m.d.slice(0,7)]=(perM[m.d.slice(0,7)]||0)+m.imp);const vals=Object.values(perM),mean=vals.reduce((a,b)=>a+b,0)/vals.length,sd=Math.sqrt(vals.reduce((a,b)=>a+(b-mean)**2,0)/vals.length);
+    const sorted=L.slice().sort((a,b)=>a.d<b.d?-1:1),last=sorted[sorted.length-1],lastM=perM[last.d.slice(0,7)],prevVals=Object.entries(perM).filter(([m])=>m<last.d.slice(0,7)).map(x=>x[1]),prevMed=prevVals.length?prevVals.slice().sort((a,b)=>a-b)[Math.floor(prevVals.length/2)]:lastM;
+    out.push({k,cat:last.cat,mens:mean*months.size/ms.length,last:lastM,lastD:last.d,stable:sd/mean<.35,up:prevMed&&lastM>prevMed*1.1?prevMed:null,stopped:diff(last.d,today())>45,n:L.length});});
+  return out.sort((a,b)=>b.mens-a.mens);}
+const pct=x=>(x>0?"+":"")+Math.round(x*100)+"%";
+function cStat(){const S=stats(SP),tot=Object.values(S.per).reduce((a,b)=>a+b,0)||1,sav=S.E-S.U;
+  if(!S.A.length)return `<div class="card"><p class="empty">Servono movimenti importati di almeno un mese completo.</p></div>`;
+  const sel=`<div class="btns" style="margin:0 0 10px">${[3,6,12,24].map(n=>`<button class="btn sm${n===SP?" pri":""}" data-sp="${n}">${n} mesi</button>`).join("")}</div>`;
+  return sel+`<div class="kpi"><div><b class="amt e">${euro(S.E)}</b><span>entrate medie al mese</span></div><div><b class="amt u">${euro(S.U)}</b><span>uscite medie al mese</span></div>
+    <div><b class="amt ${sav>=0?"e":"u"}">${euro(sav)}</b><span>avanzo medio al mese</span></div><div><b>${S.E?Math.round(sav/S.E*100):0}%</b><span>quota delle entrate che resta</span></div>
+    <div><b class="amt">${euro(S.giro)}</b><span>spostati ogni mese verso altri tuoi conti</span></div></div>
+  ${S.giro>50?`<p class="lbl">I soldi spostati verso altri tuoi conti non sono contati come spese: importa anche quei conti per vedere dove finiscono.</p>`:""}
+  <h2>Mese per mese</h2><div class="card">${S.A.map(x=>`<div class="row"><div class="grow"><b>${MESE(x.ym)}</b></div><span class="amt e">+${euro(x.e)}</span><span class="amt u">−${euro(x.u)}</span><span class="amt ${x.e-x.u>=0?"e":"u"}" style="min-width:100px;text-align:right">${euro(x.e-x.u)}</span></div>`).join("")}
+    <p class="lbl">Mese migliore: ${MESE(S.best.ym)} (${euro(S.best.e-S.best.u)}) · mese più pesante: ${MESE(S.worst.ym)} (${euro(S.worst.e-S.worst.u)})</p></div>
+  <h2>Categorie</h2><div class="card">${Object.entries(S.per).sort((a,b)=>b[1]-a[1]).map(([c,v])=>{const tr=S.trend[c];return `<div class="row"><div class="grow"><b>${catName(c)}</b><div style="height:7px;border-radius:5px;background:var(--seg);margin-top:5px"><div style="height:7px;border-radius:5px;width:${Math.round(v/tot*100)}%;background:var(--accent)"></div></div></div><span class="lbl" style="min-width:44px;text-align:right">${Math.round(v/tot*100)}%</span><span class="amt" style="min-width:96px;text-align:right">${euro(v/S.k)}/mese</span><span class="pill ${tr==null?"":tr>.1?"warn":tr<-.1?"ok":""}" title="ultimi 3 mesi rispetto ai 3 precedenti">${tr==null?"—":pct(tr)}</span></div>`;}).join("")}
+    <p class="lbl">Percentuale = quota sul totale delle uscite. Etichetta a destra: ultimi 3 mesi rispetto ai 3 precedenti.</p></div>
+  <h2>Dove spendi di più</h2><div class="card">${S.merch.map(([k,v])=>`<div class="row"><div class="grow">${esc(k)}</div><span class="amt">${euro(v/S.k)}/mese</span><span class="lbl">${euro(v)} in ${S.k} mesi</span></div>`).join("")}</div>
+  <div class="kpi"><div><b>${S.small.n}</b><span>spese sotto 10 € nel periodo</span></div><div><b class="amt">${euro(S.small.tot)}</b><span>totale delle spese piccole</span></div></div>`;}
+function cRisp(){const S=stats(12),R=recurring(12),act=R.filter(r=>!r.stopped),fix=act.reduce((s,r)=>s+r.mens,0),varM=Math.max(0,S.U-fix);
+  const debts=act.filter(r=>r.cat==="rate"||/cofidis|unicredit|findomestic|agos|compass|prestito|finanz/.test(r.k)),debtM=debts.reduce((s,r)=>s+r.mens,0);
+  const cashM=(S.per.contanti||0)/S.k,sav=S.E-S.U,ef=fix*3,ef6=fix*6;
+  const ideas=[];
+  if(debtM)ideas.push(["📑","Rate e finanziamenti",`Pesano ${euro(debtM)} al mese (${S.E?Math.round(debtM/S.E*100):0}% delle entrate). Quando una rata finisce, sposta la stessa cifra nel risparmio con un bonifico automatico: il bilancio non cambia e il risparmio cresce da solo. Se ne hai più di una, chiudere prima quella col tasso più alto (TAEG) fa pagare meno interessi in tutto.`]);
+  act.filter(r=>r.up).forEach(r=>ideas.push(["📈",r.k,`L'ultimo addebito (${euro(r.last)}) è più alto del solito (${euro(r.up)}). Vale la pena controllare se è cambiato il contratto o il premio.`]));
+  if(cashM>40)ideas.push(["💵","Prelievi e ricariche",`${euro(cashM)} al mese escono come contanti o ricariche (es. Satispay): da qui non si vede come vengono spesi. Un tetto mensile in Budget aiuta a tenerli d'occhio.`]);
+  const contr=act.filter(r=>["casa","auto","abbonamenti"].includes(r.cat));if(contr.length)ideas.push(["🔎","Contratti da rivedere una volta all'anno",`${contr.map(r=>esc(r.k)).join(", ")}: insieme ${euro(contr.reduce((s,r)=>s+r.mens,0))} al mese. Per luce e gas il confronto ufficiale delle offerte è il Portale Offerte di ARERA (ilportaleofferte.it); per assicurazione e telefono conviene chiedere un preventivo prima del rinnovo.`]);
+  if(S.small.n>20)ideas.push(["☕","Spese piccole",`${S.small.n} spese sotto 10 € in un anno, per ${euro(S.small.tot)}: prese una per una sembrano niente, sommate fanno ${euro(S.small.tot/12)} al mese.`]);
+  ideas.push(["🏦","Pagati per primi",`Il giorno in cui arriva lo stipendio, un bonifico automatico verso un conto separato mette da parte una cifra fissa prima di spendere. Con l'avanzo medio attuale (${euro(sav)} al mese) puoi partire da una parte di quella cifra.`]);
+  ideas.push(["🛟","Fondo per le emergenze",`Una regola diffusa è avere da parte 3–6 mesi di spese fisse: per te tra ${euro(ef)} e ${euro(ef6)}. Saldo attuale sui conti: ${euro(totBal())}.`]);
+  const cats=Object.entries(S.per).filter(([c])=>!["rate","banca","tasse","contanti"].includes(c)).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  return `<div class="kpi"><div><b class="amt">${euro(fix)}</b><span>spese fisse al mese (addebiti che tornano ogni mese)</span></div><div><b class="amt">${euro(varM)}</b><span>spese variabili al mese</span></div><div><b class="amt ${sav>=0?"e":"u"}">${euro(sav)}</b><span>avanzo medio (ultimi 12 mesi)</span></div><div><b class="amt">${euro(sav*12)}</b><span>avanzo in un anno, a questo ritmo</span></div></div>
+  ${S.giro>100?`<div class="card" style="border-color:var(--soon)"><b>⚠️ Avanzo da leggere con attenzione</b><p style="margin:4px 0 0">Ogni mese in media ${euro(S.giro)} vanno verso altri tuoi conti (giroconti) e qui non sono contati come spese. Se su quei conti vengono spesi, l'avanzo reale è più basso: importa anche quei conti (es. N26) per avere il quadro completo.</p></div>`:""}
+  <h2>Spese fisse trovate</h2><div class="card">${R.length?R.map(r=>`<div class="row"><div class="grow"><b>${esc(r.k)}</b><small>${catName(r.cat)} · ultimo ${fmt(r.lastD,{day:"numeric",month:"short",year:"numeric"})}${r.stopped?" · <b>sembra terminato</b>":""}${r.up?' · <b style="color:var(--warn)">aumentato</b>':""}</small></div><span class="amt u">${euro(r.mens)}/mese</span><span class="lbl">${euro(r.mens*12)}/anno</span></div>`).join(""):'<p class="empty">Servono almeno 3 mesi di movimenti.</p>'}</div>
+  <h2>💡 Dove si può risparmiare</h2>${ideas.map(([i,t,x])=>`<div class="card"><h3>${i} ${esc(t)}</h3><p style="margin:0">${x}</p></div>`).join("")}
+  <h2>🎚️ Prova a ridurre</h2><div class="card"><p class="lbl">Sposta i cursori: vedi quanto risparmieresti al mese e in un anno, e in quanto tempo arrivi a un obiettivo.</p>
+    ${cats.map(([c,v])=>`<div class="row"><div class="grow"><b>${catName(c)}</b><small>${euro(v/S.k)} al mese</small></div><input type="range" min="0" max="50" step="5" value="0" data-cut="${c}" data-v="${(v/S.k).toFixed(2)}" style="width:160px"><span class="lbl" data-cutl="${c}" style="min-width:44px">0%</span></div>`).join("")}
+    <div class="form" style="margin-top:8px"><label>Obiettivo da mettere da parte €<input id="goalA" type="text" inputmode="decimal" value="${Math.round(ef/100)*100||""}"></label></div>
+    <div class="kpi" style="margin-top:10px"><div><b class="amt e" id="cutM">0,00 €</b><span>risparmio in più al mese</span></div><div><b class="amt e" id="cutY">0,00 €</b><span>in un anno</span></div><div><b id="goalT">—</b><span>mesi per l'obiettivo (avanzo attuale + tagli)</span></div></div></div>
+  <p class="lbl">Sono calcoli sui tuoi movimenti, non consigli finanziari: per scelte su prestiti, investimenti o pensione conviene sentire la banca o un consulente.</p>`;}
+function bindStat(){document.querySelectorAll("[data-sp]").forEach(b=>b.onclick=()=>{SP=+b.dataset.sp;render();});
+  const upd=()=>{let m=0;document.querySelectorAll("[data-cut]").forEach(r=>{m+=(+r.dataset.v)*(+r.value)/100;const l=document.querySelector('[data-cutl="'+r.dataset.cut+'"]');if(l)l.textContent=r.value+"%";});
+    if(!$("cutM"))return;$("cutM").textContent=euro(m);$("cutY").textContent=euro(m*12);const S=stats(12),g=parseAmt($("goalA").value),per=S.E-S.U+m;$("goalT").textContent=g>0?(per>0?Math.ceil(g/per)+" mesi":"—"):"—";};
+  document.querySelectorAll("[data-cut]").forEach(r=>r.oninput=upd);if($("goalA"))$("goalA").oninput=upd;upd();}
 
 /* ---------- famiglia ---------- */
 const chiList=()=>[...new Set(P.fam.att.map(a=>a.chi).filter(Boolean))];
