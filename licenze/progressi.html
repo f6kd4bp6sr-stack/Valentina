@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Le mie app">
+<meta name="apple-mobile-web-app-title" content="Pianificazione">
 <meta name="theme-color" content="#f3f4f7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0f1216" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="manifest.webmanifest">
@@ -80,7 +80,7 @@ button,.btn{font:inherit;border:0;border-radius:10px;padding:10px 14px;backgroun
 </style>
 </head>
 <body>
-<nav class="appsw" aria-label="App"><a href="./">📅 Licenze</a><a href="taichi.html">🧘 Tai Chi</a><a class="on" href="progressi.html" aria-current="page">🐉 Progressi</a></nav>
+<nav class="appsw" aria-label="App"><a href="./">🏠 Pianificazione</a><a href="licenze.html">📅 Licenze</a><a href="taichi.html">🧘 Tai Chi</a><a class="on" href="progressi.html" aria-current="page">🐉 Progressi</a></nav>
 <main>
   <h1 id="title">I progressi</h1>
   <p class="sub" id="sub">Dall’app «Il mio mondo»: utilizzo e risultati, materia per materia.</p>
@@ -888,9 +888,9 @@ window.__analyze=analyze; window.__normalize=normalize;
 
 })();
 </script>
-<script>window.APP_VERSION="1076903edb";window.APP_BUILD="2026-10-03T20:30+02:00";</script>
+<script>window.APP_VERSION="4ab102a314";window.APP_BUILD="2026-10-04T15:49+02:00";</script>
 <script>
-/* ===== Aggiornamento automatico e controllo versione (uguale in Licenze, Tai Chi e Progressi) =====
+/* ===== Aggiornamento automatico e controllo versione (uguale in tutte le sezioni di Pianificazione: costruita da comune/barra.html) =====
    - all'apertura, al ritorno sull'app e ogni 30 minuti legge version.json saltando ogni copia vecchia (anche quella del server di GitHub);
    - se c'è una versione nuova salva i dati e ricarica, ma mai mentre si sta compilando qualcosa o durante una seduta;
    - in fondo a ogni sezione: versione installata, data, stato e pulsante «Cerca aggiornamenti». */
@@ -926,15 +926,16 @@ window.__analyze=analyze; window.__normalize=normalize;
   }
   /* ---------- salvataggio automatico comune a tutte le sezioni ----------
      Ogni sezione salva subito le proprie modifiche sul dispositivo. Qui, da qualsiasi sezione:
-     copia giornaliera completa (Licenze + Tai Chi + Progressi) negli ultimi 30 giorni e copia su File / iCloud. */
+     copia giornaliera completa (Pianificazione + Licenze + Tai Chi + Progressi) negli ultimi 30 giorni e copia su File / iCloud. */
   function lsJ(k){try{return JSON.parse(localStorage.getItem(k)||"null");}catch(e){return null;}}
   function dumpAll(){
     var S=lsJ("licenze-marco-v1"), tc={}, n=0;
     try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("tc_")===0){tc[k]=localStorage.getItem(k);n++;}}}catch(e){}
     var pack=lsJ("prog-vale-v1"), link=lsJ("prog-link-v1");
     var pg=pack||link?{pack:pack,hist:lsJ("prog-vale-hist-v1")||[],link:link}:null;
-    if(!S&&!n&&!pg)return null;
-    var o={}; if(S)for(var x in S)o[x]=S[x]; o.taichi=tc; o.progressi=pg; o.app="le-mie-app"; return o;
+    var pn=lsJ("pn-v1");
+    if(!S&&!n&&!pg&&!pn)return null;
+    var o={}; if(S)for(var x in S)o[x]=S[x]; o.taichi=tc; o.progressi=pg; if(pn)o.pianifica=pn; o.app="le-mie-app"; return o;
   }
   function kvDb(){return new Promise(function(res,rej){try{var r=indexedDB.open("licenze-marco",1);r.onupgradeneeded=function(){if(!r.result.objectStoreNames.contains("kv"))r.result.createObjectStore("kv");};r.onsuccess=function(){res(r.result);};r.onerror=function(){rej(r.error);};}catch(e){rej(e);}});}
   function today(){var d=new Date();return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2);}
@@ -953,7 +954,7 @@ window.__analyze=analyze; window.__normalize=normalize;
     var o=dumpAll(); if(!o){alertBar("Ancora nessun dato da salvare");return;}
     var data=JSON.stringify(o,null,1), fn="marco-backup-"+today()+".json";
     var done=function(){var t=new Date().toISOString();try{localStorage.setItem("mie-app-lastBackup",t);localStorage.setItem("tc_lastBackup",JSON.stringify(t));}catch(e){}paint();};
-    try{var f=new File([data],fn,{type:"application/json"});if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:"Copia Le mie app"}).then(done,function(){});return;}}catch(e){}
+    try{var f=new File([data],fn,{type:"application/json"});if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:"Copia Pianificazione"}).then(done,function(){});return;}}catch(e){}
     try{var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type:"application/json"}));a.download=fn;document.body.appendChild(a);a.click();a.remove();done();}catch(e){}
   }
   function alertBar(t){var e=document.querySelector(".updbar .u-sv");if(e)e.textContent=t;}

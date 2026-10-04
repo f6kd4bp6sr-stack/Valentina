@@ -1,6 +1,6 @@
 {
- "name": "Le mie app",
- "short_name": "Le mie app",
+ "name": "Pianificazione",
+ "short_name": "Pianificazione",
  "start_url": "./",
  "scope": "./",
  "display": "standalone",

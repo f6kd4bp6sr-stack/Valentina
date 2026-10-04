@@ -1,0 +1,1500 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Pianificazione">
+<meta name="theme-color" content="#f3f4f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1216" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<link rel="icon" href="data:image/png;base64,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">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Licenze e presenze</title>
+<style>
+:root{
+  --bg:#f3f4f7; --card:#ffffff; --ink:#15181d; --muted:#6b7280; --line:#e4e6eb;
+  --navy:#163054; --accent:#1f5fae;
+  --p:#2e7d5b; --p-bg:#e3f3ea;
+  --lo:#b7791f; --lo-bg:#fdf1dc;
+  --lp:#a24a24; --lp-bg:#f9e6dc;
+  --blk:#d9631e; --blk-bg:#fbe3d2; --blk-soft:#fdf0e6;
+  --rl:#6d4bb8; --rl-bg:#ece6fa;
+  --al:#2b7a83; --al-bg:#dff1f2;
+  --fest:#c0392b; --fest-bg:#fde6e3; --we:#5d6f96; --we-bg:#e9eefa; --out:#9a8f7c; --out-bg:#f8f4ec;
+  --fest:#c0392b; --we:#5d6f96; --warn:#b3261e; --warn-bg:#fdecea;
+  --seg:#eef0f3;
+  --br:#e8590c; --br-bg:#fff0e6;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0f1216; --card:#1a1e24; --ink:#eef0f3; --muted:#9aa2ad; --line:#2a3038;
+    --navy:#9dbbe6; --accent:#6ea3ea;
+    --p:#5cc494; --p-bg:#173226;
+    --lo:#e7b35a; --lo-bg:#3a2c12;
+    --lp:#f2a37c; --lp-bg:#3a2217;
+    --blk:#ff9a5c; --blk-bg:#4a2814; --blk-soft:#33200f;
+    --rl:#b39af0; --rl-bg:#2a2144;
+    --al:#6fd0d8; --al-bg:#163338;
+    --fest:#ff7b6b; --fest-bg:#3d1c19; --we:#9fb2dc; --we-bg:#1c2436; --out:#a59c8b; --out-bg:#211f1b;
+    --fest:#ff7b6b; --we:#9fb2dc; --warn:#ff8a80; --warn-bg:#3a1d1a;
+    --seg:#232830;
+    --br:#ff8c42; --br-bg:#3a2214;
+  }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif}
+body{padding:env(safe-area-inset-top) env(safe-area-inset-right) calc(76px + env(safe-area-inset-bottom)) env(safe-area-inset-left)}
+main{max-width:560px;margin:0 auto;padding:12px 16px 24px}
+h1{font-size:28px;margin:10px 2px 2px;letter-spacing:-.02em}
+.sub{color:var(--muted);margin:0 2px 14px;font-size:14px}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:22px 4px 8px;font-weight:600}
+.card{background:var(--card);border-radius:16px;padding:14px 16px;margin-bottom:12px;border:1px solid var(--line)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row label{color:var(--ink)}
+.row .v{font-variant-numeric:tabular-nums;font-weight:600}
+input[type=date],input[type=time],input[type=number],select{font:inherit;color:var(--ink);background:var(--seg);border:0;border-radius:9px;padding:6px 9px;min-height:34px}
+input[type=number]{width:70px;text-align:right}
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.big{font-size:34px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.1}
+.lbl{font-size:13px;color:var(--muted)}
+.bar{height:8px;background:var(--seg);border-radius:6px;overflow:hidden;margin:12px 0 4px}
+.bar>i{display:block;height:100%;background:var(--accent);border-radius:6px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.tile{border-radius:14px;padding:12px;border:1px solid var(--line);background:var(--card)}
+.tile .n{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums}
+.tile .t{font-size:13px;font-weight:600}
+.tile .s{font-size:12px;color:var(--muted)}
+.lo{color:var(--lo)} .lp{color:var(--lp)} .rl{color:var(--rl)} .pp{color:var(--p)}
+.banner{background:var(--warn-bg);color:var(--warn);border-radius:12px;padding:10px 12px;font-size:14px;margin-bottom:12px}
+.note{background:var(--seg);border-radius:12px;padding:10px 12px;font-size:14px;color:var(--muted);margin-bottom:12px}
+button{font:inherit;border:0;border-radius:10px;padding:9px 14px;background:var(--seg);color:var(--ink);cursor:pointer}
+button.primary{background:var(--accent);color:#fff;font-weight:600}
+button.danger{color:var(--warn)}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+/* calendar */
+.calhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.calhead b{font-size:17px;text-transform:capitalize}
+.nav{background:var(--seg);width:38px;height:34px;padding:0;font-size:18px}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.dow{font-size:11px;color:var(--muted);text-align:center;padding-bottom:2px}
+.cell{height:54px;min-width:0;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:3px;padding:6px 1px 0;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;position:relative;cursor:pointer;border:2px solid transparent;overflow:hidden}
+.cell small{display:block;width:100%;text-align:center;font-size:9px;font-weight:700;letter-spacing:.01em;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cell small .full{display:none}
+.cell.empty{background:transparent;cursor:default}
+.cell.P{background:var(--p-bg);color:var(--p)}
+.cell.LO{background:var(--lo-bg);color:var(--lo)}
+.cell.LP{background:var(--lp-bg);color:var(--lp)}
+.cell.RL{background:var(--rl-bg);color:var(--rl)}
+.cell.AL{background:var(--al-bg);color:var(--al)}
+.cell.WE{background:var(--we-bg);color:var(--we)}
+.cell.FEST{background:var(--fest-bg);color:var(--fest);font-weight:700}
+.cell.OUT{background:var(--out-bg);color:var(--out)}
+.cell.FEST.OUT{background:var(--fest-bg);color:var(--fest);opacity:.75}
+.cell.X{outline:2px dashed var(--warn);outline-offset:-3px}
+.cell.today{border-color:var(--ink)}
+.cell.sel{box-shadow:0 0 0 3px var(--accent)}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--muted);margin-top:10px}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px;background:var(--c)}
+/* day detail */
+.dayhead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.dayhead b{font-size:17px;text-transform:capitalize;text-align:center;flex:1}
+.pill{display:inline-block;border-radius:999px;padding:3px 10px;font-size:13px;font-weight:600}
+.pill.P{background:var(--p-bg);color:var(--p)} .pill.LO{background:var(--lo-bg);color:var(--lo)} .pill.LP{background:var(--lp-bg);color:var(--lp)}
+.pill.RL{background:var(--rl-bg);color:var(--rl)} .pill.AL{background:var(--al-bg);color:var(--al)}
+.pill.FEST{background:var(--warn-bg);color:var(--fest)} .pill.WE,.pill.OUT{background:var(--seg);color:var(--muted)}
+.mini{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.mini div{background:var(--seg);border-radius:10px;padding:8px;text-align:center}
+.mini b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+.mini span{font-size:11px;color:var(--muted)}
+/* week editor */
+.wk{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.wk b{flex:1;text-align:center}
+.drow{padding:10px 0;border-bottom:1px solid var(--line)}
+.drow:last-child{border-bottom:0}
+.dtop{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.dname{font-weight:600;text-transform:capitalize}
+.seg{display:flex;background:var(--seg);border-radius:10px;padding:2px}
+.seg button{flex:1;padding:7px 0;min-width:44px;border-radius:8px;background:transparent;font-size:14px;font-weight:600;color:var(--muted)}
+.seg button.on.P{background:var(--p);color:#fff} .seg button.on.LO{background:var(--lo);color:#fff} .seg button.on.LP{background:var(--lp);color:#fff}
+.seg button.on.RL{background:var(--rl);color:#fff} .seg button.on.AL{background:var(--al);color:#fff}
+.times{display:flex;gap:8px;align-items:center;margin-top:8px;font-size:14px;color:var(--muted)}
+.times input{flex:1;min-width:0;width:100%}
+.dnote{font-size:13px;color:var(--muted);margin-top:4px}
+.dnote.x{color:var(--warn)}
+.days-pick{display:flex;gap:6px;margin:8px 0}
+.days-pick label{flex:1;text-align:center;background:var(--seg);border-radius:9px;padding:7px 0;font-weight:600;font-size:14px}
+.days-pick input{display:none}
+.days-pick label:has(input:checked){background:var(--accent);color:#fff}
+/* tabbar */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:6px 10px calc(6px + env(safe-area-inset-bottom))}
+nav.tabs button{flex:1;background:transparent;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:var(--muted);padding:4px}
+nav.tabs button svg{width:26px;height:26px}
+nav.tabs button.on{color:var(--accent)}
+.hide{display:none}
+.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:999px;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.show{opacity:1}
+.evt .row b{font-weight:600}
+.evt .when{color:var(--muted);font-size:14px;text-align:right}
+.cell.EVT::after{content:"";position:absolute;top:4px;right:4px;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.cell.EVT{opacity:1;box-shadow:inset 0 0 0 2px var(--accent)}
+.pill.EVT{background:var(--accent);color:#fff}
+@media (min-width:820px){
+  main{max-width:1180px;padding:20px 28px 32px}
+  h1{font-size:34px}
+  .cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start}
+  .cols>div>h2:first-child{margin-top:4px}
+  .tiles{grid-template-columns:repeat(3,1fr)}
+  .big{font-size:42px}
+  .cell{font-size:16px;height:66px;padding-top:8px}
+  .cell small{font-size:10.5px;white-space:normal}
+  .cell small .full{display:inline} .cell small .short{display:none}
+  nav.tabs{justify-content:center;gap:40px}
+  nav.tabs button{flex:0 0 160px}
+}
+.cell.P.BR{background:var(--br-bg);color:var(--br);outline:2px dashed var(--br);outline-offset:-3px}
+.month h3{margin:0 0 10px;font-size:18px;text-transform:capitalize;display:flex;justify-content:space-between;align-items:baseline}
+.month h3 small{font-size:13px;color:var(--muted);font-weight:500;text-transform:none}
+.opt{border:1px solid var(--line);border-radius:14px;padding:12px;margin-top:10px}
+.opt.best{border:2px solid var(--br);background:var(--br-bg)}
+.ohead{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.star{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--br)}
+.alt{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.gain{font-size:26px;font-weight:800;color:var(--br);font-variant-numeric:tabular-nums;line-height:1}
+.gain small{font-size:12px;font-weight:600;display:block;text-align:right}
+.orange{font-weight:600;margin-top:6px}
+.ocost{font-size:14px;color:var(--muted);margin-top:2px}
+ .plans{display:grid;gap:12px}
+@media (min-width:820px){ .plans{grid-template-columns:repeat(3,minmax(0,1fr))} }
+.plan{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+.plan.rec{border:2px solid var(--br);background:var(--br-bg)}
+.tagrec{display:inline-block;font-size:11px;font-weight:800;color:#fff;background:var(--br);border-radius:6px;padding:2px 8px;letter-spacing:.05em;margin-bottom:6px}
+.ptitle{font-weight:700;font-size:17px;margin-bottom:2px}
+.pstats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0}
+.pstats div{background:var(--seg);border-radius:10px;padding:7px 4px;text-align:center}
+.pstats b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+.pstats span{font-size:10px;color:var(--muted);line-height:1.15;display:block}
+.pstats .hi{background:var(--br);color:#fff}
+.pstats .hi span{color:#fff;opacity:.9}
+.pstrip{display:grid;grid-template-rows:repeat(7,9px);grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:2px;margin:10px 0 2px}
+.pstrip i{display:block;border-radius:2px;background:var(--line)} .pstrip i.x{background:transparent}
+.pstrip i.p{background:var(--p)} .pstrip i.a{background:var(--br)} .pstrip i.f{background:var(--fest)}
+.banner.big{font-size:15px;border:2px solid var(--warn)}
+.banner.okb{background:var(--p-bg);color:var(--p);border-color:var(--p)}
+.strip{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.chip{width:38px;border-radius:8px;text-align:center;padding:4px 0;font-size:13px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
+.chip small{display:block;font-size:9px;font-weight:600;text-transform:uppercase;opacity:.85}
+.chip.free{background:var(--br);color:#fff}
+.chip.take{background:var(--lo-bg);color:var(--lo);box-shadow:inset 0 0 0 1.5px var(--lo)}
+.chip.fest{background:var(--fest);color:#fff}
+.chip.done{background:var(--seg);color:var(--muted)}
+.none{font-size:14px;color:var(--muted)}
+.keys{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted);margin-top:4px}
+.keys span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-2px;background:var(--c)}
+.opt .btns{margin-top:10px}
+.opt.short .strip{display:none}
+.savestat{font-size:12px;font-weight:600;margin:-8px 2px 12px;display:flex;align-items:center;gap:6px;color:var(--muted)}
+.savestat::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c,var(--muted))}
+.savestat.ok{--c:var(--p);color:var(--p)} .savestat.local{--c:var(--lo)} .savestat.err{--c:var(--warn);color:var(--warn)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
+.modal.hide{display:none}
+.mbox{background:var(--card);color:var(--ink);border-radius:16px;padding:18px;max-width:420px;width:100%;font-size:15px;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.diag .row span:last-child{font-weight:600;text-align:right}
+.diag .okc{color:var(--p)} .diag .noc{color:var(--warn)}
+.sheet{position:fixed;inset:0;z-index:40;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.35)}
+.sheet.hide{display:none}
+.sbox{background:var(--card);color:var(--ink);width:100%;max-width:560px;border-radius:20px 20px 0 0;padding:10px 16px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -8px 30px rgba(0,0,0,.25);max-height:88vh;overflow:auto}
+@media (min-width:820px){ .sheet{align-items:center} .sbox{border-radius:20px} }
+.grab{width:40px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 8px}
+.shead{display:flex;align-items:center;gap:8px}
+.shead b{flex:1;text-align:center;font-size:17px;text-transform:capitalize}
+.bigseg{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:14px 0 6px}
+.bigseg button{padding:12px 0 8px;border-radius:12px;font-weight:800;font-size:17px;background:var(--seg);color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px}
+.bigseg button small{font-size:9.5px;font-weight:600;line-height:1.1}
+.bigseg button.on.P{background:var(--p);color:#fff} .bigseg button.on.LP{background:var(--lp);color:#fff}
+.bigseg button.on.LO{background:var(--lo);color:#fff} .bigseg button.on.RL{background:var(--rl);color:#fff} .bigseg button.on.AL{background:var(--al);color:#fff}
+.simpact{font-size:14px;text-align:center;min-height:20px;margin:4px 0 2px}
+.simpact.x{color:var(--warn);font-weight:600}
+.snote{width:100%;font:inherit;font-size:15px;color:var(--ink);background:var(--seg);border:0;border-radius:10px;padding:9px 11px;margin-top:10px}
+.saved{font-size:12px;color:var(--p);text-align:center;margin-top:8px;min-height:16px}
+.cell.note::before{content:"";position:absolute;top:4px;left:4px;width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.7}
+.logrow{display:flex;justify-content:space-between;gap:8px;font-size:13px;padding:6px 0;border-bottom:1px solid var(--line)}
+.logrow:last-child{border-bottom:0}
+.daybk{display:block;margin:-6px 2px 14px;padding:7px 12px;font-size:13px;font-weight:600;background:var(--p-bg);color:var(--p);border-radius:999px}
+.ksum{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:6px}
+.ksum div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 6px;text-align:center}
+.ksum b{display:block;font-size:24px;font-variant-numeric:tabular-nums;line-height:1.1}
+.ksum span{font-size:11px;color:var(--muted);line-height:1.2;display:block}
+.ksum .hi{background:var(--blk);border-color:var(--blk);color:#fff} .ksum .hi span{color:#fff;opacity:.9}
+.blk{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.blk:last-child{border-bottom:0}
+.blk .len{min-width:54px;text-align:center;background:var(--blk-bg);color:var(--blk);border-radius:10px;padding:6px 4px;font-weight:800;font-size:20px;line-height:1}
+.blk .len small{display:block;font-size:10px;font-weight:600}
+.blk.big .len{background:var(--blk);color:#fff}
+.blk .bi{flex:1;min-width:0;font-size:14px}
+.blk .bi b{font-size:15px}
+.blk .bi .lbl{font-size:12px}
+.blk .bar{height:6px;border-radius:3px;background:var(--blk);margin-top:5px}
+.fchead,.fcrow{display:grid;grid-template-columns:34px repeat(7,minmax(0,1fr))}
+.fchead span{font-size:11px;color:var(--muted);text-align:center;padding-bottom:4px}
+.fcrow{height:46px;margin-bottom:3px}
+.fcrow.mstart{margin-top:10px;border-top:1px dashed var(--line);padding-top:6px;height:52px}
+.fcm{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;letter-spacing:.05em}
+.fd{position:relative;margin:0 2px;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;cursor:pointer;min-width:0;overflow:hidden}
+.fd small{font-size:9px;font-weight:800;line-height:1;margin-top:2px;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.fd.P{background:var(--p-bg);color:var(--p)}
+.fd.WE{background:var(--we-bg);color:var(--we)}
+.fd.FEST{background:var(--fest-bg);color:var(--fest)}
+.fd.OUT{background:transparent;color:var(--out);opacity:.55}
+.fd.none{visibility:hidden}
+.fd.today{box-shadow:inset 0 0 0 2px var(--ink)}
+.fd.B{background:var(--blk-bg);color:var(--blk);margin:0;border-radius:0}
+.fd.B.free{background:var(--blk-soft)}
+.fd.B.bs{margin-left:2px;border-top-left-radius:9px;border-bottom-left-radius:9px}
+.fd.B.be{margin-right:2px;border-top-right-radius:9px;border-bottom-right-radius:9px}
+.fd.B.FEST{color:var(--fest)}
+.fd .tag{font-size:8.5px;font-weight:800;background:var(--blk);color:#fff;border-radius:5px;padding:1px 4px;line-height:1.15;margin-bottom:1px}
+.fd.hastag{justify-content:flex-start;padding-top:3px;font-size:13px}
+.fd.hastag small{margin-top:0}
+.fd.X{outline:2px dashed var(--warn);outline-offset:-3px}
+.fd.flash{animation:flash 1.2s ease 2}
+@keyframes flash{50%{box-shadow:inset 0 0 0 3px var(--accent)}}
+@media (min-width:820px){ .fcrow{height:54px} .fcrow.mstart{height:60px} .fd{font-size:16px} .fd small{font-size:10px} }
+.appsw{display:flex;justify-content:center;gap:4px;margin:10px auto 0;padding:4px;background:var(--seg);border-radius:999px;width:max-content;max-width:calc(100% - 32px)}
+.appsw a{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:999px;font-weight:700;font-size:15px;color:var(--muted);text-decoration:none;white-space:nowrap}
+.appsw a.on{background:var(--card);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+main h1{text-align:left}
+details summary{cursor:pointer;font-weight:600;list-style:none}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:"›";float:right;color:var(--muted);transition:transform .2s}
+details[open] summary::after{transform:rotate(90deg)}
+</style>
+</head>
+<body>
+<nav class="appsw" aria-label="App"><a href="./">🏠 Pianificazione</a><a class="on" href="licenze.html" aria-current="page">📅 Licenze</a><a href="taichi.html">🧘 Tai Chi</a><a href="progressi.html">🐉 Progressi</a></nav>
+
+<!-- ================= PAGINA 1: SITUAZIONE ================= -->
+<main id="pg1">
+  <h1>Situazione</h1>
+  <p class="sub" id="subtitle"></p>
+  <div id="saveStat" class="savestat"></div>
+  <div id="warnings"></div>
+  <div class="card evt" id="events"></div>
+  <div class="cols"><div>
+  <h2>Oggi</h2>
+  <div class="card">
+    <div class="hero">
+      <div><div class="big" id="hDays">–</div><div class="lbl" id="hDaysL">giorni al congedo</div></div>
+      <div><div class="big" id="hPres">–</div><div class="lbl" id="hPresL">presenze in ufficio rimaste</div></div>
+    </div>
+    <div class="bar"><i id="prog" style="width:0"></i></div>
+    <div class="lbl" id="progL"></div>
+  </div>
+
+  <div class="tiles" id="tiles"></div>
+
+  <div class="card" style="margin-top:12px">
+    <div class="row"><label>Ultimo giorno in ufficio prima del congedo (piano)</label><span class="v" id="lastP">–</span></div>
+    <div class="row"><label>Se collochi tutto il residuo in coda</label><span class="v" id="lastEst">–</span></div>
+    <div class="row"><label>Giorni ancora da collocare</label><span class="v" id="unplanned">–</span></div>
+  </div>
+  </div><div>
+  <h2>Giorno per giorno</h2>
+  <div class="card">
+    <div class="calhead">
+      <button class="nav" id="mPrev" aria-label="Mese precedente">‹</button>
+      <b id="mLabel"></b>
+      <button class="nav" id="mNext" aria-label="Mese successivo">›</button>
+    </div>
+    <div class="grid" id="cal"></div>
+    <div class="legend">
+      <span style="--c:var(--p)">P presenza</span>
+      <span style="--c:var(--lp)">LP licenza anni prec.</span>
+      <span style="--c:var(--lo)">LO licenza anno in corso</span>
+      <span style="--c:var(--rl)">RL recupero</span>
+      <span style="--c:var(--al)">AL altra assenza</span>
+      <span style="--c:var(--fest)">Festivo</span>
+      <span style="--c:var(--we)">Weekend</span>
+      <span style="--c:var(--out)">Fuori periodo</span>
+      <span style="--c:var(--accent)">Appuntamento</span>
+      <span style="--c:var(--br)">Ponte consigliato</span>
+    </div>
+  </div>
+
+  <div class="card" id="dayCard">
+    <div class="dayhead">
+      <button class="nav" id="dPrev" aria-label="Giorno precedente">‹</button>
+      <b id="dLabel"></b>
+      <button class="nav" id="dNext" aria-label="Giorno successivo">›</button>
+    </div>
+    <div style="text-align:center;margin-top:8px" id="dStatus"></div>
+    <div class="lbl" style="text-align:center;margin-top:10px">Saldi a fine giornata</div>
+    <div class="mini" id="dMini"></div>
+    <div class="btns" style="justify-content:center"><button class="primary" id="dDay">Modifica questo giorno</button><button id="dEdit">Modifica la settimana</button></div>
+  </div>
+
+  <h2>Situazione iniziale</h2>
+  <div class="card">
+    <div class="row"><label for="sStart">Primo giorno di rientro</label><input type="date" id="sStart" min="2026-09-01" max="2027-05-31"></div>
+    <div class="row"><label for="sEnd">Ultimo giorno (in servizio)</label><input type="date" id="sEnd"></div>
+    <div class="row"><label>Giornate lavorative del periodo</label><span class="v" id="iLav">–</span></div>
+    <div class="row"><label>Assenze spettanti in totale</label><span class="v" id="iAbs">–</span></div>
+    <div class="row"><label>Presenze minime se usi tutto</label><span class="v" id="iMin">–</span></div>
+  </div>
+  <div class="card">
+    <b>Appuntamenti</b>
+    <div class="lbl">Visite e scadenze da vedere nel calendario e in “Prossime date”. Restano solo su questo dispositivo e nella copia su File / iCloud.</div>
+    <div id="evList"></div>
+    <div class="row" style="flex-wrap:wrap"><input type="date" id="evD" aria-label="Data appuntamento"><input id="evN" maxlength="40" placeholder="Es. visita medica" aria-label="Descrizione" style="flex:1;min-width:140px;font:inherit;color:var(--ink);background:var(--seg);border:0;border-radius:9px;padding:6px 9px;min-height:34px"><button class="primary" id="evAdd">Aggiungi</button></div>
+  </div>
+  <div class="card">
+    <details>
+      <summary>Saldi di partenza e orario abituale</summary>
+      <div class="row"><label for="b_lo25">Licenza residua 2025</label><input type="number" min="0" id="b_lo25"></div>
+      <div class="row"><label for="b_lo26">Licenza 2026</label><input type="number" min="0" id="b_lo26"></div>
+      <div class="row"><label for="b_lo27">Licenza 2027 (rateo)</label><input type="number" min="0" id="b_lo27"></div>
+      <div class="row"><label for="b_rl26">Recupero festivi 2026</label><input type="number" min="0" id="b_rl26"></div>
+      <div class="row"><label for="b_rl27">Recupero festivi 2027</label><input type="number" min="0" id="b_rl27"></div>
+      <div class="row"><label>Orario abituale</label><span><input type="time" id="defIn"> – <input type="time" id="defOut"></span></div>
+      <p class="lbl" style="margin:10px 0 0"><b>LP</b> = licenza anni precedenti: nel 2026 scala la 2025; dal 2027 scala il residuo 2025 e poi la 2026. <b>LO</b> = licenza dell'anno in corso: nel 2026 scala la 2026, nel 2027 solo il rateo 2027. L'RL scala prima i recuperi 2026, poi quelli 2027. Tutte le licenze scadono il 31/05/2027.</p>
+    </details>
+  </div>
+  </div></div>
+</main>
+
+<!-- ================= PAGINA 2: VARIAZIONI ================= -->
+<main id="pg2" class="hide">
+  <h1>Variazioni</h1>
+  <p class="sub">Settimana corta lun–ven. P = presenza · LP = licenza anni precedenti · LO = licenza anno in corso · RL = recupero festivo · AL = altra assenza (non scala)</p>
+  <div id="warnings2"></div>
+  <div class="cols"><div>
+
+  <div class="card">
+    <div class="wk">
+      <button class="nav" id="wPrev" aria-label="Settimana precedente">‹</button>
+      <b id="wLabel"></b>
+      <button class="nav" id="wNext" aria-label="Settimana successiva">›</button>
+    </div>
+    <div id="wDays"></div>
+    <div class="row" style="border-top:1px solid var(--line);margin-top:4px"><label>Totale settimana</label><span class="v" id="wTot"></span></div>
+  </div>
+
+  <div class="card">
+    <b>Orario della settimana</b>
+    <div class="times"><span>Entrata</span><input type="time" id="wIn"><span>Uscita</span><input type="time" id="wOut"></div>
+    <div class="btns">
+      <button class="primary" id="wApplyH">Applica a tutti i giorni in presenza</button>
+    </div>
+    <div class="btns">
+      <button data-all="LP">Tutta in LP</button>
+      <button data-all="LO">Tutta in LO</button>
+      <button data-all="RL">Tutta in RL</button>
+      <button data-all="P">Tutta in presenza</button>
+      <button id="wCopy">Copia settimana prima</button>
+    </div>
+  </div>
+  </div><div>
+  <h2>Schema ripetuto</h2>
+  <div class="card">
+    <div class="lbl">Es. tutti i lunedì e venerdì in licenza per un periodo</div>
+    <div class="days-pick">
+      <label><input type="checkbox" value="1">L</label><label><input type="checkbox" value="2">M</label><label><input type="checkbox" value="3">M</label><label><input type="checkbox" value="4">G</label><label><input type="checkbox" value="5">V</label>
+    </div>
+    <div class="row"><label>Codice</label>
+      <select id="rCode"><option value="AUTO">Licenza automatica (prima LP, poi LO)</option><option value="LP">LP – anni precedenti</option><option value="LO">LO – anno in corso</option><option value="RL">RL – recupero</option><option value="AL">AL – altra assenza</option><option value="P">P – presenza (annulla)</option></select></div>
+    <div class="row"><label>Dal</label><input type="date" id="rFrom"></div>
+    <div class="row"><label>Al</label><input type="date" id="rTo"></div>
+    <div class="btns"><button class="primary" id="rApply">Applica schema</button></div>
+  </div>
+
+  <h2>Salvataggio</h2>
+  <div class="card">
+    <div class="lbl">Ogni modifica viene salvata da sola in tre copie sul dispositivo. La copia su File / iCloud contiene anche i dati del Tai Chi (sessioni, diario, peso, impostazioni) e gli ultimi progressi caricati (memoria del browser, database e file privato dell’app). In più, una volta a settimana salva una copia su File o iCloud Drive: serve se cambi dispositivo, se passi i dati tra iPhone e iPad o se cancelli i dati di Safari.</div>
+    <div class="btns">
+      <button id="bExport">Salva copia su File / iCloud</button>
+      <label class="btn" style="background:var(--seg);border-radius:10px;padding:9px 14px;cursor:pointer">Ripristina copia<input type="file" id="bImport" accept="application/json,.json" hidden></label>
+      <button class="danger" id="bReset">Azzera tutto</button>
+    </div>
+  </div>
+  <div class="card diag">
+    <b>Verifica salvataggio</b>
+    <div id="diag"></div>
+    <div class="btns"><button class="primary" id="bTest">Salva e verifica ora</button></div>
+  </div>
+  <div class="card">
+    <b>Copie giornaliere (ultimi 30 giorni)</b>
+    <div class="lbl">L’app conserva da sola, su questo dispositivo, la situazione di fine giornata di ogni giorno: se qualcosa va storto, torni a quel giorno.</div>
+    <div id="snaps"></div>
+  </div>
+  <div class="card">
+    <b>Ultime modifiche</b>
+    <div id="logList"></div>
+    <div class="btns"><button id="bUndo">↶ Annulla ultima modifica</button></div>
+  </div>
+  </div></div>
+</main>
+
+<!-- ================= PAGINA 4: CALENDARIO COMPLETO ================= -->
+<main id="pg4" class="hide">
+  <h1>Calendario</h1>
+  <p class="sub">Tutto il periodo dal rientro al congedo, settimana per settimana. Le assenze consecutive, weekend e festivi compresi, sono unite in un’unica fascia: ogni fascia è un blocco di giorni a casa. Tocca un giorno per modificarlo.</p>
+  <div class="ksum" id="kSum"></div>
+  <div class="cols"><div>
+    <h2>Blocchi di assenza</h2>
+    <div class="card" id="kBlocks"></div>
+  </div><div>
+    <h2>Calendario completo</h2>
+    <div class="card fullcal">
+      <div class="fchead"><span></span><span>L</span><span>M</span><span>M</span><span>G</span><span>V</span><span>S</span><span>D</span></div>
+      <div id="kCal"></div>
+      <div class="legend">
+        <span style="--c:var(--p)">In ufficio</span>
+        <span style="--c:var(--blk)">Blocco di assenza</span>
+        <span style="--c:var(--we)">Weekend</span>
+        <span style="--c:var(--fest)">Festivo</span>
+      </div>
+    </div>
+  </div></div>
+</main>
+
+<!-- ================= PAGINA 3: PONTI ================= -->
+<main id="pg3" class="hide">
+  <h1>Ponti</h1>
+  <p class="sub">Combinazioni tra festivi infrasettimanali, weekend e le assenze già in programma. In arancione i giorni liberi che ottieni in più rispetto alla licenza che spendi.</p>
+  <div class="keys" style="margin:0 4px 12px">
+    <span style="--c:var(--lo)">Giorno da prendere in licenza</span>
+    <span style="--c:var(--br)">Giorno libero guadagnato</span>
+    <span style="--c:var(--fest)">Festivo</span>
+  </div>
+  <div id="brTop"></div>
+  <h2>Mese per mese</h2>
+  <div class="cols" id="brMonths"></div>
+</main>
+
+<nav class="tabs">
+  <button id="t1" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Situazione</button>
+  <button id="t4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2.5"/><path d="M3 9h18M8 2.5v3M16 2.5v3"/><path d="M6.5 13h5M13.5 13h4M6.5 17h11" stroke-width="2.6"/></svg>Calendario</button>
+  <button id="t2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>Variazioni</button>
+  <button id="t3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 17h20M4 17v-3.5a8 8 0 0 1 16 0V17M8.5 17v-5M15.5 17v-5M12 17v-6"/></svg>Ponti</button>
+</nav>
+<div class="toast" id="toast"></div>
+<div class="sheet hide" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sTitle">
+  <div class="sbox">
+    <div class="grab"></div>
+    <div class="shead"><button class="nav" id="sPrev" aria-label="Giorno lavorativo precedente">‹</button><b id="sTitle"></b><button class="nav" id="sNext" aria-label="Giorno lavorativo successivo">›</button></div>
+    <div id="sBody"></div>
+    <div class="saved" id="sSaved"></div>
+    <div class="btns" style="justify-content:space-between"><button id="sUndo">↶ Annulla ultima modifica</button><button class="primary" id="sClose">Fatto</button></div>
+  </div>
+</div>
+<div class="modal hide" id="modal"><div class="mbox"><div id="mText"></div><div class="btns" style="justify-content:flex-end"><button id="mNo">Annulla</button><button class="primary" id="mYes">Conferma</button></div></div></div>
+
+<script>
+(function(){
+"use strict";
+/* ---------- costanti ---------- */
+const KEY="licenze-marco-v1";
+const PROV_START="2026-10-16";
+/* appuntamenti: inseriti dall'utente e salvati solo sul dispositivo (S.ev), mai scritti nel codice pubblico */
+const EVT=new Proxy({},{get:(t,k)=>(typeof k==="string"&&S&&S.ev)?S.ev[k]:undefined,has:(t,k)=>!!(S&&S.ev&&k in S.ev),
+  ownKeys:()=>Object.keys((S&&S.ev)||{}),getOwnPropertyDescriptor:(t,k)=>(S&&S.ev&&k in S.ev)?{enumerable:true,configurable:true,value:S.ev[k]}:undefined});
+const HOL={"2026-11-01":"Ognissanti","2026-12-08":"Immacolata","2026-12-25":"Natale","2026-12-26":"S. Stefano",
+"2027-01-01":"Capodanno","2027-01-06":"Epifania","2027-03-28":"Pasqua","2027-03-29":"Pasquetta",
+"2027-04-25":"Liberazione","2027-05-01":"Festa del Lavoro","2027-06-02":"Festa della Repubblica"};
+const DEF={start:"",end:"2027-05-31",bal:{lo25:21,lo26:39,lo27:16,rl26:4,rl27:2},defIn:"08:00",defOut:"14:00",days:{},week:{}};
+const NAMES={P:"Presenza in ufficio",LP:"Licenza anni precedenti",LO:"Licenza anno in corso",RL:"Recupero festivo",AL:"Altra assenza",FEST:"Festivo",WE:"Fine settimana",OUT:"Fuori periodo"};
+const BK={"25":"licenza 2025","26":"licenza 2026","27":"rateo 2027",r26:"RL 2026",r27:"RL 2027",X:"oltre il saldo"};
+
+/* ---------- stato ---------- */
+let S=load();
+function normalize(s){
+  const o=JSON.parse(JSON.stringify(DEF));
+  if(s&&typeof s==="object"){ Object.assign(o,s); o.bal=Object.assign({},DEF.bal,s.bal||{}); o.days=s.days||{}; o.week=s.week||{}; }
+  return o;
+}
+function load(){
+  let s=null;
+  try{ s=JSON.parse(localStorage.getItem(KEY)||"null"); }catch(e){ s=null; }
+  return normalize(s);
+}
+/* ---------- salvataggio: archivio privato della pagina (account) + copia sul dispositivo ---------- */
+const DIAG={runtime:false,db:false,uid:false,lastCloud:null,err:null,loaded:null};
+/* ---------- memoria locale ridondante: localStorage + IndexedDB + file privato (OPFS) ---------- */
+const LS={ls:false,idb:false,opfs:false,persist:null,lastLocal:null,restoredFrom:null};
+let idbP=null, localBusy=Promise.resolve(), STORE_READY=false, PENDING_SAVE=false;
+function idbOpen(){
+  if(idbP) return idbP;
+  idbP=new Promise((res,rej)=>{ try{ const r=indexedDB.open("licenze-marco",1);
+    r.onupgradeneeded=()=>r.result.createObjectStore("kv"); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }catch(e){rej(e);} });
+  return idbP;
+}
+async function idbGet(){ const db=await idbOpen(); return new Promise((res,rej)=>{ const t=db.transaction("kv","readonly").objectStore("kv").get("stato"); t.onsuccess=()=>res(t.result||null); t.onerror=()=>rej(t.error); }); }
+async function idbSet(v){ const db=await idbOpen(); return new Promise((res,rej)=>{ const tx=db.transaction("kv","readwrite"); tx.objectStore("kv").put(v,"stato"); tx.oncomplete=()=>res(); tx.onerror=()=>rej(tx.error); }); }
+async function opfsGet(){ const root=await navigator.storage.getDirectory(); const fh=await root.getFileHandle("licenze-stato.json"); return await (await fh.getFile()).text(); }
+async function opfsSet(text){ const root=await navigator.storage.getDirectory(); const fh=await root.getFileHandle("licenze-stato.json",{create:true}); const w=await fh.createWritable(); await w.write(text); await w.close(); }
+async function idbKV(mode,key,val){ const db=await idbOpen(); return new Promise((res,rej)=>{ const tx=db.transaction("kv",mode); const st=tx.objectStore("kv");
+  const q=mode==="readonly"?(key===null?st.getAllKeys():st.get(key)):(val===undefined?st.delete(key):st.put(val,key)); let out;
+  q.onsuccess=()=>{out=q.result}; tx.oncomplete=()=>res(out); tx.onerror=()=>rej(tx.error); }); }
+async function dailySnapshot(text){ // copia giornaliera: ultima situazione di ogni giorno, ultimi 30 giorni
+  try{ const k="snap-"+today(); const keys=(await idbKV("readonly",null))||[];
+    try{ text=JSON.stringify(Object.assign(JSON.parse(text),{taichi:tcDump(),progressi:progDump(),pianifica:pnDump()})); }catch(e){}
+    await idbKV("readwrite",k,text); try{ localStorage.setItem("mie-app-lastSnap",new Date().toISOString()); }catch(e){}
+    const snaps=keys.filter(x=>String(x).startsWith("snap-")&&!String(x).includes("~")).concat(keys.includes(k)?[]:[k]).sort();
+    for(const old of snaps.slice(0,Math.max(0,snaps.length-30))) await idbKV("readwrite",old);
+    const pre=keys.filter(x=>String(x).includes("~")).sort(); // copie "prima del ripristino": ultime 5
+    for(const old of pre.slice(0,Math.max(0,pre.length-5))) await idbKV("readwrite",old);
+  }catch(e){}
+}
+function dailyBackupHint(){ // una volta al giorno, se ci sono modifiche non ancora copiate su File/iCloud
+  const el=document.getElementById("saveStat"); if(!el) return;
+  let b=document.getElementById("dayBk");
+  const need=(Object.keys(S.days).length||S.start)&&S.savedAt&&(!lastBk()||lastBk().slice(0,10)<today()&&S.savedAt>lastBk());
+  if(!need){ if(b) b.remove(); return; }
+  if(!b){ b=document.createElement("button"); b.id="dayBk"; b.className="daybk"; b.textContent="Salva la copia di oggi su File / iCloud"; b.onclick=()=>$("bExport").click(); el.after(b); }
+}
+async function listSnapshots(){ try{ const keys=(await idbKV("readonly",null))||[]; return keys.filter(x=>String(x).startsWith("snap-")).sort().reverse(); }catch(e){ return []; } }
+function saveLocalAsync(text){
+  const stamp=(()=>{try{return JSON.parse(text).savedAt}catch(e){return null}})();
+  localBusy=localBusy.then(async()=>{
+    try{ await idbSet(text); LS.idb=JSON.parse(await idbGet()).savedAt===stamp; }catch(e){ LS.idb=false; }
+    try{ if(navigator.storage&&navigator.storage.getDirectory){ await opfsSet(text); LS.opfs=JSON.parse(await opfsGet()).savedAt===stamp; } }catch(e){ LS.opfs=false; }
+    if(LS.idb) await dailySnapshot(text);
+    LS.lastLocal=new Date(); renderDiag();
+  });
+  return localBusy;
+}
+async function initLocal(){ // legge tutte le copie locali e tiene la più recente
+  const cands=[];
+  try{ const t=localStorage.getItem(KEY); if(t) cands.push(["memoria browser",t]); LS.ls=true; }catch(e){}
+  try{ const t=await idbGet(); LS.idb=true; if(t) cands.push(["database del dispositivo",t]); }catch(e){ LS.idb=false; }
+  try{ if(navigator.storage&&navigator.storage.getDirectory){ const t=await opfsGet().catch(()=>null); LS.opfs=true; if(t) cands.push(["file privato",t]); } }catch(e){ LS.opfs=false; }
+  try{ if(navigator.storage&&navigator.storage.persist){ LS.persist=await navigator.storage.persisted()||await navigator.storage.persist(); } }catch(e){}
+  let best=null, from=null;
+  for(const [n,t] of cands){ try{ const o=JSON.parse(t); if(o&&o.bal&&(!best||String(o.savedAt||"")>String(best.savedAt||""))){best=o;from=n;} }catch(e){} }
+  if(best&&String(best.savedAt||"")>String(S.savedAt||"")){ S=normalize(best); LS.restoredFrom=from; migrateV2(); calMonth=selDay=weekStart=null; rerender(); }
+  if(best) saveLocalAsync(JSON.stringify(S)); // riallinea tutte le copie
+  LOCAL_OK=LOCAL_OK||LS.idb||LS.opfs;
+  if(!CLOUD) setSaveStat(LOCAL_OK?"local":"none");
+}
+let LOCAL_OK=false, CLOUD=null, cloudTimer=null, cloudBusy=Promise.resolve(), cloudDirty=false, saveState="init";
+function save(){
+  if(!STORE_READY){ PENDING_SAVE=true; return; } // all'avvio: prima si leggono le copie esistenti, poi si scrive (senza timbrare l'ora, così una copia buona non viene scavalcata)
+  S.savedAt=new Date().toISOString();
+  const text=JSON.stringify(S);
+  try{ localStorage.setItem(KEY,text); LS.ls=localStorage.getItem(KEY)!==null; }catch(e){ LS.ls=false; }
+  saveLocalAsync(text);
+  LOCAL_OK=LS.ls||LS.idb||LS.opfs;
+  if(CLOUD){ cloudDirty=true; setSaveStat("saving"); clearTimeout(cloudTimer); cloudTimer=setTimeout(flushCloud,700); }
+  else setSaveStat(LOCAL_OK?"local":"none");
+}
+function flushCloud(){
+  clearTimeout(cloudTimer);
+  if(!CLOUD||!cloudDirty) return cloudBusy;
+  cloudDirty=false;
+  const body={state:JSON.stringify(S),savedAt:S.savedAt||new Date().toISOString()};
+  cloudBusy=cloudBusy.then(()=>CLOUD.set(body)).then(()=>{ DIAG.lastCloud=new Date(); DIAG.err=null; setSaveStat("ok"); })
+    .catch(e=>{ DIAG.err=(e&&e.code)||String(e); if(e&&e.code==="unavailable"){ cloudDirty=true; cloudTimer=setTimeout(flushCloud,1500+Math.random()*1500); } else setSaveStat("err"); });
+  return cloudBusy;
+}
+function setSaveStat(st){
+  saveState=st; const el=document.getElementById("saveStat"); if(!el) return;
+  const M={ok:["ok","Salvato nel tuo account · uguale su iPhone e iPad"],saving:["ok","Salvataggio in corso…"],
+    local:["ok","Salvato su questo dispositivo"],none:["err","Attenzione: il dispositivo non permette di salvare. Usa “Salva copia su File / iCloud”"],
+    err:["err","Errore di salvataggio: riprova o esporta una copia"],init:["local","Caricamento dati…"]};
+  const m=M[st]||M.local; el.className="savestat "+m[0];
+  const last=st==="ok"&&DIAG.lastCloud?DIAG.lastCloud:(st==="local"&&LS.lastLocal?LS.lastLocal:null);
+  el.textContent=m[1]+(last?" · ultimo salvataggio "+last.toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"}):"");
+  dailyBackupHint();
+  renderDiag();
+}
+async function initCloud(){
+  try{
+    if(!window.claude||typeof window.claude.use!=="function"){ setSaveStat(LOCAL_OK?"local":"none"); return; }
+    DIAG.runtime=true;
+    const [db,user]=await Promise.all([window.claude.use("db"),window.claude.use("user")]);
+    const uid=user?await user.id():null; DIAG.db=!!db; DIAG.uid=!!uid;
+    if(!db||!uid){ setSaveStat(LOCAL_OK?"local":"none"); return; }
+    const ref=db.doc("data/users/"+uid+"/stato");
+    let snap; try{ snap=await ref.get(); }catch(e){ await new Promise(r=>setTimeout(r,1200)); snap=await ref.get(); }
+    CLOUD=ref;
+    const remote=snap.exists?snap.data():null; DIAG.loaded=remote?remote.savedAt:"nessun dato salvato";
+    const hasLocal=Object.keys(S.days).length||S.start;
+    if(remote&&remote.state&&(!hasLocal||!S.savedAt||String(remote.savedAt)>=String(S.savedAt))){
+      S=normalize(JSON.parse(remote.state)); try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}
+      migrateV2(); calMonth=selDay=weekStart=null; rerender(); setSaveStat("ok");
+    }else{ cloudDirty=true; await flushCloud(); }
+  }catch(e){ CLOUD=null; DIAG.err=(e&&e.code)||String(e); setSaveStat(LOCAL_OK?"local":"err"); }
+}
+function renderDiag(){
+  const el=document.getElementById("diag"); if(!el) return;
+  const yn=(v,a,b)=>`<span class="${v?"okc":"noc"}">${v?a:b}</span>`;
+  const standalone=window.navigator.standalone===true||matchMedia("(display-mode: standalone)").matches;
+  const rows=[
+    ["Aperta da", standalone?"icona sulla schermata Home":(DIAG.runtime?"pagina Claude":"browser")],
+    ...(CLOUD?[["Archivio nel tuo account","attivo"]]:[]),
+    ["Memoria browser", yn(LS.ls,"funziona","bloccata")],
+    ["Database del dispositivo", yn(LS.idb,"funziona","non disponibile")],
+    ["File privato dell’app", yn(LS.opfs,"funziona","non disponibile")],
+    ["Protezione da cancellazione automatica", LS.persist===null?"–":yn(LS.persist,"attiva","non concessa")],
+    ["Ultimo salvataggio sul dispositivo", LS.lastLocal?LS.lastLocal.toLocaleString("it-IT"):"–"],
+    ["Ultima copia esportata", lastBk()?new Date(lastBk()).toLocaleString("it-IT"):"mai"],
+    ...(LS.restoredFrom?[["Dati recuperati da", LS.restoredFrom]]:[]),
+    ...(CLOUD?[["Ultimo salvataggio nell’account", DIAG.lastCloud?DIAG.lastCloud.toLocaleString("it-IT"):"–"]]:[]),
+    ["Errore", DIAG.err?`<span class="noc">${esc(DIAG.err)}</span>`:"nessuno"]
+  ];
+  el.innerHTML=rows.map(r=>`<div class="row"><span>${r[0]}</span><span>${r[1]}</span></div>`).join("");
+  renderSnaps();
+}
+async function renderSnaps(){
+  const el=document.getElementById("snaps"); if(!el) return;
+  const ks=await listSnapshots();
+  el.innerHTML=ks.length?ks.map(k=>`<div class="logrow"><span>${k.includes("~")?"Prima del ripristino del "+fmt(k.slice(5,15),{day:"numeric",month:"short"})+" "+k.split("~")[1].replace("-",":"):(k.slice(5,15)===today()?"Oggi (situazione attuale)":"Fine giornata del "+fmt(k.slice(5,15),{weekday:"short",day:"numeric",month:"short"}))}</span><button data-snap="${k}" style="padding:5px 10px;font-size:13px">Ripristina</button></div>`).join(""):`<div class="lbl">Nessuna copia giornaliera su questo dispositivo${LS.idb?" (verrà creata al prossimo salvataggio)":""}.</div>`;
+  const lg=(S.log||[]).slice(-8).reverse();
+  const lel=document.getElementById("logList");
+  if(lel) lel.innerHTML=lg.length?lg.map(x=>`<div class="logrow"><span>${fmt(x.s,{weekday:"short",day:"numeric",month:"short"})}: ${x.from} → <b>${x.to}</b></span><span class="lbl">${new Date(x.t).toLocaleString("it-IT",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</span></div>`).join(""):`<div class="lbl">Nessuna modifica registrata.</div>`;
+}
+async function testSave(){
+  if(!CLOUD){
+    save(); await localBusy; let n=0;
+    try{ if(JSON.parse(localStorage.getItem(KEY)).savedAt===S.savedAt) n++; }catch(e){}
+    try{ if(JSON.parse(await idbGet()).savedAt===S.savedAt) n++; }catch(e){}
+    try{ if(JSON.parse(await opfsGet()).savedAt===S.savedAt) n++; }catch(e){}
+    toast(n?`Verifica riuscita: ${n} ${n===1?"copia":"copie"} sul dispositivo`:"Verifica NON riuscita: nessuna memoria disponibile"); renderDiag(); return; }
+  save(); await flushCloud();
+  try{ const snap=await CLOUD.get(); const r=snap.exists?snap.data():null;
+    const ok=r&&r.savedAt===S.savedAt; toast(ok?"Verifica riuscita: dati salvati e riletti":"Verifica NON riuscita"); if(!ok) DIAG.err="rilettura diversa";
+  }catch(e){ DIAG.err=(e&&e.code)||String(e); toast("Verifica NON riuscita"); }
+  renderDiag();
+}
+async function refreshFromCloud(){ // rientro sull'app: prende la versione più recente (es. salvata dall'iPad)
+  if(!CLOUD||cloudDirty) return;
+  try{ await cloudBusy; const snap=await CLOUD.get(); const r=snap.exists?snap.data():null;
+    if(r&&r.state&&String(r.savedAt)>String(S.savedAt||"")){ S=normalize(JSON.parse(r.state)); try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){} rerender(); toast("Dati aggiornati dall’altro dispositivo"); }
+  }catch(e){}
+}
+function rerender(){
+  const p=[1,2,3,4].find(n=>!document.getElementById("pg"+n).classList.contains("hide"))||1;
+  renderPage(p);
+}
+function flushAll(){ try{ if(STORE_READY){ const t=JSON.stringify(S); localStorage.setItem(KEY,t); saveLocalAsync(t); } }catch(e){} flushCloud(); }
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="hidden") flushAll(); else { refreshFromCloud(); dailyBackupHint(); } });
+window.addEventListener("pagehide",flushAll);
+
+/* ---------- date ---------- */
+const pad=n=>String(n).padStart(2,"0");
+const iso=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const parse=s=>{const a=s.split("-").map(Number);return new Date(a[0],a[1]-1,a[2],12);};
+const add=(s,n)=>{const d=parse(s);d.setDate(d.getDate()+n);return iso(d);};
+const today=()=>iso(new Date());
+const monday=s=>{const d=parse(s);const w=(d.getDay()+6)%7;d.setDate(d.getDate()-w);return iso(d);};
+const diff=(a,b)=>Math.round((parse(b)-parse(a))/864e5);
+const fmt=(s,o)=>parse(s).toLocaleDateString("it-IT",o||{day:"numeric",month:"short",year:"numeric"});
+const kind=s=>{ if(HOL[s]) return "FEST"; const w=parse(s).getDay(); return (w===0||w===6)?"WE":"LAV"; };
+const startDate=()=>S.start||PROV_START;
+const inPeriod=s=>s>=startDate()&&s<=S.end;
+const toMin=t=>{if(!t)return 0;const a=t.split(":").map(Number);return a[0]*60+a[1];};
+const hhmm=m=>Math.floor(m/60)+"h"+(m%60?" "+pad(m%60):"");
+
+function codeOf(s){ return (S.days[s]&&S.days[s].c)||"P"; }
+function hoursOf(s){
+  const d=S.days[s]||{}, w=S.week[monday(s)]||{};
+  return {i:d.in||w.in||S.defIn, o:d.out||w.out||S.defOut};
+}
+
+/* ---------- etichetta automatica licenza: prima LP, poi LO, poi RL ---------- */
+function autoLeave(list){
+  list=list.filter(s=>inPeriod(s)&&kind(s)==="LAV"&&s!==S.end);
+  list.forEach(s=>setCode(s,"LP")); compute();
+  for(const c of ["LO","RL"]){
+    const bad=list.filter(s=>{const r=R.rows[R.idx[s]];return r&&r.bk==="X";});
+    if(!bad.length) break; bad.forEach(s=>setCode(s,c)); compute();
+  }
+}
+function migrateV2(){ // vecchia LO unica → LP/LO
+  if(S.ver===2) return;
+  const b=Object.assign({},S.bal); let changed=false;
+  Object.keys(S.days).sort().forEach(s=>{ const d=S.days[s]; if(!d||d.c!=="LO") return; changed=true;
+    if(b.lo25>0){b.lo25--;d.c="LP";}
+    else if(b.lo26>0){b.lo26--; d.c=s>="2027-01-01"?"LP":"LO";}
+    else if(b.lo27>0){b.lo27--;}
+  });
+  S.ver=2; if(changed&&STORE_READY) save();
+}
+
+/* ---------- calcolo ---------- */
+let R=null;
+function compute(){
+  const st=startDate(), en=S.end, b=Object.assign({},S.bal), rows=[], idx={};
+  if(st>en){ R={rows,idx,st,en}; return; }
+  for(let s=st;s<=en;s=add(s,1)){
+    const k=kind(s); let c=null,bk=null;
+    if(k==="LAV"){
+      c=codeOf(s);
+      const y27=s>="2027-01-01";
+      if(c==="LP"){
+        if(b.lo25>0){b.lo25--;bk="25";}
+        else if(y27&&b.lo26>0){b.lo26--;bk="26";}
+        else bk="X";
+      }else if(c==="LO"){
+        if(!y27){ if(b.lo26>0){b.lo26--;bk="26";} else bk="X"; }
+        else { if(b.lo27>0){b.lo27--;bk="27";} else bk="X"; }
+      }else if(c==="RL"){
+        if(b.rl26>0){b.rl26--;bk="r26";}
+        else if(s>="2027-01-01"&&b.rl27>0){b.rl27--;bk="r27";}
+        else bk="X";
+      }
+    }
+    idx[s]=rows.length;
+    rows.push({s,k,c,bk,bal:Object.assign({},b)});
+  }
+  R={rows,idx,st,en};
+}
+function balAt(s){ // saldi a fine giornata s
+  if(!R.rows.length) return Object.assign({},S.bal);
+  if(s<R.st) return Object.assign({},S.bal);
+  if(s>R.en) return R.rows[R.rows.length-1].bal;
+  return R.rows[R.idx[s]].bal;
+}
+function stats(){
+  const t=today(); const o={lav:0,P:0,LP:0,LO:0,RL:0,AL:0,pDone:0,pLeft:0,lavDone:0,lavLeft:0,X:[],lastP:null,futureP:[]};
+  for(const r of R.rows){
+    if(r.k!=="LAV") continue;
+    o.lav++; o[r.c]++;
+    if(r.s<=t) o.lavDone++; else o.lavLeft++;
+    if(r.c==="P"){ if(r.s<S.end) o.lastP=r.s; if(r.s<=t) o.pDone++; else {o.pLeft++; if(r.s<S.end) o.futureP.push(r.s);} }
+    if(r.bk==="X") o.X.push(r);
+  }
+  const last=R.rows.length?R.rows[R.rows.length-1].bal:S.bal;
+  o.unpl={...last}; o.unplTot=last.lo25+last.lo26+last.lo27+last.rl26+last.rl27;
+  // stima: residuo non collocato messo in coda sulle presenze future
+  const fp=o.futureP; const u=o.unplTot;
+  o.lastEst = u>=fp.length ? null : fp[fp.length-u-1];
+  o.lastEstNone = fp.length>0 && u>=fp.length;
+  return o;
+}
+
+/* ---------- ponti ---------- */
+const isWk=s=>{const w=parse(s).getDay();return w>0&&w<6;};
+function bridges(){
+  const st=startDate(), en=S.end, t=today(), from=t>st?add(t,1):st;
+  const days=[];
+  for(let s=from;s<=en;s=add(s,1)){const k=kind(s);days.push({s,k,off:k!=="LAV"||codeOf(s)!=="P"});}
+  const runs=[]; let i=0;
+  while(i<days.length){ if(days[i].off){let j=i;while(j+1<days.length&&days[j+1].off)j++;runs.push({a:i,b:j});i=j+1;} else i++; }
+  const opts=[];
+  for(let x=0;x<runs.length;x++){
+    let cost=0;
+    for(let y=x+1;y<runs.length;y++){
+      cost+=runs[y].a-runs[y-1].b-1; if(cost>12)break;
+      const a=runs[x].a,b=runs[y].b,seg=days.slice(a,b+1);
+      if(!seg.some(d=>d.k==="FEST"&&isWk(d.s)))continue;
+      const take=seg.filter(d=>!d.off).map(d=>d.s), len=b-a+1;
+      const fh=seg.find(d=>d.k==="FEST"&&isWk(d.s)).s;
+      opts.push({from:days[a].s,to:days[b].s,len,cost,take,seg,gain:len-cost,ratio:len/cost,month:fh.slice(0,7)});
+    }
+  }
+  // un solo giorno di LO attaccato a un blocco festivo (es. venerdì prima di Pasqua, 24 dicembre)
+  for(const r of runs){
+    const run=days.slice(r.a,r.b+1), fd=run.find(d=>d.k==="FEST"&&isWk(d.s));
+    if(!fd) continue;
+    for(const [a,b,e] of [[r.a-1,r.b,r.a-2],[r.a,r.b+1,r.b+2]]){
+      if(a<0||b>=days.length) continue;
+      if(e>=0&&e<days.length&&days[e].off) continue; // già coperto dagli abbinamenti tra blocchi
+      const seg=days.slice(a,b+1), take=seg.filter(d=>!d.off).map(d=>d.s), len=b-a+1;
+      opts.push({from:days[a].s,to:days[b].s,len,cost:1,take,seg,gain:len-1,ratio:len,month:fd.s.slice(0,7)});
+    }
+  }
+  return opts;
+}
+function bestByMonth(opts){
+  const m={};
+  for(const o of opts){(m[o.month]=m[o.month]||[]).push(o);}
+  for(const k in m){
+    m[k].sort((p,q)=>q.ratio-p.ratio||q.len-p.len);
+    const best=m[k][0], seen=new Set([best.gain]);
+    // alternative: solo quelle che danno più giorni liberi della migliore, dalla più conveniente
+    const rest=m[k].slice(1).filter(o=>o.gain>best.gain&&o.ratio>=1.9).sort((p,q)=>q.ratio-p.ratio||q.gain-p.gain).filter(o=>!seen.has(o.gain)&&seen.add(o.gain));
+    m[k]=[best,...rest];
+  }
+  return m;
+}
+
+/* ---------- UI helpers ---------- */
+const $=id=>document.getElementById(id);
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove("show"),1800);}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+let selDay=null, calMonth=null, weekStart=null;
+
+function warningsHTML(st){
+  let h="";
+  if(!S.start) h+=`<div class="note">Data di rientro non ancora impostata: il calcolo è provvisorio da <b>${fmt(PROV_START,{weekday:"long",day:"numeric",month:"long"})}</b>, data provvisoria. Confermala o cambiala in fondo a “Situazione”.</div>`;
+  if(st.X.length){
+    const l=st.X.slice(0,6).map(r=>fmt(r.s,{day:"numeric",month:"short"})+" ("+r.c+")").join(", ");
+    h+=`<div class="banner"><b>${st.X.length} ${st.X.length===1?"giorno supera":"giorni superano"} il saldo disponibile:</b> ${l}${st.X.length>6?"…":""}</div>`;
+  }
+  if(codeOf(S.end)!=="P") h+=`<div class="banner">Il ${fmt(S.end,{day:"numeric",month:"long"})} risulta assente, ma è l’ultimo giorno in servizio: rimettilo in presenza.</div>`;
+  if(st.unplTot>0) h+=`<div class="banner big">${st.unplTot} ${st.unplTot===1?"giorno":"giorni"} di assenza ancora da collocare entro <b>${fmt(deadline(),{weekday:"long",day:"numeric",month:"long"})}</b>. Pagina “Ponti” → Piano completo.</div>`;
+  if(!CLOUD&&(Object.keys(S.days).length||S.start)&&(!lastBk()||diff(lastBk().slice(0,10),today())>7)) h+=`<div class="note">${lastBk()?"Ultima copia di sicurezza oltre 7 giorni fa.":"Non hai ancora salvato una copia di sicurezza."} Variazioni → “Salva copia su File / iCloud”.</div>`;
+  const rl26Left=balAt("2026-12-31").rl26;
+  if(S.bal.rl26>0 && rl26Left>0 && R.rows.length) h+=`<div class="note">${rl26Left} ${rl26Left===1?"recupero":"recuperi"} festivi 2026 non ${rl26Left===1?"collocato":"collocati"} entro il 31/12/2026. Verifica se hanno una scadenza.</div>`;
+  return h;
+}
+
+/* ---------- PAGINA 1 ---------- */
+function renderP1(){
+  compute(); const st=stats(); const t=today();
+  $("subtitle").textContent="Aggiornato a "+fmt(t,{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  $("warnings").innerHTML=warningsHTML(st);
+  const evs=Object.keys(EVT).filter(d=>d>=t).map(d=>[d,EVT[d]]);
+  if(startDate()>=t) evs.push([startDate(),S.start?"Primo giorno di rientro":"Possibile rientro (provvisorio)"]);
+  evs.push([S.end,"Congedo"]);
+  evs.sort((a,b)=>a[0]<b[0]?-1:1);
+  const rel=d=>{const n=diff(t,d);return n===0?"oggi":n===1?"domani":"tra "+n+" giorni";};
+  $("evList").innerHTML=Object.keys(S.ev||{}).sort().map(d=>`<div class="row"><span>${fmt(d,{weekday:"short",day:"numeric",month:"short",year:"numeric"})} · <b>${esc(S.ev[d])}</b></span><button data-evdel="${d}" style="padding:5px 10px;font-size:13px">Togli</button></div>`).join("")||'<div class="lbl" style="padding:6px 0">Nessun appuntamento.</div>';
+  $("events").innerHTML='<b>Prossime date</b>'+evs.map(([d,n])=>`<div class="row"><span>${esc(n)}</span><span class="when"><b>${fmt(d,{weekday:"short",day:"numeric",month:"short",year:"numeric"})}</b><br>${rel(d)}</span></div>`).join("");
+
+  // hero
+  const toEnd=diff(t,S.end);
+  if(t<startDate()){
+    $("hDays").textContent=diff(t,startDate()); $("hDaysL").textContent="giorni al rientro";
+  }else{
+    $("hDays").textContent=Math.max(0,toEnd); $("hDaysL").textContent=toEnd>=0?"giorni al congedo":"congedo raggiunto";
+  }
+  $("hPres").textContent=st.pLeft; $("hPresL").textContent=t<startDate()?"presenze in ufficio pianificate":"presenze in ufficio rimaste";
+  const pct=st.lav?Math.round(st.lavDone/st.lav*100):0;
+  $("prog").style.width=pct+"%";
+  $("progL").textContent=`${st.lavDone} di ${st.lav} giornate lavorative trascorse · ${st.pDone} presenze svolte`;
+
+  // tiles: residuo a oggi e da collocare
+  const now=balAt(t<startDate()?add(startDate(),-1):t), fin=st.unpl;
+  const tile=(cls,title,init,cur,left)=>`<div class="tile"><div class="t ${cls}">${title}</div><div class="n">${cur}<span class="s"> / ${init}</span></div><div class="s">residuo oggi</div><div class="s">${left>0?left+" da collocare":"tutto collocato"}</div></div>`;
+  $("tiles").innerHTML=
+    tile("lp","LP 2025",S.bal.lo25,now.lo25,fin.lo25)+
+    tile("lo","Licenza 2026 <small>(LO ’26 · LP ’27)</small>",S.bal.lo26,now.lo26,fin.lo26)+
+    tile("lo","LO 2027 rateo",S.bal.lo27,now.lo27,fin.lo27)+
+    tile("rl","RL 2026",S.bal.rl26,now.rl26,fin.rl26)+
+    tile("rl","RL 2027",S.bal.rl27,now.rl27,fin.rl27)+
+    `<div class="tile"><div class="t pp">Assenze pianificate</div><div class="n">${st.LP+st.LO+st.RL+st.AL}</div><div class="s">LP ${st.LP} · LO ${st.LO} · RL ${st.RL} · AL ${st.AL}</div></div>`;
+
+  $("lastP").textContent=st.lastP?fmt(st.lastP,{weekday:"short",day:"numeric",month:"short",year:"numeric"}):"nessuna";
+  $("lastEst").textContent=st.lastEstNone?"nessuna presenza":(st.lastEst?fmt(st.lastEst,{weekday:"short",day:"numeric",month:"short",year:"numeric"}):"–");
+  $("unplanned").textContent=st.unplTot;
+
+  // iniziale
+  $("iLav").textContent=st.lav;
+  const tot=S.bal.lo25+S.bal.lo26+S.bal.lo27+S.bal.rl26+S.bal.rl27;
+  $("iAbs").textContent=tot;
+  $("iMin").textContent=Math.max(0,st.lav-tot);
+  $("sStart").value=S.start; $("sEnd").value=S.end;
+  for(const k in S.bal) $("b_"+k).value=S.bal[k];
+  $("defIn").value=S.defIn; $("defOut").value=S.defOut;
+
+  renderCal(); renderDay();
+}
+
+function cellClass(s){
+  if(!inPeriod(s)) return kind(s)==="FEST"?"FEST OUT":"OUT";
+  const r=R.rows[R.idx[s]]; if(!r) return "OUT";
+  if(r.k!=="LAV") return r.k;
+  return r.c+(r.bk==="X"?" X":"");
+}
+let BRDAYS={};
+const SHORT={"2026-11-01":"Ognis.","2026-12-08":"Immac.","2026-12-25":"Natale","2026-12-26":"S.Stef.","2027-01-01":"Capod.","2027-01-06":"Epifan.","2027-03-28":"Pasqua","2027-03-29":"Pasquet.","2027-04-25":"25 Apr","2027-05-01":"1° Mag","2027-06-02":"2 Giu"};
+function renderCal(){
+  BRDAYS={}; const fb=R.rows.length?R.rows[R.rows.length-1].bal:S.bal;
+  if(fb.lo25+fb.lo26+fb.lo27+fb.rl26+fb.rl27>0){ const bm=bestByMonth(bridges()); for(const k in bm) for(const s of bm[k][0].take) BRDAYS[s]=1; }
+  if(!calMonth){ const b=today()<startDate()?startDate():today(); calMonth=b.slice(0,7)+"-01"; }
+  const first=parse(calMonth);
+  $("mLabel").textContent=first.toLocaleDateString("it-IT",{month:"long",year:"numeric"});
+  let h=["L","M","M","G","V","S","D"].map(d=>`<div class="dow">${d}</div>`).join("");
+  const lead=(first.getDay()+6)%7; for(let i=0;i<lead;i++) h+='<div class="cell empty"></div>';
+  const m=first.getMonth(); const t=today();
+  for(let s=calMonth; parse(s).getMonth()===m; s=add(s,1)){
+    const cls=cellClass(s); const r=R.rows[R.idx[s]];
+    let lab="";
+    if(HOL[s]) lab=`<span class="short">${SHORT[s]||HOL[s]}</span><span class="full">${HOL[s]}</span>`;
+    else if(EVT[s]) lab=esc(String(EVT[s]).split(" ")[0].slice(0,8));
+    else if(inPeriod(s)&&r&&r.k==="LAV") lab=r.c+(BRDAYS[s]&&r.c==="P"?" ★":"");
+    else if(inPeriod(s)&&r&&r.k==="WE") lab=parse(s).getDay()===6?"sab":"dom";
+    const tag=lab?`<small>${lab}</small>`:"";
+    const ev=(S.days[s]&&S.days[s].n?" note":"")+(EVT[s]?" EVT":"")+(BRDAYS[s]&&cls==="P"?" BR":"");
+    h+=`<div class="cell ${cls}${ev}${s===t?" today":""}${s===selDay?" sel":""}" data-d="${s}" title="${esc(EVT[s]||HOL[s]||"")}">${parse(s).getDate()}${tag}</div>`;
+  }
+  $("cal").innerHTML=h;
+}
+function renderDay(){
+  if(!selDay){ const t=today(); selDay=t<startDate()?startDate():(t>S.end?S.end:t); }
+  $("dLabel").textContent=fmt(selDay,{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  let status, cls;
+  if(!inPeriod(selDay)){ cls="OUT"; status=selDay<startDate()?"Prima del rientro":"Dopo il congedo"; }
+  else{
+    const r=R.rows[R.idx[selDay]];
+    if(r.k==="FEST"){cls="FEST";status="Festivo · "+HOL[selDay];}
+    else if(r.k==="WE"){cls="WE";status=NAMES.WE;}
+    else{
+      cls=r.c; status=NAMES[r.c];
+      if(r.c==="P"){const h=hoursOf(selDay);status+=` · ${h.i}–${h.o}`;}
+      if(r.bk) status+=` · scala da ${BK[r.bk]}`;
+    }
+  }
+  const nt=S.days[selDay]&&S.days[selDay].n?`<div class="lbl" style="margin-top:6px">📝 ${esc(S.days[selDay].n)}</div>`:"";
+  $("dStatus").innerHTML=nt+(EVT[selDay]?`<span class="pill EVT">${esc(EVT[selDay])}</span> `:"")+`<span class="pill ${cls}">${esc(status)}</span>`;
+  const b=balAt(selDay);
+  // presenze svolte fino a quel giorno e lavorative rimaste dopo
+  let pd=0,lr=0; for(const r of R.rows){ if(r.k!=="LAV")continue; if(r.s<=selDay){ if(r.c==="P")pd++; } else lr++; }
+  $("dMini").innerHTML=
+    `<div><b class="lo">${b.lo25+b.lo26+b.lo27}</b><span>licenze (${b.lo25}·${b.lo26}·${b.lo27})</span></div>`+
+    `<div><b class="rl">${b.rl26+b.rl27}</b><span>RL (${b.rl26}·${b.rl27})</span></div>`+
+    `<div><b class="pp">${pd}</b><span>presenze fatte</span></div>`+
+    `<div><b>${lr}</b><span>lavorativi dopo</span></div>`+
+    `<div><b>${Math.max(0,diff(selDay,S.end))}</b><span>giorni al congedo</span></div>`+
+    `<div><b>${Math.max(0,b.lo25+b.lo26+b.lo27+b.rl26+b.rl27)}</b><span>assenze residue</span></div>`;
+}
+
+/* ---------- PAGINA 2 ---------- */
+function renderP2(){
+  compute(); const st=stats();
+  $("warnings2").innerHTML=warningsHTML(st);
+  if(!weekStart){ const b=today()<startDate()?startDate():(today()>S.end?S.end:today()); weekStart=monday(b); }
+  const we=add(weekStart,4);
+  $("wLabel").textContent=`${fmt(weekStart,{day:"numeric",month:"short"})} – ${fmt(we,{day:"numeric",month:"short",year:"numeric"})}`;
+  const w=S.week[weekStart]||{};
+  $("wIn").value=w.in||S.defIn; $("wOut").value=w.out||S.defOut;
+  let h="", tot={P:0,LP:0,LO:0,RL:0,AL:0,min:0};
+  for(let i=0;i<5;i++){
+    const s=add(weekStart,i), k=kind(s);
+    const name=fmt(s,{weekday:"long",day:"numeric",month:"short"});
+    if(!inPeriod(s)){ h+=`<div class="drow"><div class="dtop"><span class="dname">${name}</span>${EVT[s]?`<span class="pill EVT">${esc(EVT[s])}</span>`:`<span class="pill OUT">${s<startDate()?"prima del rientro":"dopo il congedo"}</span>`}</div></div>`; continue; }
+    if(k==="FEST"){ h+=`<div class="drow"><div class="dtop"><span class="dname">${name}</span><span class="pill FEST">${esc(HOL[s])}</span></div></div>`; continue; }
+    if(s===S.end){ const hh=hoursOf(s); h+=`<div class="drow"><div class="dtop"><span class="dname">${name}</span><span class="pill P">Ultimo giorno · in servizio</span></div><div class="times"><span>Entrata</span><input type="time" data-s="${s}" data-t="in" value="${hh.i}"><span>Uscita</span><input type="time" data-s="${s}" data-t="out" value="${hh.o}"></div></div>`; tot.P++; continue; }
+    const r=R.rows[R.idx[s]], c=r.c; tot[c]++;
+    const seg=["P","LP","LO","RL","AL"].map(x=>`<button class="${x}${x===c?" on":""}" data-s="${s}" data-c="${x}">${x}</button>`).join("");
+    let extra="";
+    if(c==="P"){ const hh=hoursOf(s); const m=Math.max(0,toMin(hh.o)-toMin(hh.i)); tot.min+=m;
+      extra=`<div class="times"><span>Entrata</span><input type="time" data-s="${s}" data-t="in" value="${hh.i}"><span>Uscita</span><input type="time" data-s="${s}" data-t="out" value="${hh.o}"></div><div class="dnote">${hhmm(m)}</div>`; }
+    else if(r.bk) extra=`<div class="dnote${r.bk==="X"?" x":""}">${r.bk==="X"?(r.c==="LO"?"Saldo dell’anno esaurito: usa LP":r.c==="LP"?"Licenze anni precedenti esaurite: usa LO":"Supera il saldo disponibile"):"Scala da "+BK[r.bk]}</div>`;
+    h+=`<div class="drow"><div class="dtop"><span class="dname">${name}</span><div class="seg">${seg}</div></div>${extra}</div>`;
+  }
+  $("wDays").innerHTML=h;
+  $("wTot").textContent=`P ${tot.P} · LP ${tot.LP} · LO ${tot.LO} · RL ${tot.RL}${tot.AL?" · AL "+tot.AL:""} · ${hhmm(tot.min)}`;
+  if(!$("rFrom").value) $("rFrom").value=startDate();
+  if(!$("rTo").value) $("rTo").value=S.end;
+  renderSnaps();
+}
+
+/* ---------- scadenza e piani completi ---------- */
+function deadline(){ let s=add(S.end,-1); while(kind(s)!=="LAV") s=add(s,-1); return s; }
+function planBridgeDays(){
+  const st=startDate(), en=S.end, arr=[];
+  for(let s=st;s<en;s=add(s,1)) arr.push({s,off:kind(s)!=="LAV",fw:!!HOL[s]&&isWk(s)});
+  const runs=[]; let i=0;
+  while(i<arr.length){ if(arr[i].off){let j=i;while(j+1<arr.length&&arr[j+1].off)j++;runs.push({a:i,b:j,fw:arr.slice(i,j+1).some(d=>d.fw)});i=j+1;} else i++; }
+  const out=new Set();
+  for(let x=0;x+1<runs.length;x++){
+    const gap=runs[x+1].a-runs[x].b-1;
+    if(gap>=1&&gap<=4&&(runs[x].fw||runs[x+1].fw)) for(let k=runs[x].b+1;k<runs[x+1].a;k++) out.add(arr[k].s);
+  }
+  // festivo isolato senza ponte vicino: un giorno attaccato
+  runs.forEach((r,x)=>{ if(!r.fw) return;
+    const L=x>0?r.a-runs[x-1].b-1:99, Rr=x+1<runs.length?runs[x+1].a-r.b-1:99;
+    if(L>4&&Rr>4){ const k=r.a-1>=0?r.a-1:r.b+1; if(arr[k]) out.add(arr[k].s); } });
+  out.delete(st);
+  return [...out].sort();
+}
+const PLANS={
+  A:{t:"Ponti + lunedì e venerdì",d:"Tutti i ponti delle festività, poi ogni lunedì e venerdì in licenza (weekend di 4 giorni). Il resto nelle ultime settimane di maggio."},
+  B:{t:"Ponti + pausa lunga finale",d:"Tutti i ponti delle festività, poi un unico blocco continuo che termina il giorno prima del 31/05."},
+  C:{t:"Solo blocco finale",d:"Presenza continua fino al blocco unico di fine periodo, come nel foglio Excel originale. Nessun ponte."}
+};
+function buildPlan(type){
+  const st=startDate(), en=S.end, U=S.bal.lo25+S.bal.lo26+S.bal.lo27+S.bal.rl26+S.bal.rl27;
+  const lav=[]; for(let s=add(st,1);s<en;s=add(s,1)) if(kind(s)==="LAV") lav.push(s);
+  const off=new Set(), put=s=>{ if(off.size<U&&s>st&&s<en&&kind(s)==="LAV") off.add(s); };
+  let nb=0;
+  if(type!=="C"){ const b=planBridgeDays(); b.forEach(put); nb=b.length; }
+  if(type==="A") lav.filter(s=>{const w=parse(s).getDay();return w===1||w===5;}).forEach(put);
+  for(let i=lav.length-1;i>=0;i--) put(lav[i]);
+  const codes={}; let r26=S.bal.rl26, r27=S.bal.rl27;
+  let l25=S.bal.lo25, l26=S.bal.lo26, l27=S.bal.lo27;
+  [...off].sort().forEach(s=>{
+    if(s<"2027-01-01"){
+      if(r26>0){codes[s]="RL";r26--;} else if(l25>0){codes[s]="LP";l25--;} else if(l26>0){codes[s]="LO";l26--;} else codes[s]="LO";
+    }else{
+      if(r27>0){codes[s]="RL";r27--;} else if(r26>0){codes[s]="RL";r26--;}
+      else if(l25>0){codes[s]="LP";l25--;} else if(l26>0){codes[s]="LP";l26--;} else {codes[s]="LO";l27--;}
+    }
+  });
+  // metriche
+  const runs=[]; let cur=0, lav0=0, strip=[];
+  for(let s=st;s<=en;s=add(s,1)){
+    const k=kind(s), o=k!=="LAV"||off.has(s); if(k==="LAV") lav0++;
+    strip.push(k!=="LAV"?(k==="FEST"?"f":"w"):(off.has(s)?"a":"p"));
+    if(o) cur++; else { if(cur) runs.push(cur); cur=0; }
+  }
+  if(cur) runs.push(cur);
+  let lastOff=add(en,-1); while(lastOff>st&&(kind(lastOff)!=="LAV"||off.has(lastOff))) lastOff=add(lastOff,-1);
+  return {type,codes,used:off.size,U,pres:lav0-off.size,longest:Math.max(0,...runs),long4:runs.filter(x=>x>=4).length,
+    lastOff,nb,strip,in26:[...off].filter(s=>s<"2027-01-01").length};
+}
+function applyPlan(P){
+  S.undoDays=JSON.parse(JSON.stringify(S.days));
+  for(const s in S.days){ if(inPeriod(s)){ delete S.days[s].c; if(!Object.keys(S.days[s]).length) delete S.days[s]; } }
+  for(const s in P.codes) setCode(s,P.codes[s]);
+  S.lastBridge=null; save();
+}
+function plansHTML(){
+  const D=s=>fmt(s,{weekday:"short",day:"numeric",month:"short"});
+  const ps=["A","B","C"].map(buildPlan);
+  let h=`<h2>Piano completo · tutte le assenze entro ${D(deadline())}</h2>`;
+  if(S.undoDays) h+=`<div class="note">Piano applicato. <button id="planUndo" style="margin-left:6px">Ripristina il calendario precedente</button></div>`;
+  h+=`<div class="plans">`+ps.map(P=>{
+    const rec=P.type==="A", I=PLANS[P.type];
+    const lead=(parse(startDate()).getDay()+6)%7;
+    const cells='<i class="x"></i>'.repeat(lead)+P.strip.map(c=>`<i class="${c}"></i>`).join("");
+    return `<div class="plan${rec?" rec":""}">
+      ${rec?'<span class="tagrec">★ CONSIGLIATO</span>':""}
+      <div class="ptitle">${I.t}</div><div class="lbl">${I.d}</div>
+      <div class="pstats">
+        <div><b>${P.used}</b><span>assenze collocate</span></div>
+        <div><b>${P.pres}</b><span>presenze in ufficio</span></div>
+        <div class="hi"><b>${P.long4}</b><span>assenze di 4+ giorni</span></div>
+        <div class="hi"><b>${P.longest}</b><span>giorni di fila (max)</span></div>
+      </div>
+      <div class="lbl">Ultimo giorno in ufficio prima della pausa finale: <b style="color:var(--ink)">${D(P.lastOff)}</b>${P.nb?` · ${P.nb} giorni di ponte`:""} · ${P.in26} assenze nel 2026</div>
+      <div class="pstrip" aria-hidden="true">${cells}</div>
+      <div class="btns"><button class="${rec?"primary":""}" data-plan="${P.type}">Applica questo piano</button></div>
+    </div>`;}).join("")+`</div>
+    <div class="keys" style="margin:6px 4px 0"><span style="--c:var(--p)">In ufficio</span><span style="--c:var(--br)">Assenza (LO/RL)</span><span style="--c:var(--fest)">Festivo</span><span style="--c:var(--line)">Weekend</span></div>`;
+  plansHTML.ps=ps;
+  return h;
+}
+
+function renderP3(){
+  compute(); const st=stats(), t=today();
+  const opts=bridges(), bm=bestByMonth(opts), avail=st.unplTot;
+  const D=s=>fmt(s,{weekday:"short",day:"numeric",month:"short"});
+  const optHTML=(o,best,idx)=>{
+    const chips=o.seg.map(d=>{
+      const n=parse(d.s), wd=n.toLocaleDateString("it-IT",{weekday:"short"}).slice(0,3);
+      const c=!d.off?"take":(d.k==="FEST"?"fest":"free");
+      return `<div class="chip ${c}" title="${esc(HOL[d.s]||"")}"><small>${wd}</small>${n.getDate()}</div>`;}).join("");
+    const takeTxt=o.take.length<=4?o.take.map(D).join(", "):`${D(o.take[0])} … ${D(o.take[o.take.length-1])}`;
+    const warn=o.cost>avail?`<div class="ocost" style="color:var(--warn)">Supera i ${avail} giorni ancora da collocare</div>`:"";
+    return `<div class="opt${best?" best":""}">
+      <div class="ohead"><span class="${best?"star":"alt"}">${best?"★ Più favorevole":"Alternativa"}</span>
+        <span class="gain">+${o.gain}<small>giorni liberi in più</small></span></div>
+      <div class="orange">${D(o.from)} → ${D(o.to)} · ${o.len} giorni di fila</div>
+      <div class="ocost">Spendi ${o.cost} ${o.cost===1?"giorno":"giorni"} di LO (${takeTxt}) · resa ${o.ratio.toFixed(1).replace(".",",")} giorni liberi per ogni giorno di licenza</div>
+      ${warn}
+      <div class="strip">${chips}</div>
+      <div class="btns"><button class="${best?"primary":""}" data-br="${idx}">Metti in licenza</button></div>
+    </div>`;
+  };
+  const all=[]; // for apply lookup
+  // top: best of the period
+  const sorted=opts.slice().sort((p,q)=>q.ratio-p.ratio||q.len-p.len);
+  const longest=opts.slice().sort((p,q)=>q.len-p.len||p.cost-q.cost)[0];
+  let top="";
+  if(S.lastBridge&&S.lastBridge.length) top+=`<div class="note">Ultimo ponte applicato: ${S.lastBridge.length} giorni di LO da ${D(S.lastBridge[0])}. <button id="brUndo" style="margin-left:6px">Annulla</button></div>`;
+  if(sorted.length){
+    all.push(sorted[0]); top+=`<h2>Il migliore del periodo</h2>`+optHTML(sorted[0],true,0);
+    if(longest&&longest!==sorted[0]){all.push(longest); top+=`<h2>La pausa più lunga possibile (fino a 12 giorni di LO)</h2>`+optHTML(longest,false,1);}
+  } else top+=`<div class="note">Nessun ponte disponibile da qui al congedo con il piano attuale.</div>`;
+  const U=st.unplTot;
+  const dl=`<div class="banner big${U?"":" okb"}">${U?`<b>${U} ${U===1?"giorno":"giorni"} ancora da collocare</b> entro ${fmt(deadline(),{weekday:"long",day:"numeric",month:"long"})}. Il ${fmt(S.end,{day:"numeric",month:"long"})} sei in servizio.`:`<b>Tutte le assenze sono collocate</b> entro ${fmt(deadline(),{weekday:"long",day:"numeric",month:"long"})}.`}</div>`;
+  $("brTop").innerHTML=dl+plansHTML()+`<h2 style="margin-top:26px">Ponti singoli</h2>`+top;
+  // months
+  let h=""; const first=(t>startDate()?t:startDate()).slice(0,7)+"-01";
+  for(let m=first; m<=S.end; ){
+    const key=m.slice(0,7), list=(bm[key]||[]).slice(0,4);
+    const label=parse(m).toLocaleDateString("it-IT",{month:"long",year:"numeric"});
+    const hol=Object.keys(HOL).filter(d=>d.startsWith(key)&&d>=startDate()&&d<=S.end).map(d=>`${HOL[d]} (${parse(d).toLocaleDateString("it-IT",{weekday:"short",day:"numeric"})})`);
+    h+=`<div class="card month"><h3>${label}<small>${list.length?list.length+(list.length===1?" opzione":" opzioni"):""}</small></h3>`;
+    if(list.length){ list.forEach((o,i)=>{all.push(o);h+=optHTML(o,i===0,all.length-1);}); }
+    else h+=`<div class="none">Nessun ponte utile${hol.length?": "+esc(hol.join(", "))+" cade nel weekend":" (nessun festivo infrasettimanale)"}. Alternativa semplice: un lunedì o un venerdì di LO = 3 giorni di fila.</div>`;
+    h+=`</div>`;
+    const d=parse(m); d.setMonth(d.getMonth()+1); m=iso(d);
+  }
+  $("brMonths").innerHTML=h;
+  renderP3.all=all;
+}
+
+function setCode(s,c){
+  const d=S.days[s]||{};
+  if(c==="P"){ delete d.c; } else d.c=c;
+  if(Object.keys(d).length) S.days[s]=d; else delete S.days[s];
+}
+function setTime(s,t,v){
+  const d=S.days[s]||{}; d[t]=v; S.days[s]=d;
+}
+
+/* ---------- PAGINA 4: calendario completo con blocchi ---------- */
+function absBlocks(){ // sequenze consecutive di giorni non in ufficio che contengono almeno un'assenza
+  compute(); const rows=R.rows, out=[]; let cur=null;
+  const close=()=>{ if(cur&&cur.abs>0) out.push(cur); cur=null; };
+  for(const r of rows){
+    const off=r.k!=="LAV"||r.c!=="P";
+    if(off){ if(!cur) cur={from:r.s,to:r.s,len:0,abs:0,codes:{},days:[]}; cur.to=r.s; cur.len++; cur.days.push(r.s);
+      if(r.k==="LAV"){ cur.abs++; cur.codes[r.c]=(cur.codes[r.c]||0)+1; } }
+    else close();
+  }
+  close(); return out;
+}
+function renderP4(){
+  compute(); const st=stats(), B=absBlocks(), t=today();
+  const map={}; B.forEach((b,i)=>b.days.forEach(d=>map[d]=i));
+  const big=B.length?Math.max(...B.map(b=>b.len)):0, home=B.reduce((a,b)=>a+b.len,0);
+  $("kSum").innerHTML=`<div><b>${B.length}</b><span>blocchi di assenza</span></div><div class="hi"><b>${big}</b><span>giorni di fila (max)</span></div><div><b>${home}</b><span>giorni a casa nei blocchi</span></div><div><b>${st.P}</b><span>presenze in ufficio</span></div>`;
+  const D=s=>fmt(s,{weekday:"short",day:"numeric",month:"short"});
+  $("kBlocks").innerHTML=B.length?B.map((b,i)=>{
+    const c=Object.entries(b.codes).map(([k,v])=>`${v} ${k}`).join(" · ");
+    return `<div class="blk${b.len===big?" big":""}" data-go="${b.from}"><div class="len">${b.len}<small>giorni</small></div>
+      <div class="bi"><b>${D(b.from)} → ${D(b.to)}</b><div class="lbl">${c}${b.len>b.abs?` + ${b.len-b.abs} tra weekend e festivi`:""}</div><div class="bar" style="width:${Math.round(b.len/big*100)}%"></div></div></div>`;
+  }).join(""):`<div class="lbl">Nessuna assenza ancora inserita. Tocca un giorno nel calendario o usa un piano dalla pagina “Ponti”.</div>`;
+  // calendario settimana per settimana
+  let h=""; const st0=monday(startDate()); let endW=monday(S.end);
+  for(let w=st0; w<=endW; w=add(w,7)){
+    const days=[...Array(7)].map((_,i)=>add(w,i));
+    const firstOfMonth=days.find(d=>d.endsWith("-01")&&inPeriod(d)) || (w===st0?days.find(d=>inPeriod(d)):null);
+    h+=`<div class="fcrow${firstOfMonth&&w!==st0?" mstart":""}"><div class="fcm">${firstOfMonth?parse(firstOfMonth).toLocaleDateString("it-IT",{month:"short"}):""}</div>`;
+    days.forEach((d,i)=>{
+      if(!inPeriod(d)){ h+=`<div class="fd ${d<startDate()||d>S.end?"OUT":""}" data-d="${d}">${parse(d).getDate()}</div>`; return; }
+      const r=R.rows[R.idx[d]]; const bi=map[d];
+      let cls, lab="", tag="";
+      if(bi!==undefined){
+        const b=B[bi]; cls="B"+(r.k!=="LAV"?" free":"")+(r.k==="FEST"?" FEST":"");
+        const prev=add(d,-1), next=add(d,1);
+        if(i===0||map[prev]!==bi) cls+=" bs"; if(i===6||map[next]!==bi) cls+=" be";
+        lab=r.k==="LAV"?r.c:(HOL[d]?(SHORT[d]||HOL[d]):"");
+        if(d===b.from) tag=`<span class="tag">${b.len}g</span>`;
+      }else{ cls=r.k==="LAV"?"P":r.k; lab=r.k==="LAV"?"P":(HOL[d]?(SHORT[d]||HOL[d]):(EVT[d]?esc(String(EVT[d]).split(" ")[0].slice(0,8)):"")); }
+      if(r.bk==="X") cls+=" X"; if(d===t) cls+=" today"; if(tag) cls+=" hastag";
+      h+=`<div class="fd ${cls}" data-d="${d}" title="${esc(HOL[d]||EVT[d]||"")}">${tag}${parse(d).getDate()}${lab?`<small>${lab}</small>`:""}</div>`;
+    });
+    h+=`</div>`;
+  }
+  $("kCal").innerHTML=h;
+}
+$("kCal").onclick=e=>{ const c=e.target.closest(".fd[data-d]"); if(!c) return; const d=c.dataset.d; if(!inPeriod(d)) return; selDay=d; openSheet(d); };
+$("kBlocks").onclick=e=>{ const b=e.target.closest("[data-go]"); if(!b) return; const el=document.querySelector(`#kCal .fd[data-d="${b.dataset.go}"]`); if(el){ el.scrollIntoView({behavior:"smooth",block:"center"}); el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); } };
+
+/* ---------- modifica diretta del giorno (tocco sul calendario) ---------- */
+let sheetDay=null;
+const DESC={P:"presenza",LP:"anni prec.",LO:"anno corr.",RL:"recupero",AL:"altra"};
+function logChange(s,from,to){
+  if(from===to) return;
+  S.log=(S.log||[]); S.log.push({t:new Date().toISOString(),s,from,to}); if(S.log.length>60) S.log=S.log.slice(-60);
+}
+function changeDay(s,c){ const from=codeOf(s); if(from===c) return; setCode(s,c); logChange(s,from,c); save(); }
+function undoLast(){
+  const L=S.log||[]; const x=L.pop(); if(!x){ toast("Nessuna modifica da annullare"); return null; }
+  setCode(x.s,x.from); save(); toast("Annullato: "+fmt(x.s,{day:"numeric",month:"short"})+" torna "+x.from); return x.s;
+}
+function editable(s){ return inPeriod(s)&&kind(s)==="LAV"&&s!==S.end; }
+function stepLav(s,dir){ let x=s; for(let i=0;i<14;i++){ x=add(x,dir); if(editable(x)) return x; if(x<startDate()||x>S.end) break; } return s; }
+function openSheet(s){ sheetDay=s; $("sheet").classList.remove("hide"); $("sSaved").textContent=""; renderSheet(); }
+function closeSheet(){ $("sheet").classList.add("hide"); sheetDay=null; flushCloud(); }
+function renderSheet(){
+  if(!sheetDay) return; compute();
+  const s=sheetDay; $("sTitle").textContent=fmt(s,{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  const d=S.days[s]||{}; let h="";
+  if(EVT[s]) h+=`<div style="text-align:center;margin-top:8px"><span class="pill EVT">${esc(EVT[s])}</span></div>`;
+  if(!inPeriod(s)) h+=`<p class="lbl" style="text-align:center">${s<startDate()?"Prima del rientro: giorno non conteggiato.":"Dopo il congedo."}</p>`;
+  else if(kind(s)==="FEST") h+=`<p style="text-align:center"><span class="pill FEST">Festivo · ${esc(HOL[s])}</span></p>`;
+  else if(kind(s)==="WE") h+=`<p style="text-align:center"><span class="pill WE">Fine settimana</span></p>`;
+  else{
+    const r=R.rows[R.idx[s]], c=r.c;
+    if(s===S.end) h+=`<p style="text-align:center"><span class="pill P">Ultimo giorno · in servizio</span></p>`;
+    else{
+      h+=`<div class="bigseg">${["P","LP","LO","RL","AL"].map(x=>`<button class="${x}${x===c?" on":""}" data-sc="${x}">${x}<small>${DESC[x]}</small></button>`).join("")}</div>`;
+      const b=r.bal, tot=b.lo25+b.lo26+b.lo27+b.rl26+b.rl27;
+      h+=`<div class="simpact${r.bk==="X"?" x":""}">${c==="P"?"In ufficio":r.bk==="X"?(c==="LO"?"Saldo dell’anno esaurito: usa LP":c==="LP"?"Licenze anni precedenti esaurite: usa LO":"Saldo esaurito"):c==="AL"?"Assenza che non scala dai saldi":"Scala da "+BK[r.bk]} · residuo dopo questo giorno: <b>${tot}</b></div>`;
+    }
+    if(c==="P"||s===S.end){ const hh=hoursOf(s);
+      h+=`<div class="times"><span>Entrata</span><input type="time" id="sIn" value="${hh.i}"><span>Uscita</span><input type="time" id="sOut" value="${hh.o}"></div>`; }
+  }
+  if(inPeriod(s)) h+=`<input class="snote" id="sNote" maxlength="140" placeholder="Nota (facoltativa)" value="${esc(d.n||"")}">`;
+  $("sBody").innerHTML=h;
+  $("sUndo").disabled=!(S.log&&S.log.length);
+}
+function sheetSaved(){ $("sSaved").textContent="✓ Salvato "+new Date().toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit",second:"2-digit"}); }
+function refreshBehind(){ const p=[1,2,3,4].find(n=>!$("pg"+n).classList.contains("hide"))||1; renderPage(p); }
+function renderPage(p){ if(p===1) renderP1(); else if(p===2) renderP2(); else if(p===3) renderP3(); else renderP4(); }
+
+/* ---------- dati del Tai Chi (stesso progetto): inclusi nella copia su File / iCloud ---------- */
+function tcDump(){ const o={}; try{ for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&k.startsWith("tc_")) o[k]=localStorage.getItem(k); } }catch(e){} return o; }
+function tcRestore(tc){ if(!tc||typeof tc!=="object") return; try{ for(const k in tc) if(k.startsWith("tc_")) localStorage.setItem(k,tc[k]); }catch(e){}
+  idbKV("readwrite","taichi",JSON.stringify({savedAt:new Date().toISOString(),keys:tc})).catch(()=>{}); }
+
+/* ---------- dati di Pianificazione (Oggi, Scadenze, Famiglia, Conti, Benessere): inclusi nelle copie ---------- */
+function pnDump(){ try{ return JSON.parse(localStorage.getItem("pn-v1")||"null"); }catch(e){ return null; } }
+function pnRestore(pn){ if(!pn||typeof pn!=="object") return; try{ localStorage.setItem("pn-v1",JSON.stringify(pn)); }catch(e){} idbKV("readwrite","pianifica",JSON.stringify(pn)).catch(()=>{}); }
+function progDump(){ try{ const pack=JSON.parse(localStorage.getItem("prog-vale-v1")||"null"), link=JSON.parse(localStorage.getItem("prog-link-v1")||"null"); return pack||link?{pack,hist:JSON.parse(localStorage.getItem("prog-vale-hist-v1")||"[]"),link}:null; }catch(e){ return null; } }
+function progRestore(pg){ if(!pg) return; if(pg.link&&pg.link.gist){ try{ localStorage.setItem("prog-link-v1",JSON.stringify(pg.link)); }catch(e){} idbKV("readwrite","progressi-link",JSON.stringify(pg.link)).catch(()=>{}); }
+  if(!pg.pack) return; try{ localStorage.setItem("prog-vale-v1",JSON.stringify(pg.pack)); localStorage.setItem("prog-vale-hist-v1",JSON.stringify(pg.hist||[])); }catch(e){}
+  idbKV("readwrite","progressi",JSON.stringify({pack:pg.pack,hist:pg.hist||[]})).catch(()=>{}); }
+function lastBk(){ let a=S.lastBackup||""; try{ const b=localStorage.getItem("mie-app-lastBackup")||""; if(b>a) a=b; }catch(e){} return a||null; }
+function markBk(){ S.lastBackup=new Date().toISOString(); try{ localStorage.setItem("mie-app-lastBackup",S.lastBackup); }catch(e){} save(); }
+
+/* ---------- conferma dentro la pagina (le finestre di sistema sono bloccate nella pagina pubblicata) ---------- */
+function askConfirm(msg){
+  return new Promise(res=>{ const m=$("modal"); $("mText").textContent=msg; m.classList.remove("hide");
+    const done=v=>{ m.classList.add("hide"); $("mYes").onclick=$("mNo").onclick=null; res(v); };
+    $("mYes").onclick=()=>done(true); $("mNo").onclick=()=>done(false); });
+}
+
+/* ---------- eventi ---------- */
+function show(p){
+  [1,2,3,4].forEach(n=>{$("pg"+n).classList.toggle("hide",p!==n);$("t"+n).classList.toggle("on",p===n);});
+  renderPage(p);
+  window.scrollTo(0,0);
+}
+$("t1").onclick=()=>show(1); $("t2").onclick=()=>show(2); $("t3").onclick=()=>show(3); $("t4").onclick=()=>show(4);
+$("pg3").onclick=async e=>{
+  const pb=e.target.closest("button[data-plan]");
+  if(pb){ const P=(plansHTML.ps||[]).find(x=>x.type===pb.dataset.plan); if(!P)return;
+    if(!await askConfirm(`Applicare "${PLANS[P.type].t}"? Sostituisce le assenze attuali del periodo (gli orari restano). Potrai tornare indietro.`)) return;
+    applyPlan(P); renderP3(); toast(`Piano applicato: ${P.used} assenze collocate`); window.scrollTo({top:0,behavior:"smooth"}); return; }
+  if(e.target.id==="planUndo"){ S.days=S.undoDays||S.days; S.undoDays=null; save(); renderP3(); toast("Calendario ripristinato"); return; }
+  if(e.target.id==="brUndo"){ (S.lastBridge||[]).forEach(s=>setCode(s,"P")); S.lastBridge=null; save(); renderP3(); toast("Ponte annullato"); return; }
+  const b=e.target.closest("button[data-br]"); if(!b) return;
+  const o=renderP3.all[+b.dataset.br]; if(!o) return;
+  autoLeave(o.take); S.lastBridge=o.take.slice(); save(); renderP3();
+  toast(`+${o.gain} giorni liberi: ${o.cost} di LO inseriti`); window.scrollTo({top:0,behavior:"smooth"});
+};
+
+$("mPrev").onclick=()=>{const d=parse(calMonth);d.setMonth(d.getMonth()-1);calMonth=iso(d);renderCal();};
+$("mNext").onclick=()=>{const d=parse(calMonth);d.setMonth(d.getMonth()+1);calMonth=iso(d);renderCal();};
+$("cal").onclick=e=>{const c=e.target.closest(".cell");if(!c||!c.dataset.d)return;selDay=c.dataset.d;renderCal();renderDay();openSheet(selDay);};
+$("sBody").onclick=e=>{ const b=e.target.closest("button[data-sc]"); if(!b) return; changeDay(sheetDay,b.dataset.sc); renderSheet(); sheetSaved(); refreshBehind(); };
+let noteT=null;
+$("sBody").oninput=e=>{ if(e.target.id!=="sNote") return; clearTimeout(noteT); noteT=setTimeout(()=>{ const s=sheetDay; if(!s) return; const d=S.days[s]||{}; const v=e.target.value.trim(); if(v) d.n=v; else delete d.n; if(Object.keys(d).length) S.days[s]=d; else delete S.days[s]; save(); sheetSaved(); },400); };
+$("sBody").onchange=e=>{ const t=e.target, s=sheetDay; if(!s) return;
+  if(t.id==="sIn"||t.id==="sOut"){ setTime(s,t.id==="sIn"?"in":"out",t.value); }
+  else if(t.id==="sNote"){ const d=S.days[s]||{}; if(t.value.trim()) d.n=t.value.trim(); else delete d.n; if(Object.keys(d).length) S.days[s]=d; else delete S.days[s]; }
+  else return;
+  save(); sheetSaved(); refreshBehind(); };
+$("sPrev").onclick=()=>{ sheetDay=stepLav(sheetDay,-1); selDay=sheetDay; calMonth=selDay.slice(0,7)+"-01"; renderSheet(); refreshBehind(); };
+$("sNext").onclick=()=>{ sheetDay=stepLav(sheetDay,1); selDay=sheetDay; calMonth=selDay.slice(0,7)+"-01"; renderSheet(); refreshBehind(); };
+$("sClose").onclick=closeSheet;
+$("sheet").onclick=e=>{ if(e.target.id==="sheet") closeSheet(); };
+$("sUndo").onclick=()=>{ const s=undoLast(); if(s){ sheetDay=s; selDay=s; calMonth=s.slice(0,7)+"-01"; } renderSheet(); refreshBehind(); };
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("sheet").classList.contains("hide")) closeSheet(); });
+$("dPrev").onclick=()=>{selDay=add(selDay,-1);calMonth=selDay.slice(0,7)+"-01";renderCal();renderDay();};
+$("dNext").onclick=()=>{selDay=add(selDay,1);calMonth=selDay.slice(0,7)+"-01";renderCal();renderDay();};
+$("dEdit").onclick=()=>{weekStart=monday(selDay);show(2);};
+$("dDay").onclick=()=>openSheet(selDay);
+
+$("sStart").onchange=e=>{S.start=e.target.value;save();calMonth=null;selDay=null;weekStart=null;renderP1();toast("Data di rientro salvata");};
+$("sEnd").onchange=e=>{if(e.target.value){S.end=e.target.value;save();renderP1();}};
+["lo25","lo26","lo27","rl26","rl27"].forEach(k=>{$("b_"+k).onchange=e=>{S.bal[k]=Math.max(0,parseInt(e.target.value||"0",10));save();renderP1();};});
+$("defIn").onchange=e=>{S.defIn=e.target.value;save();};
+$("defOut").onchange=e=>{S.defOut=e.target.value;save();};
+
+$("wPrev").onclick=()=>{weekStart=add(weekStart,-7);renderP2();};
+$("wNext").onclick=()=>{weekStart=add(weekStart,7);renderP2();};
+$("wDays").onclick=e=>{const b=e.target.closest("button[data-c]");if(!b)return;changeDay(b.dataset.s,b.dataset.c);renderP2();};
+$("wDays").onchange=e=>{const i=e.target;if(!i.dataset.t)return;setTime(i.dataset.s,i.dataset.t,i.value);save();renderP2();};
+$("wIn").onchange=$("wOut").onchange=()=>{S.week[weekStart]={in:$("wIn").value,out:$("wOut").value};save();};
+$("wApplyH").onclick=()=>{
+  S.week[weekStart]={in:$("wIn").value,out:$("wOut").value};
+  for(let i=0;i<5;i++){const s=add(weekStart,i);const d=S.days[s];if(d){delete d.in;delete d.out;if(!Object.keys(d).length)delete S.days[s];}}
+  save();renderP2();toast("Orario applicato alla settimana");
+};
+document.querySelectorAll("[data-all]").forEach(b=>b.onclick=()=>{
+  const c=b.dataset.all;
+  for(let i=0;i<5;i++){const s=add(weekStart,i);if(inPeriod(s)&&kind(s)==="LAV"&&s!==S.end)setCode(s,c);}
+  save();renderP2();
+});
+$("wCopy").onclick=()=>{
+  const prev=add(weekStart,-7);
+  for(let i=0;i<5;i++){const a=add(prev,i),s=add(weekStart,i);
+    if(!inPeriod(s)||kind(s)!=="LAV")continue;
+    const src=S.days[a]; if(src){S.days[s]=Object.assign({},src);} else delete S.days[s];
+  }
+  if(S.week[prev]) S.week[weekStart]=Object.assign({},S.week[prev]);
+  save();renderP2();toast("Settimana copiata");
+};
+$("rApply").onclick=()=>{
+  const wd=[...document.querySelectorAll(".days-pick input:checked")].map(i=>+i.value);
+  const f=$("rFrom").value,t=$("rTo").value,c=$("rCode").value;
+  if(!wd.length){toast("Scegli almeno un giorno");return;}
+  if(!f||!t||f>t){toast("Controlla le date");return;}
+  let n=0; const picked=[];
+  for(let s=f;s<=t;s=add(s,1)){ if(!inPeriod(s)||kind(s)!=="LAV")continue; const w=parse(s).getDay(); if(wd.includes(w)&&s!==S.end){ if(c==="AUTO") picked.push(s); else setCode(s,c); n++;} }
+  if(picked.length) autoLeave(picked);
+  save();renderP2();toast(n+" giorni aggiornati");
+};
+$("bExport").onclick=async()=>{
+  const data=JSON.stringify(Object.assign({},S,{taichi:tcDump(),progressi:progDump(),pianifica:pnDump()}),null,1), filename="marco-backup-"+today()+".json";
+  let dl=null; try{ if(window.claude&&window.claude.use) dl=await window.claude.use("downloads"); }catch(e){}
+  if(dl){ try{ await dl.save({filename,data}); markBk(); toast("Copia esportata"); }catch(e){ if(!(e&&e.code==="cancelled")) toast("Esportazione non riuscita"); } return; }
+  try{
+    const file=new File([data],filename,{type:"application/json"});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){
+      await navigator.share({files:[file],title:"Copia Pianificazione"}); markBk(); dailyBackupHint(); toast("Copia salvata"); return;
+    }
+  }catch(e){ if(e&&e.name==="AbortError") return; }
+  try{
+    const blob=new Blob([data],{type:"application/json"});
+    const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=filename;
+    document.body.appendChild(a);a.click();a.remove(); markBk();
+  }catch(e){ try{navigator.clipboard.writeText(data);toast("Copia negli appunti");}catch(_){} }
+};
+$("bImport").onchange=e=>{
+  const f=e.target.files[0]; if(!f)return;
+  const rd=new FileReader(); rd.onload=()=>{
+    let o; try{o=JSON.parse(rd.result); if(!o||!(o.bal||o.taichi||o.progressi||o.pianifica))throw 0;}catch(_){toast("File non valido");return;}
+    const tc=o.taichi; delete o.taichi; tcRestore(tc); const pg=o.progressi; delete o.progressi; progRestore(pg); const pn=o.pianifica; delete o.pianifica; pnRestore(pn);
+    if(!o.bal){ toast("Copia ripristinata (Pianificazione, Tai Chi e Progressi)"); return; }
+    S=normalize(o); S.ver=o.ver; migrateV2(); save(); calMonth=selDay=weekStart=null; renderP2(); toast(tc||pg?"Copia ripristinata (tutte le sezioni)":"Copia ripristinata");
+  }; rd.readAsText(f); e.target.value="";
+};
+$("bTest").onclick=()=>testSave();
+$("evAdd").onclick=()=>{ const d=$("evD").value, n=$("evN").value.trim(); if(!d||!n){ toast("Inserisci data e descrizione"); return; }
+  S.ev=Object.assign({},S.ev||{}); S.ev[d]=n; save(); $("evN").value=""; renderP1(); toast("Appuntamento salvato"); };
+$("evList").onclick=e=>{ const b=e.target.closest("[data-evdel]"); if(!b) return; const ev=Object.assign({},S.ev||{}); delete ev[b.dataset.evdel]; S.ev=ev; save(); renderP1(); };
+$("bUndo").onclick=()=>{ undoLast(); renderP2(); };
+document.addEventListener("click",async e=>{ const b=e.target.closest("button[data-snap]"); if(!b) return;
+  if(!await askConfirm("Ripristinare i dati di questa copia ("+fmt(b.dataset.snap.slice(5,15),{weekday:"long",day:"numeric",month:"long"})+")? La situazione attuale viene conservata tra le copie.")) return;
+  try{ const t=await idbKV("readonly",b.dataset.snap);
+    const n=new Date(); await idbKV("readwrite","snap-"+today()+"~"+pad(n.getHours())+"-"+pad(n.getMinutes()),JSON.stringify(S)); const o=JSON.parse(t); const tc=o.taichi, pg=o.progressi; delete o.taichi; delete o.progressi; if(tc&&Object.keys(tc).length) tcRestore(tc); if(pg) progRestore(pg);
+    S=normalize(o); S.ver=o.ver; migrateV2(); save(); calMonth=selDay=weekStart=null; renderP2(); toast(tc||pg?"Copia ripristinata (tutte le sezioni)":"Copia ripristinata"); }catch(err){ toast("Ripristino non riuscito"); }
+});
+$("bReset").onclick=async()=>{
+  if(!await askConfirm("Cancellare tutte le variazioni e tornare ai saldi iniziali?"))return;
+  S=JSON.parse(JSON.stringify(DEF)); save(); calMonth=selDay=weekStart=null; renderP2(); toast("Azzerato");
+};
+
+try{ localStorage.setItem(KEY+"-t","1"); LOCAL_OK=localStorage.getItem(KEY+"-t")==="1"; localStorage.removeItem(KEY+"-t"); }catch(e){ LOCAL_OK=false; }
+migrateV2();
+show(1);
+setSaveStat("init");
+(async()=>{
+  try{ await initLocal(); }catch(e){}
+  STORE_READY=true;
+  if(PENDING_SAVE){ PENDING_SAVE=false; save(); }
+  await initCloud();
+})();
+window.__flush=()=>{ try{ flushAll(); }catch(e){} };
+})();
+</script>
+<script>window.APP_VERSION="4ab102a314";window.APP_BUILD="2026-10-04T15:49+02:00";</script>
+<script>
+/* ===== Aggiornamento automatico e controllo versione (uguale in tutte le sezioni di Pianificazione: costruita da comune/barra.html) =====
+   - all'apertura, al ritorno sull'app e ogni 30 minuti legge version.json saltando ogni copia vecchia (anche quella del server di GitHub);
+   - se c'è una versione nuova salva i dati e ricarica, ma mai mentre si sta compilando qualcosa o durante una seduta;
+   - in fondo a ogni sezione: versione installata, data, stato e pulsante «Cerca aggiornamenti». */
+(function(){
+  "use strict";
+  var V=window.APP_VERSION||"", BUILT=window.APP_BUILD||"";
+  var st={state:"idle",last:null,remote:null,pending:false};
+  function visible(id){var e=document.getElementById(id);if(!e||e.hidden)return false;if(e.classList&&e.classList.contains("hide"))return false;return getComputedStyle(e).display!=="none";}
+  function busy(){var a=document.activeElement;return visible("sheet")||visible("modal")||visible("player")||!!(a&&/INPUT|SELECT|TEXTAREA/.test(a.tagName)&&a.type!=="file");}
+  function fmtBuilt(){if(!BUILT)return "";try{return new Date(BUILT).toLocaleString("it-IT",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});}catch(e){return "";}}
+  var TXT={idle:"",checking:"controllo in corso…",ok:"è l’ultima versione",new:"nuova versione trovata: aggiorno…",wait:"nuova versione pronta: si installa appena chiudi la finestra aperta",offline:"senza internet: controllo al prossimo collegamento"};
+  function paint(){
+    var bars=document.querySelectorAll(".updbar");
+    for(var i=0;i<bars.length;i++){var b=bars[i];
+      var sv=b.querySelector(".u-sv"); if(sv)sv.innerHTML=svTxt();
+      b.querySelector(".u-st").textContent=TXT[st.state]+(st.last&&st.state==="ok"?" (verificato alle "+st.last.toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"})+")":"");
+      b.dataset.st=st.state;}
+  }
+  function bar(){
+    if(document.querySelector(".updbar"))return;
+    var css=document.createElement("style");
+    css.textContent=".updbar{max-width:1100px;margin:22px auto 8px;padding:10px 16px;font-size:12.5px;color:#7a8290;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;justify-content:center;text-align:center}"+
+      ".updbar b{font-variant-numeric:tabular-nums}.updbar button{font:inherit;font-weight:700;border:0;border-radius:999px;padding:6px 12px;background:rgba(127,127,127,.16);color:inherit;cursor:pointer}"+
+      ".updbar[data-st=ok] .u-st{color:#2e8b57}.updbar[data-st=new] .u-st,.updbar[data-st=wait] .u-st{color:#c2410c;font-weight:700}";
+    document.head.appendChild(css);
+    var d=document.createElement("div");d.className="updbar";
+    d.innerHTML="<span class=\"u-sv\" style=\"flex-basis:100%\"></span><button type=\"button\" class=\"u-bk\">💾 Salva copia su File / iCloud</button><span>Versione <b>"+V+"</b>"+(BUILT?" del "+fmtBuilt():"")+"</span><span class=\"u-st\"></span><button type=\"button\">Cerca aggiornamenti</button>";
+    d.querySelector(".u-bk").addEventListener("click",exportAll);
+    d.querySelectorAll("button")[1].addEventListener("click",function(){check(true);});
+    // nelle sezioni con più pagine la barra va in fondo al documento, sopra la barra delle schede
+    document.body.insertBefore(d,document.querySelector("nav.tabs")||null);
+    paint();
+  }
+  /* ---------- salvataggio automatico comune a tutte le sezioni ----------
+     Ogni sezione salva subito le proprie modifiche sul dispositivo. Qui, da qualsiasi sezione:
+     copia giornaliera completa (Pianificazione + Licenze + Tai Chi + Progressi) negli ultimi 30 giorni e copia su File / iCloud. */
+  function lsJ(k){try{return JSON.parse(localStorage.getItem(k)||"null");}catch(e){return null;}}
+  function dumpAll(){
+    var S=lsJ("licenze-marco-v1"), tc={}, n=0;
+    try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("tc_")===0){tc[k]=localStorage.getItem(k);n++;}}}catch(e){}
+    var pack=lsJ("prog-vale-v1"), link=lsJ("prog-link-v1");
+    var pg=pack||link?{pack:pack,hist:lsJ("prog-vale-hist-v1")||[],link:link}:null;
+    var pn=lsJ("pn-v1");
+    if(!S&&!n&&!pg&&!pn)return null;
+    var o={}; if(S)for(var x in S)o[x]=S[x]; o.taichi=tc; o.progressi=pg; if(pn)o.pianifica=pn; o.app="le-mie-app"; return o;
+  }
+  function kvDb(){return new Promise(function(res,rej){try{var r=indexedDB.open("licenze-marco",1);r.onupgradeneeded=function(){if(!r.result.objectStoreNames.contains("kv"))r.result.createObjectStore("kv");};r.onsuccess=function(){res(r.result);};r.onerror=function(){rej(r.error);};}catch(e){rej(e);}});}
+  function today(){var d=new Date();return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2);}
+  var snapBusy=false;
+  function snapAll(){
+    if(snapBusy)return; var o=dumpAll(); if(!o)return; snapBusy=true;
+    kvDb().then(function(db){return new Promise(function(res){
+      var tx=db.transaction("kv","readwrite"),st=tx.objectStore("kv"),k="snap-"+today();
+      st.put(JSON.stringify(o),k);
+      var q=st.getAllKeys(); q.onsuccess=function(){var ks=q.result.map(String).filter(function(x){return x.indexOf("snap-")===0&&x.indexOf("~")<0;});if(ks.indexOf(k)<0)ks.push(k);ks.sort();ks.slice(0,Math.max(0,ks.length-30)).forEach(function(old){st.delete(old);});};
+      tx.oncomplete=function(){try{localStorage.setItem("mie-app-lastSnap",new Date().toISOString());}catch(e){}res();paint();};tx.onerror=function(){res();};
+    });}).catch(function(){}).then(function(){snapBusy=false;});
+  }
+  function exportAll(){
+    var b=document.getElementById("bExport"); if(b){b.click();setTimeout(paint,1500);return;}   // in Licenze usa il pulsante della pagina
+    var o=dumpAll(); if(!o){alertBar("Ancora nessun dato da salvare");return;}
+    var data=JSON.stringify(o,null,1), fn="marco-backup-"+today()+".json";
+    var done=function(){var t=new Date().toISOString();try{localStorage.setItem("mie-app-lastBackup",t);localStorage.setItem("tc_lastBackup",JSON.stringify(t));}catch(e){}paint();};
+    try{var f=new File([data],fn,{type:"application/json"});if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:"Copia Pianificazione"}).then(done,function(){});return;}}catch(e){}
+    try{var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type:"application/json"}));a.download=fn;document.body.appendChild(a);a.click();a.remove();done();}catch(e){}
+  }
+  function alertBar(t){var e=document.querySelector(".updbar .u-sv");if(e)e.textContent=t;}
+  function when(t){if(!t)return "mai";var d=new Date(t),o=new Date();return d.toDateString()===o.toDateString()?"oggi "+d.toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"}):d.toLocaleDateString("it-IT",{day:"numeric",month:"short"});}
+  function svTxt(){var sn=null,bk=null;try{sn=localStorage.getItem("mie-app-lastSnap");bk=localStorage.getItem("mie-app-lastBackup");var S=lsJ("licenze-marco-v1");if(S&&S.lastBackup&&(!bk||S.lastBackup>bk))bk=S.lastBackup;}catch(e){}
+    var old=!bk||(Date.now()-new Date(bk).getTime())>7*864e5;
+    return "💾 Salvataggio automatico attivo · copia del giorno: "+when(sn)+" · copia su File/iCloud: <span"+(old?" style=\"color:#c2410c;font-weight:700\"":"")+">"+when(bk)+"</span>";}
+
+  function apply(v){
+    try{if(typeof window.__flush==="function")window.__flush();}catch(e){}
+    setTimeout(function(){location.replace(location.pathname+"?v="+encodeURIComponent(v));},350);
+  }
+  function check(manual){
+    if(!/^https?:/.test(location.protocol))return;
+    st.state="checking";paint();
+    if(window.__swreg)window.__swreg.update().catch(function(){});
+    fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json();}).then(function(v){
+      st.last=new Date();st.remote=v&&v.v;
+      if(st.remote&&st.remote!==V){
+        if(manual||!busy()){st.state="new";paint();apply(st.remote);}
+        else{st.state="wait";st.pending=true;paint();}
+      }else{st.state="ok";paint();}
+    }).catch(function(){st.state="offline";paint();});
+  }
+  setInterval(function(){if(st.pending&&!busy()){st.pending=false;st.state="new";paint();apply(st.remote);}},5000);
+  if(location.search.indexOf("v=")>=0&&history.replaceState){try{history.replaceState(null,"",location.pathname+location.hash);}catch(e){}}
+  setTimeout(snapAll,3000);
+  document.addEventListener("visibilitychange",function(){if(document.visibilityState==="hidden")snapAll();else paint();});
+  window.addEventListener("pagehide",snapAll);
+  setInterval(snapAll,15*60*1000);
+  window.__snapAll=snapAll;
+  window.__exportAll=exportAll;
+  if(window.claude||window.top!==window){ // dentro Claude: niente aggiornamento automatico, solo la versione
+    if(document.readyState!=="loading")bar();else document.addEventListener("DOMContentLoaded",bar);
+    return;
+  }
+  if(document.readyState!=="loading")bar();else document.addEventListener("DOMContentLoaded",bar);
+  if("serviceWorker" in navigator&&/^https?:/.test(location.protocol)){
+    navigator.serviceWorker.register("sw.js").then(function(reg){window.__swreg=reg;}).catch(function(){});
+  }
+  check(false);
+  document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")check(false);});
+  window.addEventListener("pageshow",function(e){if(e.persisted)check(false);});
+  setInterval(function(){check(false);},30*60*1000);
+})();
+</script>
+</body>
+</html>
