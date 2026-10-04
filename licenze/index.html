@@ -82,7 +82,7 @@ button,input,select,textarea{font:inherit}
 @media (prefers-color-scheme:dark){:root{--bg:#0f1216;--card:#1a1e24;--ink:#eef0f3;--muted:#9aa3ae;--line:#2a3038;--seg:#242a32;--ok-bg:#16301f;--warn-bg:#3a1b19;--soon-bg:#33270f;--lp-bg:#3a2218;--fam-bg:#271f3d;--ben-bg:#14302f;--euro-bg:#172739}
   .form input,.form select,.form textarea,.chk,.mood button{background:#12161b;color:var(--ink)}.day.together{background:linear-gradient(180deg,#1a1e24,#14261b)}}
 </style>
-<script>window.APP_VERSION="4ab102a314";window.APP_BUILD="2026-10-04T15:49+02:00";</script>
+<script>window.APP_VERSION="26fca3c4d4";window.APP_BUILD="2026-10-04T15:59+02:00";</script>
 </head>
 <body>
 <nav class="appsw" aria-label="App"><a class="on" href="./" aria-current="page">🏠 Pianificazione</a><a href="licenze.html">📅 Licenze</a><a href="taichi.html">🧘 Tai Chi</a><a href="progressi.html">🐉 Progressi</a></nav>
@@ -121,8 +121,8 @@ function toast(t){const e=$("toast");e.textContent=t;e.classList.add("on");clear
 
 /* ---------- dati e salvataggio ---------- */
 const KEY="pn-v1";
-const DEF_PN={ver:1,scad:[],fam:{att:[],ev:[]},conti:{ric:[],mov:[],hide:false},ben:{d:{}},ics:{sent:{}},savedAt:null};
-function normalize(o){const d=JSON.parse(JSON.stringify(DEF_PN));if(o&&typeof o==="object"){Object.assign(d,o);d.fam=Object.assign({att:[],ev:[]},o.fam||{});d.conti=Object.assign({ric:[],mov:[],hide:false},o.conti||{});d.ben=Object.assign({d:{}},o.ben||{});d.ics=Object.assign({sent:{}},o.ics||{});d.scad=Array.isArray(o.scad)?o.scad:[];}return d;}
+const DEF_PN={ver:1,scad:[],fam:{att:[],ev:[]},conti:{ric:[],mov:[],hide:false},ben:{d:{}},ics:{sent:{}},cal:{at:null,ev:[]},savedAt:null};
+function normalize(o){const d=JSON.parse(JSON.stringify(DEF_PN));if(o&&typeof o==="object"){Object.assign(d,o);d.fam=Object.assign({att:[],ev:[]},o.fam||{});d.conti=Object.assign({ric:[],mov:[],hide:false},o.conti||{});d.ben=Object.assign({d:{}},o.ben||{});d.ics=Object.assign({sent:{}},o.ics||{});d.cal=Object.assign({at:null,ev:[]},o.cal||{});d.scad=Array.isArray(o.scad)?o.scad:[];}return d;}
 let P=normalize(lsJ(KEY));
 function kv(mode,key,val){return new Promise((res,rej)=>{try{const r=indexedDB.open("licenze-marco",1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains("kv"))r.result.createObjectStore("kv");};
   r.onsuccess=()=>{try{const tx=r.result.transaction("kv",mode),st=tx.objectStore("kv");const q=mode==="readonly"?st.get(key):st.put(val,key);q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error);}catch(e){rej(e);}};r.onerror=()=>rej(r.error);}catch(e){rej(e);}});}
@@ -201,6 +201,33 @@ const UMORE=["😣","😕","😐","🙂","😄"];
 function benDay(s){return P.ben.d[s]||{};}
 function setBen(s,k,v){const d=Object.assign({},P.ben.d[s]||{});if(v===""||v==null)delete d[k];else d[k]=v;if(Object.keys(d).length)P.ben.d[s]=d;else delete P.ben.d[s];save();}
 
+
+/* ---------- eventi dal Calendario dell'iPad (tramite il Comando Rapido «Aggiorna Pianificazione») ----------
+   Il Comando Rapido copia negli appunti una riga per evento: inizio§fine§titolo§calendario§tutto il giorno§luogo
+   (date in ISO 8601). Qui si incollano: sostituiscono la copia precedente, senza doppioni. */
+const SC_NAME="Aggiorna Pianificazione";
+function parseCal(txt){
+  const out=[],seen=new Set();
+  String(txt||"").split(/\r?\n/).forEach(l=>{const f=l.split("§");if(f.length<3)return;
+    const s=(f[0]||"").trim(),e=(f[1]||"").trim(),t=(f[2]||"").trim();if(!/^\d{4}-\d{2}-\d{2}/.test(s)||!t)return;
+    if(/festivit|holiday/i.test(f[3]||""))return; // le festività le conosce già l'app
+    const ad=/^(s[iì]|yes|true|1|vero)$/i.test((f[4]||"").trim()),k=s.slice(0,16)+"|"+t;if(seen.has(k))return;seen.add(k);
+    out.push({k,d:s.slice(0,10),o:ad?"":s.slice(11,16),f:ad?"":(e.slice(0,10)===s.slice(0,10)?e.slice(11,16):""),ed:(ad&&e.slice(11,16)==="00:00"&&e.slice(0,10)>s.slice(0,10))?add(e.slice(0,10),-1):(e.slice(0,10)||s.slice(0,10)),t,cal:(f[3]||"").trim(),ad,loc:(f[5]||"").trim().split("\n")[0]});});
+  return out.sort((a,b)=>(a.d+(a.o||""))<(b.d+(b.o||""))?-1:1);
+}
+function importCal(txt){const ev=parseCal(txt);if(!ev.length){toast("Negli appunti non ci sono eventi del Comando Rapido");return false;}
+  P.cal={at:new Date().toISOString(),ev};P.cal.wait=false;save();render();toast("📆 "+ev.length+" eventi dal Calendario");return true;}
+async function pasteCal(){try{const t=await navigator.clipboard.readText();importCal(t);}catch(e){toast("Non riesco a leggere gli appunti: incolla nel riquadro");go("cal");setTimeout(()=>{const a=$("calPaste");if(a)a.focus();},200);}}
+function runShortcut(){P.cal.wait=true;save();location.href="shortcuts://run-shortcut?name="+encodeURIComponent(SC_NAME);}
+function calOn(s){return (P.cal.ev||[]).filter(e=>e.d<=s&&(e.ed||e.d)>=s);}
+const calIc=e=>/compleann|🎂/i.test(e.t+" "+e.cal)?"🎂":/lavoro/i.test(e.cal)?"💼":"📆";
+function calCard(){const t=today(),up=(P.cal.ev||[]).filter(e=>e.d>=t&&diff(t,e.d)<=7);
+  return `<div class="card"><h3>📆 Dal tuo Calendario <button class="lnk" data-go="cal">Come funziona ›</button></h3>
+    ${P.cal.wait?'<div class="btns" style="margin:0 0 8px"><button class="btn pri" id="calPasteBtn">📥 Tocca qui per inserire gli eventi</button></div>':""}
+    ${up.length?up.slice(0,7).map(e=>`<div class="row"><span class="pill ${e.d===t?"soon":""}">${e.d===t?"oggi":fmt(e.d,{weekday:"short",day:"numeric"})}${e.o?" "+esc(e.o):""}</span><div class="grow"><b>${calIc(e)} ${esc(e.t)}</b>${e.loc?`<small>${esc(e.loc)}</small>`:""}</div></div>`).join(""):`<p class="empty">${P.cal.at?"Niente nei prossimi 7 giorni.":"Ancora nessun evento: crea il Comando Rapido (vedi «Come funziona»)."}</p>`}
+    <div class="btns"><button class="btn sm" id="calRun">🔄 Aggiorna dal Calendario</button><button class="btn sm" id="calClip">📥 Incolla dagli appunti</button></div>
+    ${P.cal.at?`<p class="lbl">Aggiornato ${rel(P.cal.at.slice(0,10))} alle ${new Date(P.cal.at).toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"})}</p>`:""}</div>`;}
+
 /* ---------- calendario (.ics) ---------- */
 function icsEsc(s){return String(s||"").replace(/\\/g,"\\\\").replace(/\n/g,"\\n").replace(/,/g,"\\,").replace(/;/g,"\\;");}
 function fold(l){ // righe al massimo di 75 byte (UTF-8), senza spezzare i caratteri
@@ -214,7 +241,7 @@ function icsItems(opt){
     items.push({uid:"abs-"+b.from+"-"+b.to,lines:["DTSTART;VALUE=DATE:"+dval(b.from),"DTEND;VALUE=DATE:"+dval(add(b.to,1)),"SUMMARY:"+icsEsc("🏖️ A casa ("+c+")"),"TRANSP:TRANSPARENT"]});});
   if(opt.app&&S)Object.keys(S.ev||{}).filter(d=>d>=t).forEach(d=>items.push({uid:"app-"+d,lines:["DTSTART;VALUE=DATE:"+dval(d),"DTEND;VALUE=DATE:"+dval(add(d,1)),"SUMMARY:"+icsEsc("📅 "+S.ev[d]),...alarm(1)]}));
   if(opt.app&&S&&S.end)items.push({uid:"congedo-"+S.end,lines:["DTSTART;VALUE=DATE:"+dval(S.end),"DTEND;VALUE=DATE:"+dval(add(S.end,1)),"SUMMARY:"+icsEsc("🎉 Congedo"),...alarm(7)]});
-  if(opt.scad)scadOpen().forEach(x=>{const c=CAT[x.cat]||CAT.altro,l=["DTSTART;VALUE=DATE:"+dval(x.d),"DTEND;VALUE=DATE:"+dval(add(x.d,1)),"SUMMARY:"+icsEsc(c[0]+" "+x.t)];
+  if(opt.scad)scadOpen().filter(x=>!x.fromCal).forEach(x=>{ /* quelle prese dal Calendario ci sono già */const c=CAT[x.cat]||CAT.altro,l=["DTSTART;VALUE=DATE:"+dval(x.d),"DTEND;VALUE=DATE:"+dval(add(x.d,1)),"SUMMARY:"+icsEsc(c[0]+" "+x.t)];
     if(x.note)l.push("DESCRIPTION:"+icsEsc(x.note));if(x.ric==="m")l.push("RRULE:FREQ=MONTHLY");if(x.ric==="a")l.push("RRULE:FREQ=YEARLY");items.push({uid:"scad-"+x.id,lines:l.concat(alarm(x.av))});});
   if(opt.pay)P.conti.ric.filter(r=>r.tipo!=="e").forEach(r=>{const d=ricDates(r,t,horizon)[0];if(!d)return;const step=(FREQ[r.freq]||FREQ.m)[1];
     items.push({uid:"pay-"+r.id,lines:["DTSTART;VALUE=DATE:"+dval(d),"DTEND;VALUE=DATE:"+dval(add(d,1)),"SUMMARY:"+icsEsc("💶 "+r.t),"RRULE:FREQ=MONTHLY;INTERVAL="+step,...alarm(2)]});});
@@ -247,6 +274,7 @@ function vOggi(){
       <div class="row"><div class="grow">Giorni di licenza ancora da collocare</div><b${L.unpl?' style="color:var(--soon)"':""}>${L.unpl}</b></div>
       ${B?`<div class="row"><div class="grow">Prossimo periodo a casa<small>${fmt(B.from)} → ${fmt(B.to)} · ${rel(B.from)}</small></div><span class="pill lp">${B.abs} gg</span></div>`:""}</div>`;}
   else o+=`<div class="card"><h3>📅 Licenze <a href="licenze.html">Apri ›</a></h3><p class="empty">Ancora nessun dato: imposta rientro e saldi nella sezione Licenze.</p></div>`;
+  o+=calCard();
   // scadenze
   const due=scadOpen().filter(x=>diff(t,x.d)<=7);
   o+=`<div class="card"><h3>📌 Scadenze <button class="lnk" data-go="scad">Tutte ›</button></h3>${due.length?due.slice(0,6).map(x=>scadRow(x,true)).join(""):'<p class="empty">Niente in scadenza nei prossimi 7 giorni. 👍</p>'}</div>`;
@@ -279,14 +307,28 @@ function vScad(){
   </div><div class="btns"><button class="btn pri" id="sSave">${x?"Salva modifiche":"Aggiungi"}</button>${x?'<button class="btn" id="sCancel">Annulla</button><button class="btn danger" id="sDel">Elimina</button>':""}</div></div>`;
   groups.forEach(([n,g])=>{if(g.length)o+=`<h2>${n}</h2><div class="card">${g.map(y=>scadRow(y)).join("")}</div>`;});
   if(!L.length)o+=`<div class="card"><p class="empty">Nessuna scadenza aperta. Aggiungi la prima qui sopra.</p></div>`;
+  const ce=(P.cal.ev||[]).filter(e=>e.d>=t&&diff(t,e.d)<=30&&calIc(e)!=="🎂");
+  if(ce.length)o+=`<h2>📆 Dal Calendario (prossimi 30 giorni)</h2><div class="card">${ce.map(e=>`<div class="row"><span class="pill">${fmt(e.d,{weekday:"short",day:"numeric",month:"short"})}${e.o?" "+esc(e.o):""}</span><div class="grow"><b>${calIc(e)} ${esc(e.t)}</b><small>${esc(e.cal)}${e.loc?" · "+esc(e.loc):""} · ${rel(e.d)}</small></div><button class="btn sm" data-c2s="${esc(e.k)}">➕ Scadenza</button></div>`).join("")}</div>`;
   const done=P.scad.filter(y=>y.done).sort((a,b)=>a.doneAt<b.doneAt?1:-1).slice(0,10);
   if(done.length)o+=`<h2>Fatte</h2><div class="card">${done.map(y=>`<div class="row"><button class="chk done" data-undo="${y.id}" aria-label="Riapri">✓</button><div class="grow"><b>${esc(y.t)}</b><small>fatta il ${fmt(y.doneAt)}</small></div></div>`).join("")}</div>`;
   return o;
 }
+function vCalImport(){
+  return `<h1>📆 Calendario</h1><p class="sub">In entrata: gli eventi del Calendario dell’iPad compaiono in Oggi, Famiglia e Scadenze. In uscita: assenze, scadenze e pagamenti diventano promemoria nel Calendario.</p><div class="card" id="calGuide"><h3>📥 Prendi gli eventi dal Calendario dell’iPad</h3>
+  <p class="lbl">Un’app web non può leggere da sola il Calendario: lo fa un Comando Rapido, che copia gli eventi negli appunti. Si crea una volta sola.</p>
+  <div class="row"><span class="pill">1</span><div class="grow">Apri <b>Comandi Rapidi</b> → <b>+</b> → chiamalo esattamente <b>${SC_NAME}</b>.</div></div>
+  <div class="row"><span class="pill">2</span><div class="grow">Aggiungi <b>Trova eventi di Calendario</b>: tocca «Aggiungi filtro» → <b>Data di inizio</b> «è nei prossimi» <b>60 giorni</b>; nessun altro filtro (le festività le salta l’app, che le conosce già). Ordina per <b>Data di inizio</b>, limite 300.</div></div>
+  <div class="row"><span class="pill">3</span><div class="grow">Aggiungi <b>Ripeti con ognuno</b>. Dentro, aggiungi <b>Testo</b> e scrivi, usando le variabili di «Elemento ripetuto»:<br><code>Data di inizio§Data di fine§Titolo§Calendario§È tutto il giorno§Luogo</code><br>Per le due date tocca la variabile → <b>Formato data: ISO 8601</b> e attiva <b>Includi ora</b>. Il simbolo § si trova tenendo premuto il tasto &amp; (o copialo da qui).</div></div>
+  <div class="row"><span class="pill">4</span><div class="grow">Dopo «Fine ripetizione» aggiungi <b>Combina testo</b> (con «Nuova riga») e poi <b>Copia negli appunti</b>.</div></div>
+  <div class="row"><span class="pill">5</span><div class="grow">Qui in Oggi tocca <b>🔄 Aggiorna dal Calendario</b>: parte il Comando Rapido; torna qui con «◀ Pianificazione» in alto a sinistra e tocca <b>📥 Tocca qui per inserire gli eventi</b> (iPad chiede «Incolla»: consenti).</div></div>
+  <div class="row"><span class="pill">6</span><div class="grow">Facoltativo, ogni mattina da solo: Comandi Rapidi → <b>Automazione</b> → <b>Ora del giorno</b> 7:00 → <b>Esegui subito</b> → «${SC_NAME}». Poi in Pianificazione basta <b>📥 Incolla dagli appunti</b>.</div></div>
+  <div class="form" style="margin-top:10px"><label class="wide">Oppure incolla qui il testo copiato<textarea id="calPaste" rows="3" placeholder="2026-10-06T17:00:00+02:00§…"></textarea></label></div>
+  <div class="btns"><button class="btn pri" id="calPasteGo">Inserisci</button><button class="btn" id="calSym">Copia il simbolo §</button>${P.cal.at?'<button class="btn danger" id="calClear">Togli gli eventi importati</button>':""}</div></div>`;
+}
 function vCal(){
   const opt=P.ics.opt||{abs:true,app:true,scad:true,pay:true,fam:true},items=icsItems(opt),news=items.filter(i=>P.ics.sent[i.uid]!==i.sig);
   const lab={abs:"🏖️ Periodi a casa (dalle Licenze)",app:"📅 Appuntamenti delle Licenze e congedo",scad:"📌 Scadenze e pratiche (con promemoria)",pay:"💶 Pagamenti ricorrenti",fam:"👨‍👧 Attività della famiglia"};
-  return `<h1>📆 Esporta nel Calendario</h1><p class="sub">Crea un file da aggiungere al Calendario dell’iPad: così i promemoria arrivano anche ad app chiusa, e si vedono su tutti i tuoi dispositivi con iCloud.</p>
+  return vCalImport()+`<h2>📤 Esporta verso il Calendario</h2><p class="sub">Crea un file da aggiungere al Calendario dell’iPad: così i promemoria arrivano anche ad app chiusa, e si vedono su tutti i tuoi dispositivi con iCloud.</p>
   <div class="card"><h3>Che cosa mettere nel Calendario</h3>${Object.keys(lab).map(k=>`<label class="row" style="cursor:pointer"><input type="checkbox" data-opt="${k}"${opt[k]?" checked":""} style="width:22px;height:22px"><span class="grow">${lab[k]}</span></label>`).join("")}
     <div class="kpi" style="margin-top:10px"><div><b>${items.length}</b><span>eventi in tutto</span></div><div><b>${news.length}</b><span>nuovi o cambiati dall’ultima volta</span></div></div>
     <div class="btns"><button class="btn pri" id="icsNew"${news.length?"":" disabled"}>📆 Aggiungi le novità (${news.length})</button><button class="btn" id="icsAll">Tutto da capo (${items.length})</button></div></div>
@@ -301,7 +343,7 @@ function vFam(){
   let o=`<h1>👨‍👧 Famiglia</h1><p class="sub">La settimana di tutti, accanto ai tuoi giorni in ufficio e a casa. In verde i giorni in cui sei a casa: tempo da passare insieme.</p>
   <div class="btns" style="margin:0 0 10px"><button class="btn sm" id="fPrev">‹ Settimana prima</button><button class="btn sm" id="fNow">Questa settimana</button><button class="btn sm" id="fNext">Settimana dopo ›</button></div><div class="week">`;
   days.forEach(s=>{const d=licDay(S,s),off=d.k!=="LAV"||(d.c&&d.c!=="P"),list=famOn(s);
-    o+=`<div class="day${s===t?" today":""}${off&&S?" together":""}"><b class="dn">${fmt(s,{weekday:"long",day:"numeric"})}</b>${S?`<div class="ev ${d.c==="P"?"job":d.c?"off":"off"}">${d.c==="P"?"🏢 "+(d.i||"")+"–"+(d.o||""):"🏡 "+esc(d.t)}</div>`:""}${list.map(a=>`<div class="ev">${a.o?esc(a.o)+" ":""}${esc(a.chi?a.chi+": ":"")}${esc(a.t)}${a.acc?" · 🚗 "+esc(a.acc):""}<button class="x" data-fdel="${a.tipo}:${a.id}" aria-label="Togli">×</button></div>`).join("")}</div>`;});
+    o+=`<div class="day${s===t?" today":""}${off&&S?" together":""}"><b class="dn">${fmt(s,{weekday:"long",day:"numeric"})}</b>${S?`<div class="ev ${d.c==="P"?"job":d.c?"off":"off"}">${d.c==="P"?"🏢 "+(d.i||"")+"–"+(d.o||""):"🏡 "+esc(d.t)}</div>`:""}${calOn(s).map(e=>`<div class="ev" style="background:var(--euro-bg);color:var(--euro)">${e.o?esc(e.o)+" ":""}${calIc(e)} ${esc(e.t)}</div>`).join("")}${list.map(a=>`<div class="ev">${a.o?esc(a.o)+" ":""}${esc(a.chi?a.chi+": ":"")}${esc(a.t)}${a.acc?" · 🚗 "+esc(a.acc):""}<button class="x" data-fdel="${a.tipo}:${a.id}" aria-label="Togli">×</button></div>`).join("")}</div>`;});
   o+=`</div><div class="card" style="margin-top:12px"><h3>➕ Attività che si ripete ogni settimana</h3><div class="form">
     <label>Chi<input id="aC" list="chiL" placeholder="es. il nome di chi la fa"><datalist id="chiL">${chiList().map(c=>`<option value="${esc(c)}">`).join("")}</datalist></label>
     <label>Che cosa<input id="aT" maxlength="60" placeholder="es. pattinaggio, nuoto, scuola"></label>
@@ -365,6 +407,13 @@ function bind(){
   if($("sCancel"))$("sCancel").onclick=()=>{editId=null;render();};
   if($("sDel"))$("sDel").onclick=()=>{if(!confirm("Eliminare questa scadenza?"))return;P.scad=P.scad.filter(y=>y.id!==editId);editId=null;save();render();toast("Eliminata");};
   document.querySelectorAll("[data-opt]").forEach(c=>c.onchange=()=>{P.ics.opt=Object.assign({abs:true,app:true,scad:true,pay:true,fam:true},P.ics.opt||{});P.ics.opt[c.dataset.opt]=c.checked;save();render();});
+  if($("calRun"))$("calRun").onclick=runShortcut;
+  if($("calClip"))$("calClip").onclick=pasteCal;
+  if($("calPasteBtn"))$("calPasteBtn").onclick=pasteCal;
+  if($("calPasteGo"))$("calPasteGo").onclick=()=>{importCal($("calPaste").value);};
+  if($("calSym"))$("calSym").onclick=()=>{try{navigator.clipboard.writeText("§");toast("§ copiato");}catch(e){}};
+  if($("calClear"))$("calClear").onclick=()=>{if(!confirm("Togliere gli eventi presi dal Calendario?"))return;P.cal={at:null,ev:[]};save();render();};
+  document.querySelectorAll("[data-c2s]").forEach(b=>b.onclick=()=>{const e=(P.cal.ev||[]).find(x=>x.k===b.dataset.c2s);if(!e)return;P.scad.push({id:uid(),t:e.t,d:e.d,cat:/lavoro/i.test(e.cal)?"pratica":"altro",ric:"no",av:1,note:e.loc||"",done:false,fromCal:1});save();render();toast("Aggiunta alle scadenze");});
   if($("icsNew"))$("icsNew").onclick=()=>exportIcs(false);
   if($("icsAll"))$("icsAll").onclick=()=>exportIcs(true);
   if($("fPrev"))$("fPrev").onclick=()=>{famWeek=add(famWeek,-7);render();};
