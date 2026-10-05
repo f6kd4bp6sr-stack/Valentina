@@ -262,7 +262,7 @@ function fromThisDevice(){ // stesso indirizzo: se «Il mio mondo» è usato su 
 /* ---------- materie e argomenti di «Il mio mondo» ---------- */
 const MATH=[["tab","⚡","Tabelline"],["fraz","🍕","Frazioni, decimali, %"],["prob","🕵️","Problemi"],["geo","📐","Aree e perimetri"],["media","🎒","Verso la media"],["ore","🕐","L’orologio"]];
 const SCI=[["corpo","🫀","Il corpo umano"],["spazio","🪐","Sistema solare"],["energia","⚡","Energia e materia"],["animali","🦊","Animali e ambienti"]];
-const SCOPRI={ita:["📖","Italiano",1],storia:["🏛️","Storia",1],geo:["🗺️","Geografia",1],eng:["🇬🇧","Inglese",1],arte:["🎨","Arte",0],musica:["🎵","Musica",0],civica:["🤝","Ed. civica",0],tecno:["💡","Tecnologia",0],media:["🎒","Verso la 1ª media",0],roblox:["🧱","Roblox",0],soldi:["🐷","Soldi e risparmio",0],lavo:["🧼","Perché mi lavo",0],vesto:["👗","Come mi vesto",0]};
+const SCOPRI={ita:["📖","Italiano",1],storia:["🏛️","Storia",1],geo:["🗺️","Geografia",1],eng:["🇬🇧","Inglese",1],parlo:["🇬🇧","Parlo inglese",1],arte:["🎨","Arte",0],musica:["🎵","Musica",0],civica:["🤝","Ed. civica",0],tecno:["💡","Tecnologia",0],media:["🎒","Verso la 1ª media",0],roblox:["🧱","Roblox",0],soldi:["🐷","Soldi e risparmio",0],lavo:["🧼","Perché mi lavo",0],vesto:["👗","Come mi vesto",0]};
 const SPORTN={patt:["⛸️","Pattinaggio"],aerea:["🤸","Ginnastica aerea"],nuoto:["🏊","Nuoto"],corpo:["💪","Corpo in movimento"]};
 function unitLabel(u){if(u==="mate")return "🔢 Matematica";if(SCOPRI[u])return SCOPRI[u][0]+" "+SCOPRI[u][1];
   if(u.startsWith("sci-")){const t=SCI.find(x=>x[0]===u.slice(4));if(t)return t[1]+" "+t[2];}
@@ -985,7 +985,7 @@ window.__analyze=analyze; window.__normalize=normalize;
 
 })();
 </script>
-<script>window.APP_VERSION="5fe4b87fe2";window.APP_BUILD="2026-10-04T20:53+02:00";</script>
+<script>window.APP_VERSION="d1b01722ab";window.APP_BUILD="2026-10-05T14:12+02:00";</script>
 <script>
 /* ===== Aggiornamento automatico e controllo versione (uguale in tutte le sezioni di Pianificazione: costruita da comune/barra.html) =====
    - all'apertura, al ritorno sull'app e ogni 30 minuti legge version.json saltando ogni copia vecchia (anche quella del server di GitHub);
