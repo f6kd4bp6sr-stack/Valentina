@@ -84,6 +84,8 @@ button,.btn{font:inherit;border:0;border-radius:10px;padding:10px 14px;backgroun
 .dold summary{cursor:pointer;margin-top:12px;font-weight:700;color:var(--accent)}
 .heat{display:grid;grid-template-rows:repeat(7,14px);grid-auto-flow:column;grid-auto-columns:14px;gap:3px;margin:8px 0 4px}
 .heat i{border-radius:3px;background:var(--seg)} .heat i.on{background:var(--good)} .heat i.x{background:transparent}
+.mchart{width:100%;max-width:760px;height:auto;display:block;margin:10px 0 4px}
+.mtab{overflow-x:auto;margin-top:12px}.mtab table{border-collapse:separate;border-spacing:4px;font-size:13px}.mtab th{text-align:left;font-weight:700;white-space:nowrap;padding:2px 6px}.mtab thead th{text-align:center;color:var(--muted)}.mtab td{text-align:center;border-radius:8px;padding:4px 8px;font-weight:800;min-width:46px}
 .stbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin:4px 2px 14px}
 .stchip{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:var(--seg);font-size:14px;font-weight:600}
 .stchip.ok{background:var(--good-bg);color:var(--good)}.stchip.warn{background:var(--bad-bg);color:var(--bad)}
@@ -511,6 +513,39 @@ function videoCard(A){
   return h;
 }
 
+/* ---------- 📈 andamento mese per mese (giorni di studio e risposte giuste) ---------- */
+const MESI_B=["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];
+function monthCard(A){
+  const h=A.D["prog-days"]||{},M={};
+  const m=k=>M[k]||(M[k]={days:0,ok:0,ko:0,per:{}});
+  A.days.forEach(d=>m(d.slice(0,7)).days++);
+  Object.entries(h).forEach(([d,v])=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(d))return;const x=m(d.slice(0,7));Object.entries(v||{}).forEach(([k,r])=>{const ok=+r.ok||0,ko=+r.ko||0;x.ok+=ok;x.ko+=ko;const y=x.per[k]||(x.per[k]={ok:0,ko:0});y.ok+=ok;y.ko+=ko;});});
+  const keys=Object.keys(M).filter(k=>M[k].days||M[k].ok+M[k].ko).sort().slice(-12);
+  if(keys.length<2)return "";
+  const lab=k=>MESI_B[+k.slice(5,7)-1]+(k.slice(5,7)==="01"||k===keys[0]?" "+k.slice(2,4):"");
+  const W=640,H=200,pl=34,pr=34,pt=14,pb=28,cw=(W-pl-pr)/keys.length,maxD=31;
+  const pc=k=>{const x=M[k],n=x.ok+x.ko;return n>=10?Math.round(x.ok/n*100):null;};
+  let bars="",pts=[],txt="";
+  keys.forEach((k,i)=>{const x=M[k],bh=(H-pt-pb)*x.days/maxD,cx=pl+cw*i+cw/2;
+    bars+=`<rect x="${(cx-cw*0.3).toFixed(1)}" y="${(H-pb-bh).toFixed(1)}" width="${(cw*0.6).toFixed(1)}" height="${bh.toFixed(1)}" rx="4" fill="var(--accent)" opacity=".75"><title>${lab(k)}: ${x.days} giorni</title></rect>`+
+      (x.days?`<text x="${cx.toFixed(1)}" y="${(bh>20?H-pb-6:H-pb-bh-4).toFixed(1)}" text-anchor="middle" font-size="12" font-weight="700" fill="${bh>20?"#fff":"var(--muted)"}">${x.days}</text>`:"");
+    txt+=`<text x="${cx.toFixed(1)}" y="${H-8}" text-anchor="middle" font-size="12" fill="var(--muted)">${lab(k)}</text>`;
+    const p=pc(k);if(p!=null)pts.push([cx,pt+(H-pt-pb)*(1-p/100),p,k]);});
+  const line=pts.length>1?`<polyline fill="none" stroke="var(--good)" stroke-width="3" stroke-linejoin="round" points="${pts.map(q=>q[0].toFixed(1)+","+q[1].toFixed(1)).join(" ")}"/>`:"";
+  const dots=pts.map(q=>`<circle cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="4.5" fill="var(--good)"><title>${lab(q[3])}: ${q[2]}% giuste</title></circle><text x="${q[0].toFixed(1)}" y="${(q[1]-8).toFixed(1)}" text-anchor="middle" font-size="11" font-weight="700" fill="var(--good)">${q[2]}%</text>`).join("");
+  const grid=[0,50,100].map(v=>{const y=pt+(H-pt-pb)*(1-v/100);return `<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" stroke="var(--line)"/><text x="${W-pr+4}" y="${y+4}" font-size="10" fill="var(--good)">${v}%</text>`;}).join("");
+  // materie: % giuste mese per mese (solo con almeno 10 risposte)
+  const subs=[...new Set(keys.flatMap(k=>Object.keys(M[k].per)))].filter(s=>keys.some(k=>{const y=M[k].per[s];return y&&y.ok+y.ko>=10;}));
+  const cell=(k,s)=>{const y=M[k].per[s];if(!y||y.ok+y.ko<10)return `<td class="lbl">·</td>`;const p=Math.round(y.ok/(y.ok+y.ko)*100);return `<td class="${p>=85?"t-good":p>=60?"t-mid":"t-bad"}">${p}%</td>`;};
+  const tab=subs.length?`<div class="mtab"><table><thead><tr><th></th>${keys.map(k=>`<th>${lab(k)}</th>`).join("")}</tr></thead><tbody>${subs.map(s=>`<tr><th>${esc(subjName(s))}</th>${keys.map(k=>cell(k,s)).join("")}</tr>`).join("")}</tbody></table></div><div class="lbl">Risposte giuste per materia (mesi con almeno 10 risposte).</div>`:"";
+  const a=M[keys[keys.length-1]],b=M[keys[keys.length-2]],pa=pc(keys[keys.length-1]),pb2=pc(keys[keys.length-2]);
+  const MN=["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novembre","dicembre"],mn=k=>MN[+k.slice(5,7)-1],ka=keys[keys.length-1],kb=keys[keys.length-2];
+  const cmp=`${mn(ka).charAt(0).toUpperCase()+mn(ka).slice(1)}${ka===A.ref.slice(0,7)?" (finora)":""}: ${a.days} ${a.days===1?"giorno":"giorni"} di studio${pa!=null?", "+pa+"% giuste":""} · ${mn(kb)}: ${b.days} giorni${pb2!=null?", "+pb2+"%":""}`;
+  return `<h2>📈 Mese per mese</h2><div class="card"><b>${esc(cmp)}</b>
+    <svg class="mchart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Giorni di studio e risposte giuste mese per mese">${grid}${bars}${line}${dots}${txt}</svg>
+    <div class="lbl"><span style="color:var(--accent)">■</span> giorni di studio nel mese · <span style="color:var(--good)">●</span> percentuale di risposte giuste</div>${tab}</div>`;
+}
+
 /* ---------- vista ---------- */
 const VCENA={
   mate:[["Quanto fa 7 × 8?","56"],["Come si trova il perimetro di un quadrato?","Si somma il lato 4 volte (lato × 4)"],["Quanto fa la metà di 3,40?","1,70"]],
@@ -610,6 +645,7 @@ function render(pack,hist){
   ${A.days.length?`<h2>Utilizzo</h2><div class="kpi">${k(A.days.length+tr("days"),"giorni di utilizzo in totale")}${k(A.last7?A.last7+'<span class="lbl">/7</span>':"","giorni negli ultimi 7")}${k(A.last30,"giorni negli ultimi 30")}${k(A.streak>1?A.streak:"","giorni di fila (serie attuale)")}${k(A.lastUse?(daysAgo(A.lastUse)===0?"oggi":fmt(A.lastUse,{day:"numeric",month:"short"})):"","ultimo utilizzo")}${k(A.energy?A.energy+tr("energy"):"","energia del drago"+(A.dragon?" «"+esc(A.dragon)+"»":""))}</div>`:""}
   ${daysCard(A.D["prog-days"],A.ref)}
   ${A.days.length?`<div class="card" style="margin-top:12px"><b>Giorni di utilizzo · ultime 8 settimane</b><div class="heat">${heat}</div><div class="lbl">Ogni quadratino è un giorno (righe: lunedì → domenica). Verde = app usata.</div></div>`:""}
+  ${monthCard(A)}
   ${pathCard(A)}
   ${subj.length?`<h2>Materia per materia</h2><div class="subj">${subj.map(s=>`<div class="sj" style="--c:${s.c}"><h3><span>${s.t}</span><span class="badge ${s.st}">${stTxt[s.st]}</span></h3>${s.html}</div>`).join("")}</div>`:""}
   ${videoCard(A)}
@@ -1188,7 +1224,7 @@ window.__analyze=analyze; window.__normalize=normalize;
 
 })();
 </script>
-<script>window.APP_VERSION="f995b8479f";window.APP_BUILD="2026-10-10T17:07+02:00";</script>
+<script>window.APP_VERSION="64340351b6";window.APP_BUILD="2026-10-10T17:09+02:00";</script>
 <script>
 /* ===== Aggiornamento automatico e controllo versione (uguale in tutte le sezioni di Pianificazione: costruita da comune/barra.html) =====
    - all'apertura, al ritorno sull'app e ogni 30 minuti legge version.json saltando ogni copia vecchia (anche quella del server di GitHub);
