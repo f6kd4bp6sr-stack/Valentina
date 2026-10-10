@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<script>window.APP_VERSION="8785b0b262";</script>
+<script>window.APP_VERSION="f407bbc1df";</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://f6kd4bp6sr-stack.github.io; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://i.ytimg.com; font-src 'self' data:; media-src 'self' data: blob:; connect-src 'self' https://api.github.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src https://www.youtube-nocookie.com">
 <meta name="robots" content="noindex, nofollow, noarchive">
@@ -8882,7 +8882,7 @@ function tMine(s) {
   L.forEach((x, i) => {
     if (!tIsMe(x, s)) return;
     let cue = null; for (let j = i - 1; j >= 0; j--) { if (!L[j].did) { cue = L[j]; break; } }
-    out.push({ i, t: x.t, id: tHash(x.t + '|' + x.name), sc: x.sc, with: x.who.length > 1 ? x.name : '', cue: cue ? (tIsMe(cue, s) ? { name: 'tu', t: cue.t, me: true } : { name: cue.name, t: cue.t }) : null });
+    out.push({ i, t: x.t, id: tHash(x.t + '|' + x.name), sc: x.sc, with: x.who.length > 1 ? tTitle(x.name) : '', cue: cue ? (tIsMe(cue, s) ? { name: 'tu', t: cue.t, me: true } : { name: tTitle(cue.name), t: cue.t }) : null });
   });
   return { all: L, mine: out };
 }
@@ -8992,7 +8992,7 @@ let tDidStep = false;
 function tClose() { try { speechSynthesis.cancel(); } catch (e) {} if (typeof Mic !== 'undefined') Mic.clear(); const ov = $('tt-ov'); if (ov) ov.hidden = true; document.body.classList.remove('in-lesson'); go('teatro');
   if (tDidStep) { tDidStep = false; if (typeof activityDone === 'function') try { activityDone(); } catch (e) {} } }   // energia e pause del drago solo a esercizio chiuso
 function tDone(k, gems) { const s = tState(); s.steps = s.steps || {}; s.steps[k] = (s.steps[k] || 0) + 1; tSave(s); const g = tGems(gems); if (g) toastV2('🎭 +' + g + ' 💎'); tDidStep = true; }
-const tWho = (x, s) => tIsMe(x, s) ? (x.who.length > 1 ? x.name + ' (anche tu)' : 'Tu') : x.name;
+const tWho = (x, s) => tIsMe(x, s) ? (x.who.length > 1 ? tTitle(x.name) + ' (anche tu)' : 'Tu') : tTitle(x.name);
 
 /* 🔍 trova la tua parte: dopo la lettura sceglie lei il personaggio, poi due domande per esserne sicura */
 function tTrova() {
@@ -9129,14 +9129,14 @@ function tProva() {
     if (x.did) { b.innerHTML = '<p class="tt-note">Fallo in piedi, con i gesti, come sul palco.</p><div class="tt-d big">' + esc(x.t) + '</div><button type="button" class="btn" id="tt-av">Avanti ›</button>'; $('tt-av').addEventListener('click', () => { k++; paint(); }); return; }
     const me = tIsMe(x, s);
     if (!me) {
-      b.innerHTML = '<p class="tt-note">Fallo in piedi, con i gesti, come sul palco.</p><div class="tt-cue big"><small>' + esc(x.name) + (par ? ' · legge il genitore' : '') + '</small> «' + tFmt(x.t) + '»</div><button type="button" class="btn" id="tt-av">Avanti ›</button>';
+      b.innerHTML = '<p class="tt-note">Fallo in piedi, con i gesti, come sul palco.</p><div class="tt-cue big"><small>' + esc(tTitle(x.name)) + (par ? ' · legge il genitore' : '') + '</small> «' + tFmt(x.t) + '»</div><button type="button" class="btn" id="tt-av">Avanti ›</button>';
       $('tt-av').addEventListener('click', () => { try { speechSynthesis.cancel(); } catch (e) {} k++; paint(); });
       if (!par) Voice.say(tSpeak(x.t), null, { onend: () => setTimeout(() => { if (L[k] === x && $('tt-av')) { k++; paint(); } }, 500) });
       return;
     }
     let lvl = 3;
     const show = () => { b.querySelector('.tt-big').innerHTML = tMask(x.t, lvl); };
-    b.innerHTML = '<p class="tt-note">🎤 <b>Tocca a te!</b> ' + (x.who.length > 1 ? 'Insieme: ' + esc(x.name) + '. ' : '') + 'Dilla ad alta voce.</p><div class="tt-big me">' + tMask(x.t, 3) + '</div>' +
+    b.innerHTML = '<p class="tt-note">🎤 <b>Tocca a te!</b> ' + (x.who.length > 1 ? 'Insieme: ' + esc(tTitle(x.name)) + '. ' : '') + 'Dilla ad alta voce.</p><div class="tt-big me">' + tMask(x.t, 3) + '</div>' +
       '<div class="row" style="gap:8px;flex-wrap:wrap"><button type="button" class="btn ghost" id="tt-help">💡 Aiutino</button><button type="button" class="btn ghost" id="tt-all">👀 Mostra</button><button type="button" class="btn" id="tt-av">Detta! ›</button></div>';
     $('tt-help').addEventListener('click', () => { if (lvl > 1) { lvl--; aiuti++; show(); } });
     $('tt-all').addEventListener('click', () => { if (lvl > 0) { lvl = 0; aiuti++; show(); } });
@@ -9434,7 +9434,7 @@ function qrData(days) {
 }
 const b64u = bytes => { let s = ''; for (let i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); };
 async function qrText(days) {
-  const js = JSON.stringify({ app: 'mondo-valentina', saved: new Date().toISOString(), state: { data: qrData(days) } });
+  const js = JSON.stringify({ app: APP_ID, saved: new Date().toISOString(), state: { data: qrData(days) } });
   const plain = new TextEncoder().encode(js); let raw = plain, tag = 'mm2j=';
   if (window.CompressionStream) { try { const cs = new Blob([plain]).stream().pipeThrough(new CompressionStream('deflate-raw')); raw = new Uint8Array(await new Response(cs).arrayBuffer()); tag = 'mm2z=' + plain.length + '.'; } catch (e) { raw = plain; } }
   return QR_BASE + tag + b64u(raw);
@@ -9471,7 +9471,7 @@ function wireBackup() {
     const f = fi.files && fi.files[0]; if (!f) return;
     try {
       const j = JSON.parse(await f.text());
-      if (!j || j.app !== 'mondo-valentina' || !j.state || !j.state.data) throw new Error('bad');
+      if (!isAppFile(j) || !j.state || !j.state.data) throw new Error('bad');
       Object.keys(j.state.data).forEach(k => { if (!k.startsWith('__')) store.set(k, j.state.data[k], false, Date.now()); });
       D = store.get('dragon', null); CHILD = store.get('child', null) || {}; applyChild(); updateBar(); go('home'); floatText($('p-home'), 'Ripristinato! ✅');
     } catch (e) { openModal('<div class="big">Ops!</div><p style="font-weight:800">Questo file non è una copia di sicurezza dell’app.</p><button type="button" class="btn" id="bk-ok" data-focus>Ok</button>'); $('bk-ok').addEventListener('click', closeModal); }
@@ -9481,13 +9481,15 @@ function wireBackup() {
 
 /* ================= MEMORIA LOCALE DOPPIA: localStorage + IndexedDB, con richiesta di memoria persistente =================
    Se una delle due memorie viene svuotata, l'altra la ricostruisce. */
+/* nome tecnico dell'app nei file di copia e nei QR. I file fatti prima (app «mondo-…») si leggono lo stesso. */
+const APP_ID = 'il-mio-mondo', isAppFile = j => !!j && (j.app === APP_ID || /^mondo-[a-z]+$/.test(String(j.app || '')));
 const LOCAL2 = { idb: null, persisted: null, standalone: false, lastSave: null, snapCount: 0 };
 const CLOUD_SNAPS = [];
 (function idbMirror() {
   LOCAL2.standalone = !!(window.navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches));
   try { if (navigator.storage && navigator.storage.persisted) navigator.storage.persisted().then(p => { LOCAL2.persisted = p; if (!p && navigator.storage.persist) navigator.storage.persist().then(r => { LOCAL2.persisted = r; }).catch(() => {}); }).catch(() => {}); } catch (e) {}
   if (!window.indexedDB) return;
-  let req; try { req = indexedDB.open('mondo-valentina', 2); } catch (e) { return; }
+  let req; try { req = indexedDB.open(APP_ID, 2); } catch (e) { return; }
   req.onupgradeneeded = () => { const d = req.result; try { if (!d.objectStoreNames.contains('kv')) d.createObjectStore('kv'); if (!d.objectStoreNames.contains('snap')) d.createObjectStore('snap'); } catch (e) {} };
   req.onerror = () => {};
   req.onsuccess = () => {
@@ -9497,6 +9499,9 @@ const CLOUD_SNAPS = [];
     cur.onsuccess = () => {
       const c = cur.result;
       if (c) { all[c.key] = c.value; c.continue(); return; }
+      if (!Object.keys(all).length) idbLegacy(idb).then(old => { Object.assign(all, old); proceed(); }); else proceed();
+    };
+    function proceed() {
       // confronto: vince la voce più recente
       let changed = false;
       Object.keys(all).forEach(k => { const r = all[k]; if (r && (r.t || 0) > (store._stamp[k] || 0)) { store.set(k, r.v, true, r.t); changed = true; } });
@@ -9507,9 +9512,37 @@ const CLOUD_SNAPS = [];
         D = store.get('dragon', null); CHILD = store.get('child', null) || {}; applyChild();
         if (D) { closeModal(); updateBar(); const t = store.get('tab', 'home'); go(TABS.some(x => x[0] === t) ? t : 'home'); }
       }
-    };
+    }
   };
 })();
+/* database di prima (nome «mondo-…», non «mondo-sfondo»): si copiano dati e copie giornaliere nel nuovo, una volta sola */
+function idbLegacy(idb) {
+  return new Promise(res => {
+    const done = o => res(o || {});
+    try {
+      if (!indexedDB.databases) return done();
+      indexedDB.databases().then(list => {
+        const old = (list || []).map(x => x.name).find(n => /^mondo-[a-z]+$/.test(n || '') && n !== 'mondo-sfondo' && n !== APP_ID);
+        if (!old) return done();
+        const r = indexedDB.open(old);
+        r.onerror = () => done();
+        r.onsuccess = () => {
+          const o = r.result, kv = {}, snaps = [];
+          if (!o.objectStoreNames.contains('kv')) { o.close(); return done(); }
+          const names = ['kv'].concat(o.objectStoreNames.contains('snap') ? ['snap'] : []);
+          const tx = o.transaction(names, 'readonly');
+          const c1 = tx.objectStore('kv').openCursor(); c1.onsuccess = () => { const c = c1.result; if (c) { kv[c.key] = c.value; c.continue(); } };
+          if (names.includes('snap')) { const c2 = tx.objectStore('snap').openCursor(); c2.onsuccess = () => { const c = c2.result; if (c) { snaps.push([c.key, c.value]); c.continue(); } }; }
+          tx.oncomplete = () => {
+            o.close();
+            try { const w = idb.transaction(['kv', 'snap'], 'readwrite'); Object.keys(kv).forEach(k => w.objectStore('kv').put(kv[k], k)); snaps.forEach(([k, v]) => w.objectStore('snap').put(v, k)); w.oncomplete = () => done(kv); w.onerror = () => done(kv); } catch (e) { done(kv); }
+          };
+          tx.onerror = () => { o.close(); done(); };
+        };
+      }).catch(() => done());
+    } catch (e) { done(); }
+  });
+}
 function idbPut(k) {
   if (!LOCAL2.idb) return;
   try { LOCAL2.idb.transaction('kv', 'readwrite').objectStore('kv').put({ v: store._mem[k], t: store._stamp[k] || Date.now() }, k); } catch (e) {}
@@ -9602,7 +9635,7 @@ async function openSnapshots() {
    Nel foglio di condivisione si sceglie «Salva su File» → iCloud Drive (l'iPad ricorda la cartella). */
 function backupFile() {
   const st = snapData();
-  const data = JSON.stringify({ app: 'mondo-valentina', saved: new Date().toISOString(), state: st });
+  const data = JSON.stringify({ app: APP_ID, saved: new Date().toISOString(), state: st });
   const d = new Date(), fn = 'drago-progressi-' + d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + '.json';
   return { data, fn };
 }
@@ -9690,7 +9723,7 @@ function restoreFromFile() {
       const f = fi.files && fi.files[0]; if (!f) return;
       try {
         const j = JSON.parse(await f.text());
-        if (!j || j.app !== 'mondo-valentina' || !j.state || !j.state.data) throw new Error('bad');
+        if (!isAppFile(j) || !j.state || !j.state.data) throw new Error('bad');
         Object.keys(j.state.data).forEach(k => { if (!k.startsWith('__')) store.set(k, j.state.data[k], false, Date.now()); });
         D = store.get('dragon', null); CHILD = store.get('child', null) || {}; applyChild(); closeModal(); updateBar(); go('home'); floatText($('p-home'), 'Bentornata! ✅');
       } catch (e) { alert('Questo file non è una copia dei progressi dell\u2019app.'); }
@@ -9765,7 +9798,7 @@ const getLook = () => Object.assign({}, LOOK_DEF, store.get('girl-look', {}));
 Girl.look(getLook());
 
 /* ---------- Voce ---------- */
-const F_NAMES = /alice|federica|emma|paola|elsa|silvia|chiara|isabella|giulia|elena|anna|sofia|francesca|bianca|martina|valentina|grandma|flo|sandy|shelley|female|donna|woman/i;
+const F_NAMES = /alice|federica|emma|paola|elsa|silvia|chiara|isabella|giulia|elena|anna|sofia|francesca|bianca|martina|grandma|flo|sandy|shelley|female|donna|woman/i;
 const M_NAMES = /luca|diego|cosimo|giorgio|roberto|paolo|andrea|giuseppe|marco|matteo|lorenzo|alessandro|davide|grandpa|eddy|reed|rocko|\bmale|uomo|\bman\b/i;
 const QUALITY = /premium|enhanced|avanzat|migliorat|neural|natural|online|google/i;
 function itVoices() {
