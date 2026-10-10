@@ -6,13 +6,16 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Pianificazione">
-<meta name="theme-color" content="#f3f4f7">
+<meta name="apple-mobile-web-app-title" content="Semestre filtro">
+<meta name="theme-color" content="#f3f4f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1216" media="(prefers-color-scheme: dark)">
+<meta name="description" content="Preparazione agli esami del semestre filtro di Medicina 2026/27: Fisica, Chimica, Biologia">
 <meta name="robots" content="noindex, nofollow">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
 <title>Semestre filtro</title>
-<script>window.APP_VERSION="56463adb8d";window.APP_BUILD="2026-10-10T19:37+02:00";</script>
+<script>window.APP_VERSION="7be7b742fe";window.APP_BUILD="2026-10-10T19:37+02:00";</script>
 <style>
 :root{--bg:#f3f4f7;--card:#ffffff;--ink:#15181d;--muted:#6b7280;--line:#e4e6eb;--navy:#163054;--accent:#1f5fae;--seg:#e6e8ee;
   --ok:#2e7d5b;--ok-bg:#e3f3ea;--warn:#b3261e;--warn-bg:#fdecea;--soon:#b7791f;--soon-bg:#fdf1dc;--lp:#a24a24;--lp-bg:#f9e6dc;--fam:#6d4bb8;--fam-bg:#ece6fa;--ben:#2b7a83;--ben-bg:#dff1f2;--euro:#1f5fae;--euro-bg:#e3edf9;
@@ -145,13 +148,13 @@ details.more>summary{cursor:pointer;font-weight:700;color:var(--accent);margin:8
 </style>
 </head>
 <body>
-<nav class="appsw" aria-label="App"><a href="./">🏠 Pianificazione</a><a href="licenze.html">📅 Licenze</a><a href="taichi.html">🧘 Tai Chi</a><a href="progressi.html">🐉 Progressi</a><a class="on" href="semestre.html" aria-current="page">🩺 Semestre filtro</a></nav>
 <div class="wrap">
   <nav class="side" id="side" aria-label="Sezioni"></nav>
   <main id="main"></main>
 </div>
 <div class="toast" id="toast" role="status"></div>
 <script>window.QR_SVG="<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 136 136\"  preserveAspectRatio=\"xMinYMin meet\"><rect width=\"100%\" height=\"100%\" fill=\"white\" cx=\"0\" cy=\"0\"/><path d=\"M2,2l4,0 0,4 -4,0 0,-4z M6,2l4,0 0,4 -4,0 0,-4z M10,2l4,0 0,4 -4,0 0,-4z M14,2l4,0 0,4 -4,0 0,-4z M18,2l4,0 0,4 -4,0 0,-4z M22,2l4,0 0,4 -4,0 0,-4z M26,2l4,0 0,4 -4,0 0,-4z M38,2l4,0 0,4 -4,0 0,-4z M74,2l4,0 0,4 -4,0 0,-4z M86,2l4,0 0,4 -4,0 0,-4z M90,2l4,0 0,4 -4,0 0,-4z M106,2l4,0 0,4 -4,0 0,-4z M110,2l4,0 0,4 -4,0 0,-4z M114,2l4,0 0,4 -4,0 0,-4z M118,2l4,0 0,4 -4,0 0,-4z M122,2l4,0 0,4 -4,0 0,-4z M126,2l4,0 0,4 -4,0 0,-4z M130,2l4,0 0,4 -4,0 0,-4z M2,6l4,0 0,4 -4,0 0,-4z M26,6l4,0 0,4 -4,0 0,-4z M34,6l4,0 0,4 -4,0 0,-4z M54,6l4,0 0,4 -4,0 0,-4z M58,6l4,0 0,4 -4,0 0,-4z M70,6l4,0 0,4 -4,0 0,-4z M90,6l4,0 0,4 -4,0 0,-4z M98,6l4,0 0,4 -4,0 0,-4z M106,6l4,0 0,4 -4,0 0,-4z M130,6l4,0 0,4 -4,0 0,-4z M2,10l4,0 0,4 -4,0 0,-4z M10,10l4,0 0,4 -4,0 0,-4z M14,10l4,0 0,4 -4,0 0,-4z M18,10l4,0 0,4 -4,0 0,-4z M26,10l4,0 0,4 -4,0 0,-4z M34,10l4,0 0,4 -4,0 0,-4z M42,10l4,0 0,4 -4,0 0,-4z M46,10l4,0 0,4 -4,0 0,-4z M54,10l4,0 0,4 -4,0 0,-4z M62,10l4,0 0,4 -4,0 0,-4z M70,10l4,0 0,4 -4,0 0,-4z M74,10l4,0 0,4 -4,0 0,-4z M82,10l4,0 0,4 -4,0 0,-4z M86,10l4,0 0,4 -4,0 0,-4z M90,10l4,0 0,4 -4,0 0,-4z M106,10l4,0 0,4 -4,0 0,-4z M114,10l4,0 0,4 -4,0 0,-4z M118,10l4,0 0,4 -4,0 0,-4z M122,10l4,0 0,4 -4,0 0,-4z M130,10l4,0 0,4 -4,0 0,-4z M2,14l4,0 0,4 -4,0 0,-4z M10,14l4,0 0,4 -4,0 0,-4z M14,14l4,0 0,4 -4,0 0,-4z M18,14l4,0 0,4 -4,0 0,-4z M26,14l4,0 0,4 -4,0 0,-4z M34,14l4,0 0,4 -4,0 0,-4z M38,14l4,0 0,4 -4,0 0,-4z M46,14l4,0 0,4 -4,0 0,-4z M62,14l4,0 0,4 -4,0 0,-4z M82,14l4,0 0,4 -4,0 0,-4z M86,14l4,0 0,4 -4,0 0,-4z M98,14l4,0 0,4 -4,0 0,-4z M106,14l4,0 0,4 -4,0 0,-4z M114,14l4,0 0,4 -4,0 0,-4z M118,14l4,0 0,4 -4,0 0,-4z M122,14l4,0 0,4 -4,0 0,-4z M130,14l4,0 0,4 -4,0 0,-4z M2,18l4,0 0,4 -4,0 0,-4z M10,18l4,0 0,4 -4,0 0,-4z M14,18l4,0 0,4 -4,0 0,-4z M18,18l4,0 0,4 -4,0 0,-4z M26,18l4,0 0,4 -4,0 0,-4z M42,18l4,0 0,4 -4,0 0,-4z M46,18l4,0 0,4 -4,0 0,-4z M62,18l4,0 0,4 -4,0 0,-4z M74,18l4,0 0,4 -4,0 0,-4z M86,18l4,0 0,4 -4,0 0,-4z M94,18l4,0 0,4 -4,0 0,-4z M106,18l4,0 0,4 -4,0 0,-4z M114,18l4,0 0,4 -4,0 0,-4z M118,18l4,0 0,4 -4,0 0,-4z M122,18l4,0 0,4 -4,0 0,-4z M130,18l4,0 0,4 -4,0 0,-4z M2,22l4,0 0,4 -4,0 0,-4z M26,22l4,0 0,4 -4,0 0,-4z M42,22l4,0 0,4 -4,0 0,-4z M46,22l4,0 0,4 -4,0 0,-4z M50,22l4,0 0,4 -4,0 0,-4z M58,22l4,0 0,4 -4,0 0,-4z M66,22l4,0 0,4 -4,0 0,-4z M74,22l4,0 0,4 -4,0 0,-4z M82,22l4,0 0,4 -4,0 0,-4z M86,22l4,0 0,4 -4,0 0,-4z M106,22l4,0 0,4 -4,0 0,-4z M130,22l4,0 0,4 -4,0 0,-4z M2,26l4,0 0,4 -4,0 0,-4z M6,26l4,0 0,4 -4,0 0,-4z M10,26l4,0 0,4 -4,0 0,-4z M14,26l4,0 0,4 -4,0 0,-4z M18,26l4,0 0,4 -4,0 0,-4z M22,26l4,0 0,4 -4,0 0,-4z M26,26l4,0 0,4 -4,0 0,-4z M34,26l4,0 0,4 -4,0 0,-4z M42,26l4,0 0,4 -4,0 0,-4z M50,26l4,0 0,4 -4,0 0,-4z M58,26l4,0 0,4 -4,0 0,-4z M66,26l4,0 0,4 -4,0 0,-4z M74,26l4,0 0,4 -4,0 0,-4z M82,26l4,0 0,4 -4,0 0,-4z M90,26l4,0 0,4 -4,0 0,-4z M98,26l4,0 0,4 -4,0 0,-4z M106,26l4,0 0,4 -4,0 0,-4z M110,26l4,0 0,4 -4,0 0,-4z M114,26l4,0 0,4 -4,0 0,-4z M118,26l4,0 0,4 -4,0 0,-4z M122,26l4,0 0,4 -4,0 0,-4z M126,26l4,0 0,4 -4,0 0,-4z M130,26l4,0 0,4 -4,0 0,-4z M34,30l4,0 0,4 -4,0 0,-4z M38,30l4,0 0,4 -4,0 0,-4z M42,30l4,0 0,4 -4,0 0,-4z M46,30l4,0 0,4 -4,0 0,-4z M58,30l4,0 0,4 -4,0 0,-4z M78,30l4,0 0,4 -4,0 0,-4z M82,30l4,0 0,4 -4,0 0,-4z M94,30l4,0 0,4 -4,0 0,-4z M98,30l4,0 0,4 -4,0 0,-4z M2,34l4,0 0,4 -4,0 0,-4z M26,34l4,0 0,4 -4,0 0,-4z M34,34l4,0 0,4 -4,0 0,-4z M46,34l4,0 0,4 -4,0 0,-4z M54,34l4,0 0,4 -4,0 0,-4z M58,34l4,0 0,4 -4,0 0,-4z M62,34l4,0 0,4 -4,0 0,-4z M70,34l4,0 0,4 -4,0 0,-4z M78,34l4,0 0,4 -4,0 0,-4z M82,34l4,0 0,4 -4,0 0,-4z M90,34l4,0 0,4 -4,0 0,-4z M102,34l4,0 0,4 -4,0 0,-4z M106,34l4,0 0,4 -4,0 0,-4z M118,34l4,0 0,4 -4,0 0,-4z M122,34l4,0 0,4 -4,0 0,-4z M126,34l4,0 0,4 -4,0 0,-4z M2,38l4,0 0,4 -4,0 0,-4z M10,38l4,0 0,4 -4,0 0,-4z M22,38l4,0 0,4 -4,0 0,-4z M38,38l4,0 0,4 -4,0 0,-4z M42,38l4,0 0,4 -4,0 0,-4z M46,38l4,0 0,4 -4,0 0,-4z M58,38l4,0 0,4 -4,0 0,-4z M62,38l4,0 0,4 -4,0 0,-4z M74,38l4,0 0,4 -4,0 0,-4z M78,38l4,0 0,4 -4,0 0,-4z M86,38l4,0 0,4 -4,0 0,-4z M94,38l4,0 0,4 -4,0 0,-4z M98,38l4,0 0,4 -4,0 0,-4z M114,38l4,0 0,4 -4,0 0,-4z M118,38l4,0 0,4 -4,0 0,-4z M122,38l4,0 0,4 -4,0 0,-4z M2,42l4,0 0,4 -4,0 0,-4z M10,42l4,0 0,4 -4,0 0,-4z M14,42l4,0 0,4 -4,0 0,-4z M18,42l4,0 0,4 -4,0 0,-4z M26,42l4,0 0,4 -4,0 0,-4z M30,42l4,0 0,4 -4,0 0,-4z M34,42l4,0 0,4 -4,0 0,-4z M46,42l4,0 0,4 -4,0 0,-4z M62,42l4,0 0,4 -4,0 0,-4z M74,42l4,0 0,4 -4,0 0,-4z M82,42l4,0 0,4 -4,0 0,-4z M86,42l4,0 0,4 -4,0 0,-4z M90,42l4,0 0,4 -4,0 0,-4z M98,42l4,0 0,4 -4,0 0,-4z M102,42l4,0 0,4 -4,0 0,-4z M106,42l4,0 0,4 -4,0 0,-4z M114,42l4,0 0,4 -4,0 0,-4z M122,42l4,0 0,4 -4,0 0,-4z M126,42l4,0 0,4 -4,0 0,-4z M6,46l4,0 0,4 -4,0 0,-4z M14,46l4,0 0,4 -4,0 0,-4z M22,46l4,0 0,4 -4,0 0,-4z M30,46l4,0 0,4 -4,0 0,-4z M34,46l4,0 0,4 -4,0 0,-4z M38,46l4,0 0,4 -4,0 0,-4z M46,46l4,0 0,4 -4,0 0,-4z M58,46l4,0 0,4 -4,0 0,-4z M66,46l4,0 0,4 -4,0 0,-4z M78,46l4,0 0,4 -4,0 0,-4z M90,46l4,0 0,4 -4,0 0,-4z M102,46l4,0 0,4 -4,0 0,-4z M110,46l4,0 0,4 -4,0 0,-4z M114,46l4,0 0,4 -4,0 0,-4z M118,46l4,0 0,4 -4,0 0,-4z M122,46l4,0 0,4 -4,0 0,-4z M126,46l4,0 0,4 -4,0 0,-4z M18,50l4,0 0,4 -4,0 0,-4z M26,50l4,0 0,4 -4,0 0,-4z M34,50l4,0 0,4 -4,0 0,-4z M38,50l4,0 0,4 -4,0 0,-4z M50,50l4,0 0,4 -4,0 0,-4z M54,50l4,0 0,4 -4,0 0,-4z M58,50l4,0 0,4 -4,0 0,-4z M62,50l4,0 0,4 -4,0 0,-4z M66,50l4,0 0,4 -4,0 0,-4z M70,50l4,0 0,4 -4,0 0,-4z M74,50l4,0 0,4 -4,0 0,-4z M78,50l4,0 0,4 -4,0 0,-4z M82,50l4,0 0,4 -4,0 0,-4z M94,50l4,0 0,4 -4,0 0,-4z M106,50l4,0 0,4 -4,0 0,-4z M110,50l4,0 0,4 -4,0 0,-4z M126,50l4,0 0,4 -4,0 0,-4z M6,54l4,0 0,4 -4,0 0,-4z M10,54l4,0 0,4 -4,0 0,-4z M14,54l4,0 0,4 -4,0 0,-4z M18,54l4,0 0,4 -4,0 0,-4z M22,54l4,0 0,4 -4,0 0,-4z M30,54l4,0 0,4 -4,0 0,-4z M34,54l4,0 0,4 -4,0 0,-4z M46,54l4,0 0,4 -4,0 0,-4z M50,54l4,0 0,4 -4,0 0,-4z M54,54l4,0 0,4 -4,0 0,-4z M58,54l4,0 0,4 -4,0 0,-4z M66,54l4,0 0,4 -4,0 0,-4z M78,54l4,0 0,4 -4,0 0,-4z M94,54l4,0 0,4 -4,0 0,-4z M106,54l4,0 0,4 -4,0 0,-4z M118,54l4,0 0,4 -4,0 0,-4z M126,54l4,0 0,4 -4,0 0,-4z M130,54l4,0 0,4 -4,0 0,-4z M6,58l4,0 0,4 -4,0 0,-4z M26,58l4,0 0,4 -4,0 0,-4z M34,58l4,0 0,4 -4,0 0,-4z M38,58l4,0 0,4 -4,0 0,-4z M46,58l4,0 0,4 -4,0 0,-4z M50,58l4,0 0,4 -4,0 0,-4z M58,58l4,0 0,4 -4,0 0,-4z M70,58l4,0 0,4 -4,0 0,-4z M74,58l4,0 0,4 -4,0 0,-4z M82,58l4,0 0,4 -4,0 0,-4z M86,58l4,0 0,4 -4,0 0,-4z M102,58l4,0 0,4 -4,0 0,-4z M106,58l4,0 0,4 -4,0 0,-4z M118,58l4,0 0,4 -4,0 0,-4z M126,58l4,0 0,4 -4,0 0,-4z M18,62l4,0 0,4 -4,0 0,-4z M30,62l4,0 0,4 -4,0 0,-4z M54,62l4,0 0,4 -4,0 0,-4z M58,62l4,0 0,4 -4,0 0,-4z M62,62l4,0 0,4 -4,0 0,-4z M90,62l4,0 0,4 -4,0 0,-4z M94,62l4,0 0,4 -4,0 0,-4z M102,62l4,0 0,4 -4,0 0,-4z M110,62l4,0 0,4 -4,0 0,-4z M114,62l4,0 0,4 -4,0 0,-4z M122,62l4,0 0,4 -4,0 0,-4z M130,62l4,0 0,4 -4,0 0,-4z M2,66l4,0 0,4 -4,0 0,-4z M6,66l4,0 0,4 -4,0 0,-4z M10,66l4,0 0,4 -4,0 0,-4z M22,66l4,0 0,4 -4,0 0,-4z M26,66l4,0 0,4 -4,0 0,-4z M42,66l4,0 0,4 -4,0 0,-4z M46,66l4,0 0,4 -4,0 0,-4z M50,66l4,0 0,4 -4,0 0,-4z M66,66l4,0 0,4 -4,0 0,-4z M70,66l4,0 0,4 -4,0 0,-4z M82,66l4,0 0,4 -4,0 0,-4z M94,66l4,0 0,4 -4,0 0,-4z M98,66l4,0 0,4 -4,0 0,-4z M102,66l4,0 0,4 -4,0 0,-4z M110,66l4,0 0,4 -4,0 0,-4z M114,66l4,0 0,4 -4,0 0,-4z M130,66l4,0 0,4 -4,0 0,-4z M2,70l4,0 0,4 -4,0 0,-4z M6,70l4,0 0,4 -4,0 0,-4z M18,70l4,0 0,4 -4,0 0,-4z M22,70l4,0 0,4 -4,0 0,-4z M30,70l4,0 0,4 -4,0 0,-4z M42,70l4,0 0,4 -4,0 0,-4z M46,70l4,0 0,4 -4,0 0,-4z M58,70l4,0 0,4 -4,0 0,-4z M62,70l4,0 0,4 -4,0 0,-4z M66,70l4,0 0,4 -4,0 0,-4z M70,70l4,0 0,4 -4,0 0,-4z M74,70l4,0 0,4 -4,0 0,-4z M78,70l4,0 0,4 -4,0 0,-4z M82,70l4,0 0,4 -4,0 0,-4z M90,70l4,0 0,4 -4,0 0,-4z M94,70l4,0 0,4 -4,0 0,-4z M106,70l4,0 0,4 -4,0 0,-4z M118,70l4,0 0,4 -4,0 0,-4z M122,70l4,0 0,4 -4,0 0,-4z M130,70l4,0 0,4 -4,0 0,-4z M22,74l4,0 0,4 -4,0 0,-4z M26,74l4,0 0,4 -4,0 0,-4z M30,74l4,0 0,4 -4,0 0,-4z M62,74l4,0 0,4 -4,0 0,-4z M78,74l4,0 0,4 -4,0 0,-4z M86,74l4,0 0,4 -4,0 0,-4z M94,74l4,0 0,4 -4,0 0,-4z M102,74l4,0 0,4 -4,0 0,-4z M106,74l4,0 0,4 -4,0 0,-4z M110,74l4,0 0,4 -4,0 0,-4z M118,74l4,0 0,4 -4,0 0,-4z M122,74l4,0 0,4 -4,0 0,-4z M130,74l4,0 0,4 -4,0 0,-4z M2,78l4,0 0,4 -4,0 0,-4z M6,78l4,0 0,4 -4,0 0,-4z M10,78l4,0 0,4 -4,0 0,-4z M34,78l4,0 0,4 -4,0 0,-4z M42,78l4,0 0,4 -4,0 0,-4z M46,78l4,0 0,4 -4,0 0,-4z M54,78l4,0 0,4 -4,0 0,-4z M70,78l4,0 0,4 -4,0 0,-4z M74,78l4,0 0,4 -4,0 0,-4z M82,78l4,0 0,4 -4,0 0,-4z M90,78l4,0 0,4 -4,0 0,-4z M94,78l4,0 0,4 -4,0 0,-4z M98,78l4,0 0,4 -4,0 0,-4z M102,78l4,0 0,4 -4,0 0,-4z M114,78l4,0 0,4 -4,0 0,-4z M118,78l4,0 0,4 -4,0 0,-4z M122,78l4,0 0,4 -4,0 0,-4z M130,78l4,0 0,4 -4,0 0,-4z M2,82l4,0 0,4 -4,0 0,-4z M6,82l4,0 0,4 -4,0 0,-4z M14,82l4,0 0,4 -4,0 0,-4z M26,82l4,0 0,4 -4,0 0,-4z M38,82l4,0 0,4 -4,0 0,-4z M42,82l4,0 0,4 -4,0 0,-4z M50,82l4,0 0,4 -4,0 0,-4z M66,82l4,0 0,4 -4,0 0,-4z M78,82l4,0 0,4 -4,0 0,-4z M90,82l4,0 0,4 -4,0 0,-4z M94,82l4,0 0,4 -4,0 0,-4z M98,82l4,0 0,4 -4,0 0,-4z M102,82l4,0 0,4 -4,0 0,-4z M110,82l4,0 0,4 -4,0 0,-4z M114,82l4,0 0,4 -4,0 0,-4z M118,82l4,0 0,4 -4,0 0,-4z M126,82l4,0 0,4 -4,0 0,-4z M130,82l4,0 0,4 -4,0 0,-4z M2,86l4,0 0,4 -4,0 0,-4z M6,86l4,0 0,4 -4,0 0,-4z M30,86l4,0 0,4 -4,0 0,-4z M42,86l4,0 0,4 -4,0 0,-4z M50,86l4,0 0,4 -4,0 0,-4z M66,86l4,0 0,4 -4,0 0,-4z M70,86l4,0 0,4 -4,0 0,-4z M74,86l4,0 0,4 -4,0 0,-4z M78,86l4,0 0,4 -4,0 0,-4z M94,86l4,0 0,4 -4,0 0,-4z M98,86l4,0 0,4 -4,0 0,-4z M102,86l4,0 0,4 -4,0 0,-4z M110,86l4,0 0,4 -4,0 0,-4z M114,86l4,0 0,4 -4,0 0,-4z M118,86l4,0 0,4 -4,0 0,-4z M2,90l4,0 0,4 -4,0 0,-4z M10,90l4,0 0,4 -4,0 0,-4z M14,90l4,0 0,4 -4,0 0,-4z M22,90l4,0 0,4 -4,0 0,-4z M26,90l4,0 0,4 -4,0 0,-4z M34,90l4,0 0,4 -4,0 0,-4z M46,90l4,0 0,4 -4,0 0,-4z M50,90l4,0 0,4 -4,0 0,-4z M54,90l4,0 0,4 -4,0 0,-4z M62,90l4,0 0,4 -4,0 0,-4z M66,90l4,0 0,4 -4,0 0,-4z M70,90l4,0 0,4 -4,0 0,-4z M74,90l4,0 0,4 -4,0 0,-4z M90,90l4,0 0,4 -4,0 0,-4z M98,90l4,0 0,4 -4,0 0,-4z M102,90l4,0 0,4 -4,0 0,-4z M118,90l4,0 0,4 -4,0 0,-4z M126,90l4,0 0,4 -4,0 0,-4z M2,94l4,0 0,4 -4,0 0,-4z M18,94l4,0 0,4 -4,0 0,-4z M22,94l4,0 0,4 -4,0 0,-4z M30,94l4,0 0,4 -4,0 0,-4z M34,94l4,0 0,4 -4,0 0,-4z M58,94l4,0 0,4 -4,0 0,-4z M78,94l4,0 0,4 -4,0 0,-4z M98,94l4,0 0,4 -4,0 0,-4z M106,94l4,0 0,4 -4,0 0,-4z M114,94l4,0 0,4 -4,0 0,-4z M118,94l4,0 0,4 -4,0 0,-4z M122,94l4,0 0,4 -4,0 0,-4z M2,98l4,0 0,4 -4,0 0,-4z M6,98l4,0 0,4 -4,0 0,-4z M10,98l4,0 0,4 -4,0 0,-4z M14,98l4,0 0,4 -4,0 0,-4z M26,98l4,0 0,4 -4,0 0,-4z M38,98l4,0 0,4 -4,0 0,-4z M42,98l4,0 0,4 -4,0 0,-4z M46,98l4,0 0,4 -4,0 0,-4z M58,98l4,0 0,4 -4,0 0,-4z M62,98l4,0 0,4 -4,0 0,-4z M66,98l4,0 0,4 -4,0 0,-4z M74,98l4,0 0,4 -4,0 0,-4z M78,98l4,0 0,4 -4,0 0,-4z M82,98l4,0 0,4 -4,0 0,-4z M94,98l4,0 0,4 -4,0 0,-4z M98,98l4,0 0,4 -4,0 0,-4z M102,98l4,0 0,4 -4,0 0,-4z M106,98l4,0 0,4 -4,0 0,-4z M110,98l4,0 0,4 -4,0 0,-4z M114,98l4,0 0,4 -4,0 0,-4z M118,98l4,0 0,4 -4,0 0,-4z M130,98l4,0 0,4 -4,0 0,-4z M34,102l4,0 0,4 -4,0 0,-4z M38,102l4,0 0,4 -4,0 0,-4z M46,102l4,0 0,4 -4,0 0,-4z M58,102l4,0 0,4 -4,0 0,-4z M62,102l4,0 0,4 -4,0 0,-4z M66,102l4,0 0,4 -4,0 0,-4z M74,102l4,0 0,4 -4,0 0,-4z M78,102l4,0 0,4 -4,0 0,-4z M90,102l4,0 0,4 -4,0 0,-4z M98,102l4,0 0,4 -4,0 0,-4z M114,102l4,0 0,4 -4,0 0,-4z M122,102l4,0 0,4 -4,0 0,-4z M130,102l4,0 0,4 -4,0 0,-4z M2,106l4,0 0,4 -4,0 0,-4z M6,106l4,0 0,4 -4,0 0,-4z M10,106l4,0 0,4 -4,0 0,-4z M14,106l4,0 0,4 -4,0 0,-4z M18,106l4,0 0,4 -4,0 0,-4z M22,106l4,0 0,4 -4,0 0,-4z M26,106l4,0 0,4 -4,0 0,-4z M46,106l4,0 0,4 -4,0 0,-4z M50,106l4,0 0,4 -4,0 0,-4z M62,106l4,0 0,4 -4,0 0,-4z M66,106l4,0 0,4 -4,0 0,-4z M74,106l4,0 0,4 -4,0 0,-4z M94,106l4,0 0,4 -4,0 0,-4z M98,106l4,0 0,4 -4,0 0,-4z M106,106l4,0 0,4 -4,0 0,-4z M114,106l4,0 0,4 -4,0 0,-4z M122,106l4,0 0,4 -4,0 0,-4z M2,110l4,0 0,4 -4,0 0,-4z M26,110l4,0 0,4 -4,0 0,-4z M42,110l4,0 0,4 -4,0 0,-4z M46,110l4,0 0,4 -4,0 0,-4z M54,110l4,0 0,4 -4,0 0,-4z M62,110l4,0 0,4 -4,0 0,-4z M78,110l4,0 0,4 -4,0 0,-4z M82,110l4,0 0,4 -4,0 0,-4z M94,110l4,0 0,4 -4,0 0,-4z M98,110l4,0 0,4 -4,0 0,-4z M114,110l4,0 0,4 -4,0 0,-4z M118,110l4,0 0,4 -4,0 0,-4z M122,110l4,0 0,4 -4,0 0,-4z M2,114l4,0 0,4 -4,0 0,-4z M10,114l4,0 0,4 -4,0 0,-4z M14,114l4,0 0,4 -4,0 0,-4z M18,114l4,0 0,4 -4,0 0,-4z M26,114l4,0 0,4 -4,0 0,-4z M38,114l4,0 0,4 -4,0 0,-4z M42,114l4,0 0,4 -4,0 0,-4z M62,114l4,0 0,4 -4,0 0,-4z M74,114l4,0 0,4 -4,0 0,-4z M82,114l4,0 0,4 -4,0 0,-4z M90,114l4,0 0,4 -4,0 0,-4z M98,114l4,0 0,4 -4,0 0,-4z M102,114l4,0 0,4 -4,0 0,-4z M106,114l4,0 0,4 -4,0 0,-4z M110,114l4,0 0,4 -4,0 0,-4z M114,114l4,0 0,4 -4,0 0,-4z M118,114l4,0 0,4 -4,0 0,-4z M2,118l4,0 0,4 -4,0 0,-4z M10,118l4,0 0,4 -4,0 0,-4z M14,118l4,0 0,4 -4,0 0,-4z M18,118l4,0 0,4 -4,0 0,-4z M26,118l4,0 0,4 -4,0 0,-4z M42,118l4,0 0,4 -4,0 0,-4z M46,118l4,0 0,4 -4,0 0,-4z M50,118l4,0 0,4 -4,0 0,-4z M54,118l4,0 0,4 -4,0 0,-4z M66,118l4,0 0,4 -4,0 0,-4z M70,118l4,0 0,4 -4,0 0,-4z M78,118l4,0 0,4 -4,0 0,-4z M82,118l4,0 0,4 -4,0 0,-4z M90,118l4,0 0,4 -4,0 0,-4z M110,118l4,0 0,4 -4,0 0,-4z M114,118l4,0 0,4 -4,0 0,-4z M118,118l4,0 0,4 -4,0 0,-4z M126,118l4,0 0,4 -4,0 0,-4z M130,118l4,0 0,4 -4,0 0,-4z M2,122l4,0 0,4 -4,0 0,-4z M10,122l4,0 0,4 -4,0 0,-4z M14,122l4,0 0,4 -4,0 0,-4z M18,122l4,0 0,4 -4,0 0,-4z M26,122l4,0 0,4 -4,0 0,-4z M42,122l4,0 0,4 -4,0 0,-4z M46,122l4,0 0,4 -4,0 0,-4z M50,122l4,0 0,4 -4,0 0,-4z M54,122l4,0 0,4 -4,0 0,-4z M58,122l4,0 0,4 -4,0 0,-4z M66,122l4,0 0,4 -4,0 0,-4z M78,122l4,0 0,4 -4,0 0,-4z M82,122l4,0 0,4 -4,0 0,-4z M90,122l4,0 0,4 -4,0 0,-4z M98,122l4,0 0,4 -4,0 0,-4z M110,122l4,0 0,4 -4,0 0,-4z M114,122l4,0 0,4 -4,0 0,-4z M122,122l4,0 0,4 -4,0 0,-4z M126,122l4,0 0,4 -4,0 0,-4z M130,122l4,0 0,4 -4,0 0,-4z M2,126l4,0 0,4 -4,0 0,-4z M26,126l4,0 0,4 -4,0 0,-4z M38,126l4,0 0,4 -4,0 0,-4z M46,126l4,0 0,4 -4,0 0,-4z M50,126l4,0 0,4 -4,0 0,-4z M54,126l4,0 0,4 -4,0 0,-4z M58,126l4,0 0,4 -4,0 0,-4z M62,126l4,0 0,4 -4,0 0,-4z M66,126l4,0 0,4 -4,0 0,-4z M74,126l4,0 0,4 -4,0 0,-4z M82,126l4,0 0,4 -4,0 0,-4z M90,126l4,0 0,4 -4,0 0,-4z M94,126l4,0 0,4 -4,0 0,-4z M110,126l4,0 0,4 -4,0 0,-4z M114,126l4,0 0,4 -4,0 0,-4z M118,126l4,0 0,4 -4,0 0,-4z M122,126l4,0 0,4 -4,0 0,-4z M2,130l4,0 0,4 -4,0 0,-4z M6,130l4,0 0,4 -4,0 0,-4z M10,130l4,0 0,4 -4,0 0,-4z M14,130l4,0 0,4 -4,0 0,-4z M18,130l4,0 0,4 -4,0 0,-4z M22,130l4,0 0,4 -4,0 0,-4z M26,130l4,0 0,4 -4,0 0,-4z M34,130l4,0 0,4 -4,0 0,-4z M46,130l4,0 0,4 -4,0 0,-4z M70,130l4,0 0,4 -4,0 0,-4z M82,130l4,0 0,4 -4,0 0,-4z M90,130l4,0 0,4 -4,0 0,-4z M94,130l4,0 0,4 -4,0 0,-4z M98,130l4,0 0,4 -4,0 0,-4z M110,130l4,0 0,4 -4,0 0,-4z M126,130l4,0 0,4 -4,0 0,-4z \" stroke=\"transparent\" fill=\"black\"/></svg>";</script>
+<script>window.SF_STANDALONE=true;</script>
 <script>
 (function(){
 "use strict";
@@ -1174,116 +1177,56 @@ route();recover();if(!Rt.sum){Rt.sum=summaryAll();try{localStorage.setItem(KEY,J
 })();
 </script>
 <script>
-/* ===== Aggiornamento automatico e controllo versione (uguale in tutte le sezioni di Pianificazione: costruita da comune/barra.html) =====
-   - all'apertura, al ritorno sull'app e ogni 30 minuti legge version.json saltando ogni copia vecchia (anche quella del server di GitHub);
-   - se c'è una versione nuova salva i dati e ricarica, ma mai mentre si sta compilando qualcosa o durante una seduta;
-   - in fondo a ogni sezione: versione installata, data, stato e pulsante «Cerca aggiornamenti». */
+/* ===== App autonoma «Semestre filtro»: aggiornamento automatico, copie e barra in fondo =====
+   - all'apertura, al ritorno sull'app e ogni 30 minuti legge version.json (mai dalla cache);
+   - se c'è una versione nuova salva i dati e ricarica, ma mai durante una simulazione o mentre si scrive;
+   - ogni giorno conserva sul dispositivo una copia dei progressi (ultimi 30 giorni);
+   - «Salva copia su File / iCloud» crea un file .json che si ripristina in Progressi e copie. */
 (function(){
   "use strict";
-  var V=window.APP_VERSION||"", BUILT=window.APP_BUILD||"";
+  var V=window.APP_VERSION||"", BUILT=window.APP_BUILD||"", KEY="semestre-v1";
   var st={state:"idle",last:null,remote:null,pending:false};
-  function visible(id){var e=document.getElementById(id);if(!e||e.hidden)return false;if(e.classList&&e.classList.contains("hide"))return false;return getComputedStyle(e).display!=="none";}
-  function busy(){var a=document.activeElement;return visible("sheet")||visible("modal")||visible("player")||!!(a&&/INPUT|SELECT|TEXTAREA/.test(a.tagName)&&a.type!=="file");}
-  function fmtBuilt(){if(!BUILT)return "";try{return new Date(BUILT).toLocaleString("it-IT",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});}catch(e){return "";}}
-  var TXT={idle:"",checking:"controllo in corso…",ok:"è l’ultima versione",new:"nuova versione trovata: aggiorno…",wait:"nuova versione pronta: si installa appena chiudi la finestra aperta",offline:"senza internet: controllo al prossimo collegamento"};
-  function paint(){
-    var bars=document.querySelectorAll(".updbar");
-    for(var i=0;i<bars.length;i++){var b=bars[i];
-      var sv=b.querySelector(".u-sv"); if(sv)sv.innerHTML=svTxt();
-      b.querySelector(".u-st").textContent=TXT[st.state]+(st.last&&st.state==="ok"?" (verificato alle "+st.last.toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"})+")":"");
-      b.dataset.st=st.state;}
-  }
-  function bar(){
-    if(document.querySelector(".updbar"))return;
-    var css=document.createElement("style");
-    css.textContent=".updbar{max-width:1100px;margin:22px auto 8px;padding:10px 16px;font-size:12.5px;color:#7a8290;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;justify-content:center;text-align:center}"+
-      ".updbar b{font-variant-numeric:tabular-nums}.updbar button{font:inherit;font-weight:700;border:0;border-radius:999px;padding:6px 12px;background:rgba(127,127,127,.16);color:inherit;cursor:pointer}"+
-      ".updbar[data-st=ok] .u-st{color:#2e8b57}.updbar[data-st=new] .u-st,.updbar[data-st=wait] .u-st{color:#c2410c;font-weight:700}";
-    document.head.appendChild(css);
-    var d=document.createElement("div");d.className="updbar";
-    d.innerHTML="<span class=\"u-sv\" style=\"flex-basis:100%\"></span><button type=\"button\" class=\"u-bk\">💾 Salva copia su File / iCloud</button><span>Versione <b>"+V+"</b>"+(BUILT?" del "+fmtBuilt():"")+"</span><span class=\"u-st\"></span><button type=\"button\">Cerca aggiornamenti</button>";
-    d.querySelector(".u-bk").addEventListener("click",exportAll);
-    d.querySelectorAll("button")[1].addEventListener("click",function(){check(true);});
-    // nelle sezioni con più pagine la barra va in fondo al documento, sopra la barra delle schede
-    document.body.insertBefore(d,document.querySelector("nav.tabs")||null);
-    paint();
-  }
-  /* ---------- salvataggio automatico comune a tutte le sezioni ----------
-     Ogni sezione salva subito le proprie modifiche sul dispositivo. Qui, da qualsiasi sezione:
-     copia giornaliera completa (Pianificazione + Licenze + Tai Chi + Progressi + Semestre filtro) negli ultimi 30 giorni e copia su File / iCloud. */
   function lsJ(k){try{return JSON.parse(localStorage.getItem(k)||"null");}catch(e){return null;}}
-  function dumpAll(){
-    var S=lsJ("licenze-marco-v1"), tc={}, n=0;
-    try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("tc_")===0){tc[k]=localStorage.getItem(k);n++;}}}catch(e){}
-    var pack=lsJ("prog-vale-v1"), link=lsJ("prog-link-v1");
-    var pg=pack||link?{pack:pack,hist:lsJ("prog-vale-hist-v1")||[],link:link}:null;
-    var pn=lsJ("pn-v1");
-    var sf=lsJ("semestre-v1");
-    if(!S&&!n&&!pg&&!pn&&!sf)return null;
-    var o={}; if(S)for(var x in S)o[x]=S[x]; o.taichi=tc; o.progressi=pg; if(pn)o.pianifica=pn; if(sf)o.semestre=sf; o.app="le-mie-app"; return o;
-  }
-  function kvDb(){return new Promise(function(res,rej){try{var r=indexedDB.open("licenze-marco",1);r.onupgradeneeded=function(){if(!r.result.objectStoreNames.contains("kv"))r.result.createObjectStore("kv");};r.onsuccess=function(){res(r.result);};r.onerror=function(){rej(r.error);};}catch(e){rej(e);}});}
+  function visible(id){var e=document.getElementById(id);return !!(e&&!e.hidden&&getComputedStyle(e).display!=="none");}
+  function busy(){var a=document.activeElement;return visible("player")||!!(a&&/INPUT|SELECT|TEXTAREA/.test(a.tagName)&&a.type!=="file");}
+  function fmtBuilt(){if(!BUILT)return "";try{return new Date(BUILT).toLocaleString("it-IT",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});}catch(e){return "";}}
   function today(){var d=new Date();return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2);}
-  var snapBusy=false;
-  function snapAll(){
-    if(snapBusy)return; var o=dumpAll(); if(!o)return; snapBusy=true;
-    kvDb().then(function(db){return new Promise(function(res){
-      var tx=db.transaction("kv","readwrite"),st=tx.objectStore("kv"),k="snap-"+today();
-      st.put(JSON.stringify(o),k);
-      var q=st.getAllKeys(); q.onsuccess=function(){var ks=q.result.map(String).filter(function(x){return x.indexOf("snap-")===0&&x.indexOf("~")<0;});if(ks.indexOf(k)<0)ks.push(k);ks.sort();ks.slice(0,Math.max(0,ks.length-30)).forEach(function(old){st.delete(old);});};
-      tx.oncomplete=function(){try{localStorage.setItem("mie-app-lastSnap",new Date().toISOString());}catch(e){}res();paint();};tx.onerror=function(){res();};
-    });}).catch(function(){}).then(function(){snapBusy=false;});
-  }
-  function exportAll(){
-    var b=document.getElementById("bExport"); if(b){b.click();setTimeout(paint,1500);return;}   // in Licenze usa il pulsante della pagina
-    var o=dumpAll(); if(!o){alertBar("Ancora nessun dato da salvare");return;}
-    var data=JSON.stringify(o,null,1), fn="marco-backup-"+today()+".json";
-    var done=function(){var t=new Date().toISOString();try{localStorage.setItem("mie-app-lastBackup",t);localStorage.setItem("tc_lastBackup",JSON.stringify(t));}catch(e){}paint();};
-    try{var f=new File([data],fn,{type:"application/json"});if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:"Copia Pianificazione"}).then(done,function(){});return;}}catch(e){}
-    try{var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type:"application/json"}));a.download=fn;document.body.appendChild(a);a.click();a.remove();done();}catch(e){}
-  }
-  function alertBar(t){var e=document.querySelector(".updbar .u-sv");if(e)e.textContent=t;}
   function when(t){if(!t)return "mai";var d=new Date(t),o=new Date();return d.toDateString()===o.toDateString()?"oggi "+d.toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"}):d.toLocaleDateString("it-IT",{day:"numeric",month:"short"});}
-  function svTxt(){var sn=null,bk=null;try{sn=localStorage.getItem("mie-app-lastSnap");bk=localStorage.getItem("mie-app-lastBackup");var S=lsJ("licenze-marco-v1");if(S&&S.lastBackup&&(!bk||S.lastBackup>bk))bk=S.lastBackup;}catch(e){}
-    var old=!bk||(Date.now()-new Date(bk).getTime())>7*864e5;
+  var TXT={idle:"",checking:"controllo in corso…",ok:"è l’ultima versione",new:"nuova versione trovata: aggiorno…",wait:"nuova versione pronta: si installa appena finisci",offline:"senza internet: controllo al prossimo collegamento"};
+  function svTxt(){var sn=localStorage.getItem("sf-lastSnap"),bk=localStorage.getItem("sf-lastBackup"),old=!bk||(Date.now()-new Date(bk).getTime())>7*864e5;
     return "💾 Salvataggio automatico attivo · copia del giorno: "+when(sn)+" · copia su File/iCloud: <span"+(old?" style=\"color:#c2410c;font-weight:700\"":"")+">"+when(bk)+"</span>";}
-
-  function apply(v){
-    try{if(typeof window.__flush==="function")window.__flush();}catch(e){}
-    setTimeout(function(){location.replace(location.pathname+"?v="+encodeURIComponent(v));},350);
-  }
-  function check(manual){
-    if(!/^https?:/.test(location.protocol))return;
-    st.state="checking";paint();
-    if(window.__swreg)window.__swreg.update().catch(function(){});
-    fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json();}).then(function(v){
-      st.last=new Date();st.remote=v&&v.v;
-      if(st.remote&&st.remote!==V){
-        if(manual||!busy()){st.state="new";paint();apply(st.remote);}
-        else{st.state="wait";st.pending=true;paint();}
-      }else{st.state="ok";paint();}
-    }).catch(function(){st.state="offline";paint();});
-  }
-  setInterval(function(){if(st.pending&&!busy()){st.pending=false;st.state="new";paint();apply(st.remote);}},5000);
-  if(location.search.indexOf("v=")>=0&&history.replaceState){try{history.replaceState(null,"",location.pathname+location.hash);}catch(e){}}
-  setTimeout(snapAll,3000);
-  document.addEventListener("visibilitychange",function(){if(document.visibilityState==="hidden")snapAll();else paint();});
-  window.addEventListener("pagehide",snapAll);
-  setInterval(snapAll,15*60*1000);
-  window.__snapAll=snapAll;
-  window.__exportAll=exportAll;
-  if(window.claude||window.top!==window){ // dentro Claude: niente aggiornamento automatico, solo la versione
-    if(document.readyState!=="loading")bar();else document.addEventListener("DOMContentLoaded",bar);
-    return;
-  }
+  function paint(){var b=document.querySelector(".updbar");if(!b)return;b.querySelector(".u-sv").innerHTML=svTxt();
+    b.querySelector(".u-st").textContent=TXT[st.state]+(st.last&&st.state==="ok"?" (verificato alle "+st.last.toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"})+")":"");b.dataset.st=st.state;}
+  function bar(){if(document.querySelector(".updbar"))return;var css=document.createElement("style");
+    css.textContent=".updbar{max-width:1100px;margin:22px auto 8px;padding:10px 16px calc(10px + env(safe-area-inset-bottom));font-size:12.5px;color:#7a8290;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;justify-content:center;text-align:center}.updbar b{font-variant-numeric:tabular-nums}.updbar button{font:inherit;font-weight:700;border:0;border-radius:999px;padding:6px 12px;background:rgba(127,127,127,.16);color:inherit;cursor:pointer}.updbar[data-st=ok] .u-st{color:#2e8b57}.updbar[data-st=new] .u-st,.updbar[data-st=wait] .u-st{color:#c2410c;font-weight:700}";
+    document.head.appendChild(css);var d=document.createElement("div");d.className="updbar";
+    d.innerHTML="<span class=\"u-sv\" style=\"flex-basis:100%\"></span><button type=\"button\" class=\"u-bk\">💾 Salva copia su File / iCloud</button><span>Versione <b>"+V+"</b>"+(BUILT?" del "+fmtBuilt():"")+"</span><span class=\"u-st\"></span><button type=\"button\" class=\"u-ck\">Cerca aggiornamenti</button>";
+    d.querySelector(".u-bk").addEventListener("click",exportAll);d.querySelector(".u-ck").addEventListener("click",function(){check(true);});document.body.appendChild(d);paint();}
+  function kvDb(){return new Promise(function(res,rej){try{var r=indexedDB.open("licenze-marco",1);r.onupgradeneeded=function(){if(!r.result.objectStoreNames.contains("kv"))r.result.createObjectStore("kv");};r.onsuccess=function(){res(r.result);};r.onerror=function(){rej(r.error);};}catch(e){rej(e);}});}
+  var snapBusy=false;
+  function snapAll(){if(snapBusy)return;var o=lsJ(KEY);if(!o)return;snapBusy=true;
+    kvDb().then(function(db){return new Promise(function(res){var tx=db.transaction("kv","readwrite"),s=tx.objectStore("kv"),k="sf-snap-"+today();s.put(JSON.stringify(o),k);
+      var q=s.getAllKeys();q.onsuccess=function(){var ks=q.result.map(String).filter(function(x){return x.indexOf("sf-snap-")===0;});if(ks.indexOf(k)<0)ks.push(k);ks.sort();ks.slice(0,Math.max(0,ks.length-30)).forEach(function(x){s.delete(x);});};
+      tx.oncomplete=function(){try{localStorage.setItem("sf-lastSnap",new Date().toISOString());}catch(e){}res();paint();};tx.onerror=function(){res();};});}).catch(function(){}).then(function(){snapBusy=false;});}
+  function exportAll(){try{if(typeof window.__flush==="function")window.__flush();}catch(e){}var o=lsJ(KEY);if(!o){alert("Ancora nessun dato da salvare");return;}
+    var data=JSON.stringify({app:"semestre-filtro",semestre:o},null,1),fn="semestre-filtro-copia-"+today()+".json";
+    var done=function(){try{localStorage.setItem("sf-lastBackup",new Date().toISOString());}catch(e){}paint();};
+    try{var f=new File([data],fn,{type:"application/json"});if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:"Copia Semestre filtro"}).then(done,function(){});return;}}catch(e){}
+    try{var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type:"application/json"}));a.download=fn;document.body.appendChild(a);a.click();a.remove();done();}catch(e){}}
+  function apply(v){try{if(typeof window.__flush==="function")window.__flush();}catch(e){}setTimeout(function(){location.replace(location.pathname+"?v="+encodeURIComponent(v)+location.hash);},350);}
+  function check(manual){if(!/^https?:/.test(location.protocol))return;st.state="checking";paint();if(window.__swreg)window.__swreg.update().catch(function(){});
+    fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json();}).then(function(v){st.last=new Date();st.remote=v&&v.v;
+      if(st.remote&&st.remote!==V){if(manual||!busy()){st.state="new";paint();apply(st.remote);}else{st.state="wait";st.pending=true;paint();}}else{st.state="ok";paint();}
+    }).catch(function(){st.state="offline";paint();});}
+  window.__exportAll=exportAll;window.__snapAll=snapAll;
   if(document.readyState!=="loading")bar();else document.addEventListener("DOMContentLoaded",bar);
-  if("serviceWorker" in navigator&&/^https?:/.test(location.protocol)){
-    navigator.serviceWorker.register("sw.js").then(function(reg){window.__swreg=reg;}).catch(function(){});
-  }
-  check(false);
-  document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")check(false);});
-  window.addEventListener("pageshow",function(e){if(e.persisted)check(false);});
-  setInterval(function(){check(false);},30*60*1000);
+  setTimeout(snapAll,3000);document.addEventListener("visibilitychange",function(){if(document.visibilityState==="hidden")snapAll();else paint();});window.addEventListener("pagehide",snapAll);setInterval(snapAll,15*60*1000);
+  if(location.search.indexOf("v=")>=0&&history.replaceState){try{history.replaceState(null,"",location.pathname+location.hash);}catch(e){}}
+  if(window.claude||window.top!==window)return; // dentro un'anteprima: niente aggiornamento automatico
+  setInterval(function(){if(st.pending&&!busy()){st.pending=false;st.state="new";paint();apply(st.remote);}},5000);
+  if("serviceWorker" in navigator&&/^https?:/.test(location.protocol)){navigator.serviceWorker.register("sw.js").then(function(reg){window.__swreg=reg;}).catch(function(){});}
+  check(false);document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")check(false);});
+  window.addEventListener("pageshow",function(e){if(e.persisted)check(false);});setInterval(function(){check(false);},30*60*1000);
 })();
 </script>
 </body>

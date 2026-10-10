@@ -1,0 +1,19 @@
+
+/* ---------- Semestre filtro (dati salvati da semestre.html: semestre-v1 → sum) ---------- */
+function semSum(){const f=lsJ("semestre-v1");return f&&f.sum?f:null;}
+function semDays(s){return Math.round((new Date(s+"T00:00")-new Date(today()+"T00:00"))/864e5);}
+function semCard(){const f=semSum(),d=semDays("2026-12-10");
+  if(!f)return `<div class="card"><h3>🩺 Semestre filtro <a href="semestre.html">Apri ›</a></h3><div class="big">${Math.max(0,d)}</div><div class="lbl">giorni al 1° appello (10 dicembre)</div><p class="empty">Inizia dal test d'ingresso di Fisica.</p></div>`;
+  const E=f.sum.exams||{};return `<div class="card"><h3>🩺 Semestre filtro <button class="lnk" data-go="sem">Progressi ›</button></h3><div class="lbl">${Math.max(0,d)} giorni al 1° appello</div>${["fis","chi","bio"].filter(k=>E[k]).map(k=>`<div class="row"><span class="pill">${E[k].ic}</span><div class="grow">${esc(E[k].t)}${E[k].next?`<small>prossimo: ${esc(E[k].next.t)}</small>`:""}</div><b>${E[k].overall}%</b></div>`).join("")}<div class="btns"><a class="btn sm" href="semestre.html">Apri</a></div></div>`;}
+function semBar(s,c){return `<div style="height:7px;background:var(--seg);border-radius:6px;margin-top:5px;overflow:hidden"><i style="display:block;height:100%;width:${s}%;background:${c||(s>=80?"var(--ok)":s>=50?"var(--accent)":"var(--soon)")};border-radius:6px"></i></div>`;}
+function vSem(){const f=semSum(),d1=semDays("2026-12-10"),d2=semDays("2027-01-11");
+  let o=`<h1>🩺 Semestre filtro</h1><p class="sub">Medicina UPO 2026/27 · esami nazionali di Fisica, Chimica e Biologia il 10 dicembre 2026 e l'11 gennaio 2027 (ore 11). I progressi arrivano dalla sezione Semestre filtro di questa app.</p>
+  <div class="btns" style="margin:0 0 12px"><a class="btn pri" href="semestre.html">🩺 Apri Semestre filtro</a><a class="btn" href="semestre.html#fis">⚛️ Fisica</a><a class="btn" href="semestre.html#fis/sim">⏱️ Simulazione di Fisica</a><a class="btn" href="semestre.html#regole">🎓 Regole e UPO</a><a class="btn" href="semestre.html#installa">📲 Installa su un altro iPad</a></div>`;
+  if(!f)return o+`<div class="card"><p class="empty">Ancora nessun dato: apri Semestre filtro e fai il test d'ingresso di Fisica per avere il piano di studio.</p></div>`;
+  const E=f.sum.exams||{};
+  o+=`<div class="kpi"><div><b>${Math.max(0,d1)}</b><span>giorni al 1° appello</span></div><div><b>${Math.max(0,d2)}</b><span>giorni al 2° appello</span></div>${["fis","chi","bio"].filter(k=>E[k]).map(k=>`<div><b>${E[k].overall}%</b><span>${E[k].ic} ${esc(E[k].t)}${E[k].ready?"":" (in costruzione)"}</span></div>`).join("")}</div><div class="grid">`;
+  o+=["fis","chi","bio"].filter(k=>E[k]).map(k=>{const s=E[k];return `<div class="card"><h3>${s.ic} ${esc(s.t)} <a href="semestre.html#${k}">Apri ›</a></h3>${Object.values(s.units).map(u=>`<div class="row"><span class="pill">${u.ic}</span><div class="grow">${esc(u.t)}${semBar(u.s)}</div><b>${u.s}%</b></div>`).join("")}
+   ${s.next?`<div class="row"><div class="grow">Prossimo: <b>${esc(s.next.t)}</b><small>${esc(s.next.u)}</small></div><a class="btn sm pri" href="semestre.html#${k}/t/${s.next.id}">Studia</a></div>`:""}
+   ${s.ready?`<div class="row"><div class="grow">Test d'ingresso</div><b>${s.pt?s.pt.score+"/"+s.pt.n+" · "+s.pt.lev:"da fare"}</b></div><div class="row"><div class="grow">Esercizi negli ultimi 7 giorni</div><b>${s.week}</b></div><div class="row"><div class="grow">Ultima simulazione</div><b>${s.sim?String(s.sim.pts).replace(".",",")+" punti · "+(s.sim.pass?"✓ sopra 18":"sotto 18"):"—"}</b></div>`:`<p class="lbl">Programma ufficiale con autovalutazione; esercizi e simulazioni in arrivo.</p>`}</div>`;}).join("");
+  o+=`</div><p class="lbl">Aggiornato: ${new Date(f.savedAt||f.sum.date).toLocaleString("it-IT",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</p>`;
+  return o;}
