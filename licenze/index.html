@@ -44,6 +44,10 @@ h2{font-size:18px;margin:18px 0 8px}
 .row small{display:block;color:var(--muted)}
 .pill{display:inline-block;font-size:12.5px;font-weight:800;padding:2px 9px;border-radius:999px;background:var(--seg);color:var(--ink);white-space:nowrap}
 .pill.warn{background:var(--warn-bg);color:var(--warn)}.pill.soon{background:var(--soon-bg);color:var(--soon)}.pill.ok{background:var(--ok-bg);color:var(--ok)}
+.prow{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;border-top:1px solid var(--line);background:none;font:inherit;color:var(--ink);padding:10px 0;cursor:pointer}.plist .prow:first-child{border-top:0}.prow .pic{font-size:24px}.prow small{display:block;color:var(--muted)}
+.pin{flex:1;min-width:200px;border:1px solid var(--line);border-radius:10px;padding:9px 10px;background:var(--card);color:var(--ink)}
+details.more>summary{cursor:pointer;font-weight:700;color:var(--accent);margin:14px 2px 8px}
+.fx{border-top:1px solid var(--line);padding:10px 0}.fx:first-of-type{border-top:0}
 .pill.fam{background:var(--fam-bg);color:var(--fam)}.pill.ben{background:var(--ben-bg);color:var(--ben)}.pill.lp{background:var(--lp-bg);color:var(--lp)}.pill.euro{background:var(--euro-bg);color:var(--euro)}
 button,input,select,textarea{font:inherit}
 .btn{border:0;border-radius:12px;padding:10px 14px;font-weight:700;background:var(--seg);color:var(--ink);cursor:pointer}
@@ -100,7 +104,7 @@ a.btn{text-decoration:none}
 .cc{display:block;font-size:11.5px;font-weight:700;line-height:1.25;border-radius:6px;padding:1px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--seg);color:var(--ink)}
 .cc.scad{background:var(--soon-bg);color:var(--soon)}.cc.scad.warn{background:var(--warn-bg);color:var(--warn)}.cc.scad.proj{opacity:.7}
 .cc.pay{background:var(--euro-bg);color:var(--euro)}.cc.pay.in{background:var(--ok-bg);color:var(--ok)}
-.cc.fam{background:var(--fam-bg);color:var(--fam)}.cc.ipad{background:var(--ben-bg);color:var(--ben)}.cc.lic{background:var(--lp-bg);color:var(--lp)}.cc.more{background:none;color:var(--muted)}
+.cc.fam{background:var(--fam-bg);color:var(--fam)}.cc.prat{background:var(--lp-bg);color:var(--lp)}.mc .md i.prat{background:var(--lp)}.cc.ipad{background:var(--ben-bg);color:var(--ben)}.cc.lic{background:var(--lp-bg);color:var(--lp)}.cc.more{background:none;color:var(--muted)}
 .mc .mi{margin-top:auto;font-size:13px;line-height:1;min-height:14px}.mc .vs{font-style:normal}
 .cal-leg{margin:8px 2px}.lg{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;border:1px solid var(--line)}.lg.lic{background:var(--lp-bg)}.lg.we{background:var(--seg)}
 .lgu{display:inline-block;width:12px;border-bottom:3px solid var(--soon)}
@@ -133,7 +137,7 @@ a.btn{text-decoration:none}
 @media (prefers-color-scheme:dark){:root{--bg:#0f1216;--card:#1a1e24;--ink:#eef0f3;--muted:#9aa3ae;--line:#2a3038;--seg:#242a32;--ok-bg:#16301f;--warn-bg:#3a1b19;--soon-bg:#33270f;--lp-bg:#3a2218;--fam-bg:#271f3d;--ben-bg:#14302f;--euro-bg:#172739}
   .form input,.form select,.form textarea,.chk,.mood button{background:#12161b;color:var(--ink)}.day.together{background:linear-gradient(180deg,#1a1e24,#14261b)}}
 </style>
-<script>window.APP_VERSION="64340351b6";window.APP_BUILD="2026-10-10T17:09+02:00";</script>
+<script>window.APP_VERSION="af8f687aa6";window.APP_BUILD="2026-10-10T17:35+02:00";</script>
 </head>
 <body>
 <style id="lockCss">
@@ -240,7 +244,7 @@ html.locked #lockScr{display:grid}
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
 /* ================= PIANIFICAZIONE =================
-   Sezioni: Calendario (punto di partenza: giorno, settimana, mese, anno; il giorno di oggi contiene il riepilogo) · Scadenze · Famiglia · Conti · Benessere.
+   Sezioni: Calendario (punto di partenza: giorno, settimana, mese, anno; il giorno di oggi contiene il riepilogo; dentro ci sono anche gli impegni e le attività fisse della famiglia) · Scadenze · Pratiche · Conti · Benessere.
    Tutti i dati restano su questo dispositivo: localStorage «pn-v1» + copia nel database del dispositivo (IndexedDB «licenze-marco», voce «pianifica»)
    + copie giornaliere e copia su File/iCloud insieme a Licenze, Tai Chi e Progressi (barra in fondo). Nessun dato personale nel codice. */
 "use strict";
@@ -272,7 +276,7 @@ const DEF_PN={ver:1,scad:[],fam:{att:[],ev:[]},conti:{ric:[],mov:[],hide:false},
 function normalize(o){const d=JSON.parse(JSON.stringify(DEF_PN));if(o&&typeof o==="object"){Object.assign(d,o);d.fam=Object.assign({att:[],ev:[]},o.fam||{});d.conti=Object.assign({ric:[],mov:[],hide:false},o.conti||{});d.ben=Object.assign({d:{}},o.ben||{});d.ics=Object.assign({sent:{}},o.ics||{});d.cal=Object.assign({at:null,ev:[]},o.cal||{});d.scad=Array.isArray(o.scad)?o.scad:[];}return d;}
 let P=normalize(lsJ(KEY));
 function kv(mode,key,val){return new Promise((res,rej)=>{try{const r=indexedDB.open("licenze-marco",1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains("kv"))r.result.createObjectStore("kv");};
-  r.onsuccess=()=>{try{const tx=r.result.transaction("kv",mode),st=tx.objectStore("kv");const q=mode==="readonly"?st.get(key):st.put(val,key);q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error);}catch(e){rej(e);}};r.onerror=()=>rej(r.error);}catch(e){rej(e);}});}
+  r.onsuccess=()=>{try{const tx=r.result.transaction("kv",mode),st=tx.objectStore("kv");const q=mode==="readonly"?st.get(key):(val===undefined?st.delete(key):st.put(val,key));q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error);}catch(e){rej(e);}};r.onerror=()=>rej(r.error);}catch(e){rej(e);}});}
 let saveT=null;
 function save(){P.savedAt=new Date().toISOString();try{localStorage.setItem(KEY,JSON.stringify(P));}catch(e){}clearTimeout(saveT);saveT=setTimeout(()=>{kv("readwrite","pianifica",JSON.stringify(P)).catch(()=>{});},400);paintSaved();}
 window.__flush=()=>{try{localStorage.setItem(KEY,JSON.stringify(P));}catch(e){}kv("readwrite","pianifica",JSON.stringify(P)).catch(()=>{});};
@@ -951,7 +955,7 @@ function bindStat(){document.querySelectorAll("[data-sp]").forEach(b=>b.onclick=
    così tutta l'app resta allineata. Le istruzioni per collegare il Calendario dell'iPad stanno dietro un pulsante. */
 const CV=[["giorno","Giorno"],["sett","Settimana"],["mese","Mese"],["anno","Anno"]];
 let calV=(()=>{try{const v=localStorage.getItem("pn-calv");return CV.some(x=>x[0]===v)?v:"mese";}catch(e){return "mese";}})();
-let calD=today(), calSel=today(), calLink=false, calAdd="", calOpenLav=false;
+let calD=today(), calSel=today(), calLink=false, calFixed=false, calAdd="", calOpenLav=false, calEdit=null;
 const setCalV=v=>{calV=v;try{localStorage.setItem("pn-calv",v);}catch(e){}};
 const MESI_L=["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novembre","dicembre"];
 const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
@@ -990,7 +994,8 @@ function dayData(s,V){
   if(HOL[s])it.push({ic:"🇮🇹",t:HOL[s],c:"hol",k:"hol"});
   scadOn(s).forEach(o=>it.push({ic:(CAT[o.x.cat]||CAT.altro)[0],t:o.x.t,c:o.proj?"scad proj":scadState(o.x)==="warn"?"scad warn":"scad",k:"scad",id:o.x.id,proj:o.proj,sub:RIC[o.x.ric]&&o.x.ric!=="no"?RIC[o.x.ric]:""}));
   try{C().ric.forEach(r=>{if(ricDates(r,s,s).length)it.push({ic:r.tipo==="e"?"💰":"💶",t:r.t,amt:(r.tipo==="e"?"+":"−")+euro(r.imp),c:"pay"+(r.tipo==="e"?" in":""),k:"pay",id:r.id});});}catch(e){}
-  famOn(s).forEach(a=>it.push({ic:"👨‍👧",t:(a.chi?a.chi+": ":"")+a.t,o:a.o||"",f:a.f||"",c:"fam",k:a.tipo==="att"?"att":"fev",id:a.id,sub:a.acc?"🚗 "+a.acc:""}));
+  famOn(s).forEach(a=>it.push({ic:"👨‍👧",t:(a.chi?a.chi+": ":"")+a.t,o:a.o||"",f:a.f||"",c:"fam",k:a.tipo==="att"?"att":"fev",id:a.id,sub:[a.tipo==="att"?(+a.ogni===2?"ogni 2 settimane":"ogni settimana"):"",a.acc?"🚗 "+a.acc:""].filter(Boolean).join(" · ")}));
+  if(typeof pratOn==="function")pratOn(s).forEach(x=>it.push({ic:"🗂️",t:x.passo.t,c:"prat",k:"prat",id:x.id,sub:x.t}));
   calOn(s).forEach(e=>it.push({ic:calIc(e),t:e.t,o:e.o||"",f:e.f||"",c:"ipad",k:"ipad",sub:[e.cal,e.loc].filter(Boolean).join(" · ")}));
   const dn=(P.dn||{})[s];
   it.sort((a,b)=>(a.o||"99")<(b.o||"99")?-1:(a.o||"99")>(b.o||"99")?1:0);
@@ -1011,13 +1016,14 @@ function calStep(n){const d=parse(calD);
 }
 function vCal(){
   if(calLink)return `<div class="btns" style="margin:0 0 6px"><button class="btn sm" data-ca="back">‹ Torna al calendario</button></div>`+vCalImport()+vCalExport();
+  if(calFixed)return calFixedView();
   const t=today();
   let o=`<div class="cal-head"><h1>📆 ${esc(calTitle())}</h1>
     <div class="cal-ctl"><div class="seg" role="tablist">${CV.map(([k,n])=>`<button role="tab" data-cv="${k}" class="${calV===k?"on":""}" aria-selected="${calV===k}">${n}</button>`).join("")}</div>
     <div class="cal-nav"><button class="btn sm" data-ca="prev" aria-label="Precedente">‹</button><button class="btn sm" data-ca="today">Oggi</button><button class="btn sm" data-ca="next" aria-label="Successivo">›</button></div></div></div>`;
   if(P.cal.wait)o+=`<div class="btns" style="margin:0 0 10px"><button class="btn pri" data-ca="paste">📥 Tocca qui per inserire gli eventi del Calendario</button></div>`;
   o+=calV==="giorno"?calDayView(calD):calV==="sett"?calWeekView():calV==="anno"?calYearView():calMonthView();
-  o+=`<div class="card cal-foot"><div class="btns" style="margin:0"><button class="btn sm" data-ca="run">🔄 Aggiorna dal Calendario dell’iPad</button><button class="btn sm" data-ca="paste">📥 Incolla dagli appunti</button><button class="btn sm" data-ca="link">ℹ️ Collega il Calendario dell’iPad</button></div>
+  o+=`<div class="card cal-foot"><div class="btns" style="margin:0"><button class="btn sm" data-ca="run">🔄 Aggiorna dal Calendario dell’iPad</button><button class="btn sm" data-ca="paste">📥 Incolla dagli appunti</button><button class="btn sm" data-ca="fixed">👨‍👧 Attività fisse</button><button class="btn sm" data-ca="link">ℹ️ Collega il Calendario dell’iPad</button></div>
     ${P.cal.at?`<p class="lbl" style="margin:8px 0 0">Eventi dell’iPad aggiornati ${rel(P.cal.at.slice(0,10))} alle ${new Date(P.cal.at).toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"})}</p>`:""}</div>`;
   return o;
 }
@@ -1066,13 +1072,19 @@ function dayEditor(s,compact){
   // elenco
   const it=D.it;
   o+=it.length?it.map(x=>`<div class="row"><span class="pill cc ${x.c}">${x.o?esc(x.o)+(x.f?"–"+esc(x.f):""):x.ic}</span><div class="grow"><b>${x.o?x.ic+" ":""}${esc(x.t)}</b>${x.sub||x.proj?`<small>${esc([x.sub,x.proj?"prossima volta (si ripete)":""].filter(Boolean).join(" · "))}</small>`:""}</div>${x.amt?`<span class="amt ${/in/.test(x.c)?"e":"u"}">${x.amt}</span>`:""}
-    ${x.k==="scad"&&!x.proj?`<button class="chk" data-done="${x.id}" aria-label="Segna fatto">✓</button>`:""}${x.k==="fev"?`<button class="btn sm" data-cdel="fev:${x.id}" aria-label="Togli">×</button>`:""}${x.k==="pay"?`<button class="lnk" data-go="conti">Conti ›</button>`:""}${x.k==="att"?`<button class="lnk" data-go="fam">Famiglia ›</button>`:""}</div>`).join(""):`<p class="empty">Niente in programma.</p>`;
+    ${x.k==="scad"&&!x.proj?`<button class="chk" data-done="${x.id}" aria-label="Segna fatto">✓</button>`:""}${x.k==="fev"||x.k==="att"?`<button class="btn sm" data-ca="fedit:${x.k}:${x.id}">Modifica</button>`:""}${x.k==="pay"?`<button class="lnk" data-go="conti">Conti ›</button>`:""}${x.k==="prat"?`<button class="lnk" data-psel="${x.id}">Pratica ›</button>`:""}</div>`).join(""):`<p class="empty">Niente in programma.</p>`;
   if(D.dn)o+=`<div class="row"><span class="pill">📝</span><div class="grow">${esc(D.dn)}</div><button class="btn sm" data-ca="add:nota">Modifica</button></div>`;
   // aggiungi
   o+=`<div class="addbar">${[["scad","📌 Scadenza"],["pay","💶 Pagamento"],["fam","👨‍👧 Impegno"],["nota","📝 Nota"]].map(([k,n])=>`<button class="btn sm${calAdd===k?" pri":""}" data-ca="add:${k}">${n}</button>`).join("")}</div>`;
   if(calAdd==="scad")o+=`<div class="form addf"><label class="wide">Che cosa<input id="caT" maxlength="120" placeholder="es. revisione auto, rinnovo documento"></label><label>Categoria<select id="caC">${Object.entries(CAT).map(([k,v])=>`<option value="${k}">${v[0]} ${v[1]}</option>`).join("")}</select></label><label>Si ripete<select id="caR">${Object.entries(RIC).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select></label><label>Avvisami<select id="caA">${[[0,"il giorno stesso"],[1,"1 giorno prima"],[3,"3 giorni prima"],[7,"1 settimana prima"],[14,"2 settimane prima"],[30,"1 mese prima"]].map(([k,v])=>`<option value="${k}"${k===7?" selected":""}>${v}</option>`).join("")}</select></label><div class="btns wide"><button class="btn pri" data-ca="save:scad">Aggiungi la scadenza</button></div></div>`;
   if(calAdd==="pay")o+=`<div class="form addf"><label>Voce<input id="caT" maxlength="60" placeholder="es. bollo, rata, affitto"></label><label>Importo €<input id="caI" inputmode="decimal" placeholder="0,00"></label><label>Tipo<select id="caTp"><option value="u">uscita</option><option value="e">entrata</option></select></label><label>Si ripete<select id="caF"><option value="1">una volta</option>${Object.entries(FREQ).map(([k,v])=>`<option value="${k}">${v[0]}</option>`).join("")}</select></label><label>Ultima data (facoltativa)<input id="caE" type="date"></label><div class="btns wide"><button class="btn pri" data-ca="save:pay">Aggiungi il pagamento</button></div></div>`;
-  if(calAdd==="fam")o+=`<div class="form addf"><label class="wide">Che cosa<input id="caT" maxlength="80" placeholder="es. colloquio con le maestre, gara, festa"></label><label>Dalle (facoltativo)<input id="caO" type="time"></label><label>Alle<input id="caF2" type="time"></label><div class="btns wide"><button class="btn pri" data-ca="save:fam">Aggiungi l’impegno</button></div></div>`;
+  if(calAdd==="fam"){const E=calEdit?(calEdit.k==="att"?P.fam.att:P.fam.ev).find(a=>a.id===calEdit.id):null,att=calEdit&&calEdit.k==="att",rip=att?String(+E.ogni===2?2:1):"0";
+    o+=`<div class="form addf"><label class="wide">Che cosa<input id="caT" maxlength="80" value="${esc(E?E.t:"")}" placeholder="es. pattinaggio, colloquio con le maestre, gara"></label>
+      <label>Chi<input id="caC2" list="chiL2" maxlength="40" value="${esc(E&&E.chi||"")}" placeholder="facoltativo"><datalist id="chiL2">${chiList().map(c=>`<option value="${esc(c)}">`).join("")}</datalist></label>
+      <label>Dalle<input id="caO" type="time" value="${esc(E&&E.o||"")}"></label><label>Alle<input id="caF2" type="time" value="${esc(E&&E.f||"")}"></label>
+      <label>Si ripete<select id="caRp"${E&&!att?" disabled":""}>${att?"":`<option value="0"${rip==="0"?" selected":""}>una volta</option>`}<option value="1"${rip==="1"?" selected":""}>ogni settimana</option><option value="2"${rip==="2"?" selected":""}>ogni 2 settimane</option></select></label>
+      <label>Fino al (se si ripete)<input id="caFi" type="date" value="${esc(E&&E.fino||"")}"></label><label>Chi accompagna<input id="caAc" maxlength="40" value="${esc(E&&E.acc||"")}" placeholder="facoltativo"></label>
+      <div class="btns wide"><button class="btn pri" data-ca="save:fam">${E?"Salva le modifiche":"Aggiungi l’impegno"}</button>${E?`<button class="btn" data-ca="fcancel">Annulla</button>`:""}${att?`<button class="btn" data-ca="fskip">Togli solo questo giorno</button>`:""}${E?`<button class="btn danger" data-ca="fdel">${att?"Togli sempre":"Togli"}</button>`:""}</div></div>`;}
   if(calAdd==="nota")o+=`<div class="form addf"><label class="wide">Nota del giorno<textarea id="caN" rows="2" maxlength="300">${esc(D.dn||"")}</textarea></label><div class="btns wide"><button class="btn pri" data-ca="save:nota">Salva la nota</button>${D.dn?'<button class="btn danger" data-ca="save:notadel">Togli</button>':""}</div></div>`;
   // benessere
   if(s<=t){const tm=D.tc.filter(x=>x.s==="mattina").length,tp=D.tc.filter(x=>x.s==="pomeriggio").length;
@@ -1092,8 +1104,9 @@ function calDayView(s){
 /* ---- azioni ---- */
 function bindCal(){
   const R=()=>render();
+  if(calFixed)bindFixed();
   document.querySelectorAll("[data-cv]").forEach(b=>b.onclick=()=>{setCalV(b.dataset.cv);if(calV==="giorno")calD=calSel;R();});
-  document.querySelectorAll("[data-cd]").forEach(b=>b.onclick=()=>{calSel=b.dataset.cd;calAdd="";calOpenLav=false;R();
+  document.querySelectorAll("[data-cd]").forEach(b=>b.onclick=()=>{calSel=b.dataset.cd;calAdd="";calEdit=null;calOpenLav=false;R();
     if(!matchMedia("(min-width:1100px)").matches){const p=document.querySelector(".cal-side");if(p)p.scrollIntoView({behavior:"smooth",block:"start"});}});
   document.querySelectorAll("[data-cday]").forEach(b=>b.onclick=e=>{e.stopPropagation();calSel=calD=b.dataset.cday;setCalV("giorno");calAdd="";calOpenLav=false;R();window.scrollTo(0,0);});
   document.querySelectorAll("[data-cmon]").forEach(b=>b.onclick=()=>{calD=b.dataset.cmon;setCalV("mese");R();});
@@ -1105,11 +1118,20 @@ function bindCal(){
     if(a==="run")return runShortcut();
     if(a==="paste")return pasteCal();
     if(a==="lav"){calOpenLav=!calOpenLav;return R();}
-    if(a.startsWith("add:")){const k=a.slice(4);calAdd=calAdd===k?"":k;R();const f=document.getElementById("caT")||document.getElementById("caN");if(f)f.focus();return;}
+    if(a.startsWith("add:")){const k=a.slice(4);calEdit=null;calAdd=calAdd===k?"":k;R();const f=document.getElementById("caT")||document.getElementById("caN");if(f)f.focus();return;}
     if(a==="save:scad"){const t=$("caT").value.trim();if(!t)return toast("Scrivi che cosa");P.scad.push({id:uid(),t,d:s,cat:$("caC").value,ric:$("caR").value,av:+$("caA").value,note:"",done:false});calAdd="";save();R();return toast("📌 Scadenza aggiunta");}
     if(a==="save:pay"){const t=$("caT").value.trim(),i=parseFloat(String($("caI").value).replace(/\./g,"").replace(",","."));if(!t||!(i>0))return toast("Scrivi voce e importo");
       const f=$("caF").value,one=f==="1";C().ric.push({id:uid(),t,imp:Math.round(i*100)/100,tipo:$("caTp").value,kind:"",freq:one?"m":f,d0:s,fine:one?s:($("caE").value||""),cat:"altro"});calAdd="";save();R();return toast("💶 Pagamento aggiunto in Conti");}
-    if(a==="save:fam"){const t=$("caT").value.trim();if(!t)return toast("Scrivi che cosa");P.fam.ev.push({id:uid(),t,d:s,o:$("caO").value,f:$("caF2").value});calAdd="";save();R();return toast("👨‍👧 Impegno aggiunto in Famiglia");}
+    if(a==="save:fam"){const t=$("caT").value.trim();if(!t)return toast("Scrivi che cosa");const o={t,chi:$("caC2").value.trim(),o:$("caO").value,f:$("caF2").value,acc:$("caAc").value.trim()},rp=$("caRp").value,fi=$("caFi").value;
+      if(calEdit){const L=calEdit.k==="att"?P.fam.att:P.fam.ev,E=L.find(x=>x.id===calEdit.id);if(E){Object.assign(E,o);if(calEdit.k==="att"){E.ogni=rp==="2"?2:1;E.fino=fi||"";}}calEdit=null;calAdd="";save();R();return toast("Modificato");}
+      if(rp==="0")P.fam.ev.push(Object.assign({id:uid(),d:s},o));else P.fam.att.push(Object.assign({id:uid(),g:(parse(s).getDay()+6)%7+1,dal:s,ogni:rp==="2"?2:1,fino:fi||"",pause:[]},o));
+      calAdd="";save();R();return toast(rp==="0"?"👨‍👧 Impegno aggiunto":"👨‍👧 Attività fissa aggiunta");}
+    if(a.startsWith("fedit:")){const[,k,id]=a.split(":");calEdit={k,id};calAdd="fam";return R();}
+    if(a==="fcancel"){calEdit=null;calAdd="";return R();}
+    if(a==="fskip"&&calEdit){const E=P.fam.att.find(x=>x.id===calEdit.id);if(E){(E.pause=E.pause||[]).push({da:s,a:s});}calEdit=null;calAdd="";save();R();return toast("Tolta solo per questo giorno");}
+    if(a==="fdel"&&calEdit){if(!confirm(calEdit.k==="att"?"Togliere questa attività da tutte le settimane?":"Togliere questo impegno?"))return;if(calEdit.k==="att")P.fam.att=P.fam.att.filter(x=>x.id!==calEdit.id);else P.fam.ev=P.fam.ev.filter(x=>x.id!==calEdit.id);calEdit=null;calAdd="";save();R();return toast("Tolto");}
+    if(a==="fixed"){calFixed=true;R();return window.scrollTo(0,0);}
+    if(a==="fixback"){calFixed=false;return R();}
     if(a==="save:nota"||a==="save:notadel"){P.dn=P.dn||{};const v=a==="save:notadel"?"":$("caN").value.trim();if(v)P.dn[s]=v;else delete P.dn[s];calAdd="";save();R();return toast(v?"📝 Nota salvata":"Nota tolta");}
   });
   document.querySelectorAll("[data-lc]").forEach(b=>b.onclick=()=>{const s=calV==="giorno"?calD:calSel;if(licSetCode(s,b.dataset.lc)){toast("Licenze aggiornate");R();}});
@@ -1123,9 +1145,121 @@ function bindCal(){
   document.querySelectorAll("[data-cdel]").forEach(b=>b.onclick=()=>{const[tp,id]=b.dataset.cdel.split(":");if(tp==="fev"){if(!confirm("Togliere questo impegno?"))return;P.fam.ev=P.fam.ev.filter(a=>a.id!==id);save();R();}});
 }
 
+/* ---- 👨‍👧 attività fisse della famiglia: elenco, pausa, fine, togli ---- */
+function calFixedView(){const L=P.fam.att.slice().sort((a,b)=>(+a.g-+b.g)||((a.o||"")<(b.o||"")?-1:1)),t=today();
+  let o=`<div class="btns" style="margin:0 0 6px"><button class="btn sm" data-ca="fixback">‹ Torna al calendario</button></div><h1>👨‍👧 Attività fisse</h1><p class="sub">Le attività che si ripetono ogni settimana. Per aggiungerne una: nel Calendario tocca il primo giorno → «👨‍👧 Impegno» → «Si ripete».</p>`;
+  if(!L.length)return o+`<div class="card"><p class="empty">Nessuna attività fissa.</p></div>`;
+  o+=`<div class="card">${L.map(a=>{const ps=(a.pause||[]).filter(p=>(p.a||p.da)>=t),ended=a.fino&&a.fino<t;
+    return `<div class="fx"><div class="row" style="border:0;padding:0"><span class="pill fam">${GIORNI[a.g-1].slice(0,3)} ${esc(a.o||"")}${a.f?"–"+esc(a.f):""}</span><div class="grow"><b>${esc(a.chi?a.chi+": ":"")}${esc(a.t)}</b><small>${+a.ogni===2?"ogni 2 settimane":"ogni settimana"}${a.dal?" dal "+fmt(a.dal,{day:"numeric",month:"short"}):""}${a.fino?(ended?" · finita il ":" · fino al ")+fmt(a.fino,{day:"numeric",month:"short",year:"numeric"}):""}${a.acc?" · 🚗 "+esc(a.acc):""}</small>
+      ${ps.length?`<small>⏸️ in pausa: ${ps.map((p,i)=>`${fmt(p.da,{day:"numeric",month:"short"})}${p.a&&p.a!==p.da?" → "+fmt(p.a,{day:"numeric",month:"short"}):""} <button class="lnk" data-fxp="${a.id}:${(a.pause||[]).indexOf(p)}">togli</button>`).join(" · ")}</small>`:""}</div></div>
+      <div class="form" style="margin-top:6px"><label>Pausa dal<input type="date" data-fxa="${a.id}"></label><label>al<input type="date" data-fxb="${a.id}"></label><div class="btns"><button class="btn sm" data-fx="pause:${a.id}">⏸️ Metti in pausa</button><button class="btn sm" data-fx="end:${a.id}">Finisce oggi</button><button class="btn sm danger" data-fx="del:${a.id}">Togli</button></div></div></div>`;}).join("")}</div>`;
+  return o;}
+function bindFixed(){
+  document.querySelectorAll("[data-fx]").forEach(b=>b.onclick=()=>{const[k,id]=b.dataset.fx.split(":"),a=P.fam.att.find(x=>x.id===id);if(!a)return;
+    if(k==="pause"){const da=document.querySelector(`[data-fxa="${id}"]`).value,al=document.querySelector(`[data-fxb="${id}"]`).value||da;if(!da)return toast("Scegli il primo giorno di pausa");(a.pause=a.pause||[]).push({da,a:al<da?da:al});save();render();return toast("⏸️ In pausa");}
+    if(k==="end"){a.fino=today();save();render();return toast("Finisce oggi");}
+    if(k==="del"){if(!confirm("Togliere «"+a.t+"» da tutte le settimane?"))return;P.fam.att=P.fam.att.filter(x=>x.id!==id);save();render();return toast("Tolta");}});
+  document.querySelectorAll("[data-fxp]").forEach(b=>b.onclick=()=>{const[id,i]=b.dataset.fxp.split(":"),a=P.fam.att.find(x=>x.id===id);if(a&&a.pause){a.pause.splice(+i,1);save();render();}});
+}
+
+/* ---------- 🗂️ PRATICHE: le cose lunghe in corso ----------
+   Per ogni pratica: stato, prossimo passo con data (compare nel Calendario e nelle Scadenze), documenti da spuntare,
+   uffici e contatti, diario delle cose fatte, file allegati e note. Tutto resta su questo dispositivo (pn-v1);
+   i file allegati stanno nel database del dispositivo («licenze-marco», chiavi «pf-…») e non entrano nella copia su iCloud. */
+const PRAT_ST={corso:["In corso","soon"],attesa:["In attesa di risposta","fam"],chiusa:["Chiusa","ok"]};
+const PRAT_MOD={
+  congedo:["🎖️","Congedo / pensione",["Domanda e ricevuta di invio","Documenti richiesti dall’ufficio","Comunicazioni ricevute","Prospetto economico"]],
+  auto:["🚗","Auto",["Contratto in corso","Proposta di riscatto","Preventivo di un nuovo contratto","Verbale di riconsegna","Libretto e assicurazione"]],
+  casa:["🏠","Casa in affitto",["Contratto di locazione","Registrazione del contratto","Ricevute dei canoni","Foto e inventario della casa","Documento dell’inquilino"]],
+  legale:["⚖️","Pratica legale o amministrativa",["Atto o comunicazione ricevuta","Risposta inviata (con ricevuta)","Documenti a supporto","Termini da rispettare"]],
+  altro:["📁","Altro",[]]};
+let pratSel=null, pratNew=false, pratEditPasso=false;
+const PR=()=>{if(!Array.isArray(P.prat))P.prat=[];return P.prat;};
+const pratById=id=>PR().find(x=>x.id===id);
+const pratIc=x=>(PRAT_MOD[x.mod]||PRAT_MOD.altro)[0];
+function pratOn(s){return PR().filter(x=>x.stato!=="chiusa"&&x.passo&&x.passo.d===s);}
+function pratDue(days){const t=today();return PR().filter(x=>x.stato!=="chiusa"&&x.passo&&x.passo.d&&diff(t,x.passo.d)<=days).sort((a,b)=>a.passo.d<b.passo.d?-1:1);}
+function pratRow(x){const p=x.passo,st=PRAT_ST[x.stato]||PRAT_ST.corso,dn=(x.docs||[]).filter(d=>d.ok).length,dt=(x.docs||[]).length;
+  const late=p&&p.d&&p.d<today()&&x.stato!=="chiusa";
+  return `<button class="prow" data-psel="${x.id}"><span class="pic">${pratIc(x)}</span><span class="grow"><b>${esc(x.t)}</b><small>${p&&p.t?`➡️ ${esc(p.t)}${p.d?" · "+fmt(p.d,{weekday:"short",day:"numeric",month:"short"})+" ("+rel(p.d)+")":""}`:"Nessun prossimo passo"}${dt?` · 📄 ${dn}/${dt}`:""}</small></span><span class="pill ${late?"warn":st[1]}">${late?"in ritardo":st[0]}</span></button>`;}
+function vPrat(){
+  if(pratSel&&pratById(pratSel))return pratDetail(pratById(pratSel));
+  const L=PR(),open=L.filter(x=>x.stato!=="chiusa").sort((a,b)=>((a.passo&&a.passo.d)||"9")<((b.passo&&b.passo.d)||"9")?-1:1),closed=L.filter(x=>x.stato==="chiusa");
+  let o=`<h1>🗂️ Pratiche</h1><p class="sub">Le cose lunghe in corso: a che punto sono, qual è il prossimo passo, che cosa manca. Il prossimo passo compare da solo nel Calendario e nelle Scadenze.</p>`;
+  o+=`<div class="btns" style="margin:0 0 12px"><button class="btn pri" data-pa="new">➕ Nuova pratica</button></div>`;
+  if(pratNew)o+=`<div class="card"><h3>➕ Nuova pratica</h3><div class="form"><label class="wide">Nome<input id="pnT" maxlength="80" placeholder="es. noleggio auto, affitto appartamento, domanda di congedo"></label>
+    <label>Tipo<select id="pnM">${Object.entries(PRAT_MOD).map(([k,v])=>`<option value="${k}">${v[0]} ${v[1]}</option>`).join("")}</select></label>
+    <label>Prossimo passo (facoltativo)<input id="pnP" maxlength="120" placeholder="es. chiedere il preventivo"></label><label>Entro il<input id="pnD" type="date"></label></div>
+    <p class="lbl">Il tipo propone l’elenco dei documenti più comuni: lo puoi cambiare come vuoi.</p>
+    <div class="btns"><button class="btn pri" data-pa="create">Crea</button><button class="btn" data-pa="cancel">Annulla</button></div></div>`;
+  o+=open.length?`<div class="card plist">${open.map(pratRow).join("")}</div>`:(pratNew?"":`<div class="card"><p class="empty">Nessuna pratica aperta. Creane una con «➕ Nuova pratica».</p></div>`);
+  if(closed.length)o+=`<details class="more"><summary>Chiuse (${closed.length})</summary><div class="card plist">${closed.map(pratRow).join("")}</div></details>`;
+  return o;
+}
+function pratDetail(x){
+  const p=x.passo||{},st=x.stato||"corso",docs=x.docs||[],cont=x.cont||[],log=(x.log||[]).slice().sort((a,b)=>a.d<b.d?1:-1),files=x.files||[];
+  return `<div class="btns" style="margin:0 0 6px"><button class="btn sm" data-pa="back">‹ Tutte le pratiche</button></div>
+  <h1>${pratIc(x)} ${esc(x.t)}</h1>
+  <div class="card"><div class="form"><label class="wide">Nome<input data-pf="t" maxlength="80" value="${esc(x.t)}"></label>
+    <label>Stato<select data-pf="stato">${Object.entries(PRAT_ST).map(([k,v])=>`<option value="${k}"${st===k?" selected":""}>${v[0]}</option>`).join("")}</select></label>
+    <label>Tipo<select data-pf="mod">${Object.entries(PRAT_MOD).map(([k,v])=>`<option value="${k}"${(x.mod||"altro")===k?" selected":""}>${v[0]} ${v[1]}</option>`).join("")}</select></label></div></div>
+  <div class="card"><h3>➡️ Prossimo passo</h3>${p.t&&!pratEditPasso?`<div class="row"><div class="grow"><b>${esc(p.t)}</b><small>${p.d?fmt(p.d,{weekday:"long",day:"numeric",month:"long",year:"numeric"})+" · "+rel(p.d):"senza data"}</small></div><button class="btn ok sm" data-pa="passodone">✓ Fatto</button><button class="btn sm" data-pa="passoedit">Modifica</button></div>`
+    :`<div class="form"><label class="wide">Che cosa<input id="ppT" maxlength="120" value="${esc(p.t||"")}" placeholder="es. telefonare all’ufficio, mandare la PEC"></label><label>Entro il<input id="ppD" type="date" value="${esc(p.d||"")}"></label></div><div class="btns"><button class="btn pri" data-pa="passosave">Salva</button>${p.t?'<button class="btn" data-pa="passocancel">Annulla</button>':""}</div>`}
+    <p class="lbl" style="margin:8px 0 0">Quando lo segni fatto, finisce nel diario qui sotto e puoi scrivere il passo successivo.</p></div>
+  <div class="card"><h3>📄 Documenti <span class="lbl">${docs.filter(d=>d.ok).length}/${docs.length}</span></h3>${docs.map((d,i)=>`<div class="row"><button class="chk${d.ok?" done":""}" data-pdoc="${i}" aria-label="Segna">✓</button><div class="grow${d.ok?" lbl":""}">${esc(d.t)}</div><button class="btn sm" data-pdocx="${i}" aria-label="Togli">×</button></div>`).join("")}
+    <div class="btns"><input id="pdT" maxlength="100" placeholder="Aggiungi un documento" class="pin"><button class="btn sm" data-pa="docadd">Aggiungi</button></div></div>
+  <div class="card"><h3>☎️ Uffici e contatti</h3>${cont.map((c,i)=>`<div class="row"><div class="grow"><b>${esc(c.n)}</b><small>${[c.tel?`<a href="tel:${esc(c.tel.replace(/[^\d+]/g,""))}">${esc(c.tel)}</a>`:"",c.mail?`<a href="mailto:${esc(c.mail)}">${esc(c.mail)}</a>`:"",esc(c.note||"")].filter(Boolean).join(" · ")}</small></div><button class="btn sm" data-pcx="${i}" aria-label="Togli">×</button></div>`).join("")}
+    <div class="form" style="margin-top:6px"><label>Ufficio o persona<input id="pcN" maxlength="80"></label><label>Telefono<input id="pcT" inputmode="tel" maxlength="30"></label><label>Email o PEC<input id="pcM" inputmode="email" maxlength="80"></label><label>Nota<input id="pcO" maxlength="100" placeholder="orari, numero di pratica…"></label></div>
+    <div class="btns"><button class="btn sm" data-pa="contadd">Aggiungi il contatto</button></div></div>
+  <div class="card"><h3>📝 Diario</h3><div class="form"><label>Data<input id="plD" type="date" value="${today()}"></label><label class="wide">Che cosa è successo<input id="plT" maxlength="300" placeholder="es. inviata la PEC, mi hanno risposto, appuntamento fissato"></label></div>
+    <div class="btns"><button class="btn sm pri" data-pa="logadd">Aggiungi al diario</button></div>
+    ${log.map(l=>`<div class="row"><span class="pill">${fmt(l.d,{day:"numeric",month:"short",year:"2-digit"})}</span><div class="grow">${esc(l.t)}</div><button class="btn sm" data-plx="${esc(l.id||"")}" aria-label="Togli">×</button></div>`).join("")}</div>
+  <div class="card"><h3>📎 File</h3>${files.map(f=>`<div class="row"><span class="pill">${/pdf/.test(f.type)?"PDF":/image/.test(f.type)?"🖼️":"📄"}</span><div class="grow"><b>${esc(f.n)}</b><small>${Math.max(1,Math.round(f.size/1024))} KB · ${fmt(f.at.slice(0,10),{day:"numeric",month:"short"})}</small></div><button class="btn sm" data-pfo="${f.id}">Apri</button><button class="btn sm" data-pfx="${f.id}" aria-label="Togli">×</button></div>`).join("")}
+    <div class="btns"><label class="btn sm" style="cursor:pointer">➕ Aggiungi foto o PDF<input type="file" id="pfIn" accept="image/*,application/pdf" hidden></label></div>
+    <p class="lbl" style="margin:8px 0 0">I file restano solo su questo iPad (massimo 10 MB l’uno) e non entrano nella copia su File/iCloud: tieni anche l’originale.</p></div>
+  <div class="card"><h3>🗒️ Note</h3><div class="form"><label class="wide"><textarea data-pf="note" rows="3" maxlength="2000" placeholder="numero di pratica, cose da ricordare…">${esc(x.note||"")}</textarea></label></div></div>
+  <div class="btns"><button class="btn danger" data-pa="del">Elimina la pratica</button></div>`;
+}
+function pratSave(msg){save();render();if(msg)toast(msg);}
+function bindPrat(){
+  document.querySelectorAll("[data-psel]").forEach(b=>b.onclick=()=>{pratSel=b.dataset.psel;pratEditPasso=false;render();window.scrollTo(0,0);});
+  const x=pratSel&&pratById(pratSel);
+  document.querySelectorAll("[data-pa]").forEach(b=>b.onclick=async()=>{const a=b.dataset.pa;
+    if(a==="new"){pratNew=!pratNew;render();const f=$("pnT");if(f)f.focus();return;}
+    if(a==="cancel"){pratNew=false;return render();}
+    if(a==="create"){const t=$("pnT").value.trim();if(!t)return toast("Scrivi il nome della pratica");const m=$("pnM").value,pt=$("pnP").value.trim(),pd=$("pnD").value;
+      const o={id:uid(),t,mod:m,stato:"corso",passo:pt?{t:pt,d:pd}:null,docs:(PRAT_MOD[m]||PRAT_MOD.altro)[2].map(t=>({t,ok:false})),cont:[],log:[{id:uid(),d:today(),t:"Pratica aperta"}],files:[],note:"",creata:today()};
+      PR().push(o);pratNew=false;pratSel=o.id;window.scrollTo(0,0);return pratSave("Pratica creata");}
+    if(a==="back"){pratSel=null;return render();}
+    if(!x)return;
+    if(a==="passoedit"){pratEditPasso=true;return render();}
+    if(a==="passocancel"){pratEditPasso=false;return render();}
+    if(a==="passosave"){const t=$("ppT").value.trim(),d=$("ppD").value;x.passo=t?{t,d}:null;pratEditPasso=false;return pratSave(t?"Prossimo passo salvato":"");}
+    if(a==="passodone"){if(x.passo){(x.log=x.log||[]).push({id:uid(),d:today(),t:"✓ "+x.passo.t});x.passo=null;}pratEditPasso=true;return pratSave("Fatto: scrivi il passo successivo");}
+    if(a==="docadd"){const t=$("pdT").value.trim();if(!t)return;(x.docs=x.docs||[]).push({t,ok:false});return pratSave();}
+    if(a==="contadd"){const n=$("pcN").value.trim();if(!n)return toast("Scrivi l’ufficio o la persona");(x.cont=x.cont||[]).push({n,tel:$("pcT").value.trim(),mail:$("pcM").value.trim(),note:$("pcO").value.trim()});return pratSave("Contatto aggiunto");}
+    if(a==="logadd"){const t=$("plT").value.trim();if(!t)return;(x.log=x.log||[]).push({id:uid(),d:$("plD").value||today(),t});return pratSave("Aggiunto al diario");}
+    if(a==="del"){if(!confirm("Eliminare la pratica «"+x.t+"» con documenti, contatti, diario e file?"))return;(x.files||[]).forEach(f=>kv("readwrite","pf-"+f.id,undefined).catch(()=>{}));P.prat=PR().filter(y=>y.id!==x.id);pratSel=null;return pratSave("Pratica eliminata");}
+  });
+  if(!x)return;
+  document.querySelectorAll("[data-pf]").forEach(el=>el.onchange=()=>{const k=el.dataset.pf,v=el.value.trim();if(k==="t"&&!v)return;x[k]=v;if(k==="stato"&&v==="chiusa")(x.log=x.log||[]).push({id:uid(),d:today(),t:"Pratica chiusa"});pratSave(k==="note"?"Note salvate":"");});
+  document.querySelectorAll("[data-pdoc]").forEach(b=>b.onclick=()=>{const d=x.docs[+b.dataset.pdoc];d.ok=!d.ok;pratSave();});
+  document.querySelectorAll("[data-pdocx]").forEach(b=>b.onclick=()=>{x.docs.splice(+b.dataset.pdocx,1);pratSave();});
+  document.querySelectorAll("[data-pcx]").forEach(b=>b.onclick=()=>{if(!confirm("Togliere questo contatto?"))return;x.cont.splice(+b.dataset.pcx,1);pratSave();});
+  document.querySelectorAll("[data-plx]").forEach(b=>b.onclick=()=>{if(!confirm("Togliere questa riga del diario?"))return;x.log=(x.log||[]).filter(l=>(l.id||"")!==b.dataset.plx);pratSave();});
+  const fin=$("pfIn");if(fin)fin.onchange=async()=>{const f=fin.files&&fin.files[0];fin.value="";if(!f)return;if(f.size>10*1024*1024)return toast("File troppo grande (massimo 10 MB)");
+    const id=uid();try{await kv("readwrite","pf-"+id,f);}catch(e){return toast("Non riesco a salvare il file su questo iPad");}
+    (x.files=x.files||[]).push({id,n:f.name||"file",type:f.type||"",size:f.size,at:new Date().toISOString()});pratSave("File aggiunto");};
+  document.querySelectorAll("[data-pfo]").forEach(b=>b.onclick=async()=>{try{const blob=await kv("readonly","pf-"+b.dataset.pfo);if(!blob)return toast("File non trovato su questo iPad");const u=URL.createObjectURL(blob);window.open(u,"_blank")||(location.href=u);setTimeout(()=>URL.revokeObjectURL(u),60000);}catch(e){toast("Non riesco ad aprire il file");}});
+  document.querySelectorAll("[data-pfx]").forEach(b=>b.onclick=()=>{if(!confirm("Togliere questo file?"))return;kv("readwrite","pf-"+b.dataset.pfx,undefined).catch(()=>{});x.files=(x.files||[]).filter(f=>f.id!==b.dataset.pfx);pratSave();});
+}
+
 /* ---------- famiglia ---------- */
 const chiList=()=>[...new Set(P.fam.att.map(a=>a.chi).filter(Boolean))];
-function famOn(s){const g=(parse(s).getDay()+6)%7+1;return P.fam.att.filter(a=>+a.g===g).map(a=>Object.assign({tipo:"att"},a)).concat(P.fam.ev.filter(e=>e.d===s).map(e=>Object.assign({tipo:"ev"},e))).sort((a,b)=>(a.o||"")<(b.o||"")?-1:1);}
+/* attività fisse: ogni settimana o ogni 2 settimane (da «dal»), fino a «fino», con periodi di pausa; impegni di un giorno */
+function attOn(a,s){const g=(parse(s).getDay()+6)%7+1;if(+a.g!==g)return false;if(a.dal&&s<a.dal)return false;if(a.fino&&s>a.fino)return false;
+  if((a.pause||[]).some(p=>s>=p.da&&s<=(p.a||p.da)))return false;if(+a.ogni===2&&a.dal&&Math.round(diff(monday(a.dal),monday(s))/7)%2)return false;return true;}
+function famOn(s){return P.fam.att.filter(a=>attOn(a,s)).map(a=>Object.assign({tipo:"att"},a)).concat(P.fam.ev.filter(e=>e.d===s).map(e=>Object.assign({tipo:"ev"},e))).sort((a,b)=>(a.o||"")<(b.o||"")?-1:1);}
 
 /* ---------- benessere ---------- */
 const UMORE=["😣","😕","😐","🙂","😄"];
@@ -1199,9 +1333,11 @@ function icsItems(opt){
     if(x.note)l.push("DESCRIPTION:"+icsEsc(x.note));if(x.ric==="m")l.push("RRULE:FREQ=MONTHLY");if(x.ric==="a")l.push("RRULE:FREQ=YEARLY");items.push({uid:"scad-"+x.id,lines:l.concat(alarm(x.av))});});
   if(opt.pay)P.conti.ric.filter(r=>r.tipo!=="e").forEach(r=>{const d=ricDates(r,t,horizon)[0];if(!d)return;const step=(FREQ[r.freq]||FREQ.m)[1];
     items.push({uid:"pay-"+r.id,lines:["DTSTART;VALUE=DATE:"+dval(d),"DTEND;VALUE=DATE:"+dval(add(d,1)),"SUMMARY:"+icsEsc("💶 "+r.t),"RRULE:FREQ=MONTHLY;INTERVAL="+step+(r.fine?";UNTIL="+dval(r.fine):""),...alarm(2)]});});
-  if(opt.fam){const BY=["MO","TU","WE","TH","FR","SA","SU"];P.fam.att.forEach(a=>{let d=t;while(((parse(d).getDay()+6)%7+1)!==+a.g)d=add(d,1);
-      const tm=x=>(x||"00:00").replace(":","")+"00";items.push({uid:"fam-"+a.id,lines:["DTSTART:"+dval(d)+"T"+tm(a.o||"16:00"),"DTEND:"+dval(d)+"T"+tm(a.f||a.o||"17:00"),"SUMMARY:"+icsEsc("👨‍👧 "+(a.chi?a.chi+": ":"")+a.t),"RRULE:FREQ=WEEKLY;BYDAY="+BY[a.g-1],...(a.acc?["DESCRIPTION:"+icsEsc("Accompagna: "+a.acc)]:[])]});});
+  if(opt.fam){const BY=["MO","TU","WE","TH","FR","SA","SU"];P.fam.att.forEach(a=>{if(a.fino&&a.fino<t)return;let d=a.dal&&a.dal>t?a.dal:t,g=0;while(!attOn(a,d)&&g++<30)d=add(d,1);if(!attOn(a,d))return;
+      const tm=x=>(x||"00:00").replace(":","")+"00",ex=[];(a.pause||[]).forEach(p=>{for(let x=p.da;x<=(p.a||p.da)&&ex.length<120;x=add(x,1))if(((parse(x).getDay()+6)%7+1)===+a.g&&x>=d)ex.push(dval(x)+"T"+tm(a.o||"16:00"));});
+      items.push({uid:"fam-"+a.id,lines:["DTSTART:"+dval(d)+"T"+tm(a.o||"16:00"),"DTEND:"+dval(d)+"T"+tm(a.f||a.o||"17:00"),"SUMMARY:"+icsEsc("👨‍👧 "+(a.chi?a.chi+": ":"")+a.t),"RRULE:FREQ=WEEKLY;BYDAY="+BY[a.g-1]+(+a.ogni===2?";INTERVAL=2":"")+(a.fino?";UNTIL="+dval(a.fino)+"T235959":""),...(ex.length?["EXDATE:"+ex.join(",")]:[]),...(a.acc?["DESCRIPTION:"+icsEsc("Accompagna: "+a.acc)]:[])]});});
     P.fam.ev.filter(e=>e.d>=t).forEach(e=>{const tm=x=>(x||"00:00").replace(":","")+"00";items.push({uid:"fev-"+e.id,lines:e.o?["DTSTART:"+dval(e.d)+"T"+tm(e.o),"DTEND:"+dval(e.d)+"T"+tm(e.f||e.o),"SUMMARY:"+icsEsc("👨‍👧 "+e.t),...alarm(1)]:["DTSTART;VALUE=DATE:"+dval(e.d),"DTEND;VALUE=DATE:"+dval(add(e.d,1)),"SUMMARY:"+icsEsc("👨‍👧 "+e.t),...alarm(1)]});});}
+  if(opt.prat!==false&&typeof PR==="function")PR().filter(x=>x.stato!=="chiusa"&&x.passo&&x.passo.d&&x.passo.d>=t).forEach(x=>items.push({uid:"prat-"+x.id,lines:["DTSTART;VALUE=DATE:"+dval(x.passo.d),"DTEND;VALUE=DATE:"+dval(add(x.passo.d,1)),"SUMMARY:"+icsEsc("🗂️ "+x.passo.t+" («"+x.t+"»)"),...alarm(2)]}));
   items.forEach(i=>i.sig=i.lines.join("|"));
   return items;
 }
@@ -1209,13 +1345,13 @@ function icsText(items){const L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Pian
   items.forEach(i=>{L.push("BEGIN:VEVENT","UID:"+i.uid+"@pianificazione","DTSTAMP:"+ds,...i.lines,"END:VEVENT");});L.push("END:VCALENDAR");return L.map(fold).join("\r\n")+"\r\n";}
 
 /* ---------- interfaccia ---------- */
-const SECT=[["cal","📆","Calendario"],["scad","📌","Scadenze"],["fam","👨‍👧","Famiglia"],["conti","💶","Conti"],["ben","🧘","Benessere"],["sic","🔒","Blocco"]];
-let cur=(location.hash||"").slice(1)||"cal"; if(cur==="oggi"){cur="cal";calV="giorno";calD=calSel=today();} if(!SECT.some(x=>x[0]===cur))cur="cal";
-let famWeek=monday(today()), editId=null;
+const SECT=[["cal","📆","Calendario"],["scad","📌","Scadenze"],["prat","🗂️","Pratiche"],["conti","💶","Conti"],["ben","🧘","Benessere"],["sic","🔒","Blocco"]];
+let cur=(location.hash||"").slice(1)||"cal"; if(cur==="oggi"){cur="cal";calV="giorno";calD=calSel=today();} if(cur==="fam"){cur="cal";calV="sett";} if(!SECT.some(x=>x[0]===cur))cur="cal";
+let editId=null;
 function side(){const late=scadOpen().filter(x=>scadState(x)==="warn").length;
   $("side").innerHTML=SECT.map(([k,i,t])=>`<button data-s="${k}" class="${k===cur?"on":""}"${k===cur?' aria-current="page"':""}><span class="ic">${i}</span>${t}${k==="scad"&&late?`<span class="n">${late}</span>`:""}</button>`).join("");}
-function go(k){if(k==="oggi"){k="cal";setCalV("giorno");calD=calSel=today();}if(k==="cal")calLink=false;cur=k;try{history.replaceState(null,"","#"+k);}catch(e){}render();window.scrollTo(0,0);}
-function render(){side();const m=$("main");m.innerHTML=({cal:vCal,oggi:vOggi,scad:vScad,fam:vFam,conti:vConti,ben:vBen,sic:vSic}[cur]||vOggi)()+'<p class="saved" id="pnSaved"></p>';paintSaved();bind();}
+function go(k){if(k==="oggi"){k="cal";setCalV("giorno");calD=calSel=today();}if(k==="fam"){k="cal";setCalV("sett");calD=today();}if(k==="cal"){calLink=false;calFixed=false;}if(k==="prat")pratNew=false;cur=k;try{history.replaceState(null,"","#"+k);}catch(e){}render();window.scrollTo(0,0);}
+function render(){side();const m=$("main");m.innerHTML=({cal:vCal,oggi:vOggi,scad:vScad,prat:vPrat,conti:vConti,ben:vBen,sic:vSic}[cur]||vOggi)()+'<p class="saved" id="pnSaved"></p>';paintSaved();bind();}
 
 function vOggi(){
   const t=today(),S=licS(),h=new Date().getHours();
@@ -1235,6 +1371,9 @@ function vOggi(){
   // famiglia
   const fo=famOn(t);
   o+=`<div class="card"><h3>👨‍👧 Famiglia oggi <button class="lnk" data-go="fam">Settimana ›</button></h3>${fo.length?fo.map(a=>`<div class="row"><span class="pill fam">${esc(a.o||"tutto il giorno")}${a.f?"–"+esc(a.f):""}</span><div class="grow"><b>${esc(a.chi?a.chi+": ":"")}${esc(a.t)}</b>${a.acc?`<small>accompagna ${esc(a.acc)}</small>`:""}</div></div>`).join(""):'<p class="empty">Nessuna attività in programma oggi.</p>'}</div>`;
+  // pratiche
+  const pd=typeof pratDue==="function"?pratDue(14):[];
+  if(pd.length)o+=`<div class="card"><h3>🗂️ Pratiche <button class="lnk" data-go="prat">Tutte ›</button></h3>${pd.slice(0,5).map(x=>`<div class="row"><span class="pill ${x.passo.d<t?"warn":x.passo.d===t?"soon":""}">${x.passo.d===t?"oggi":fmt(x.passo.d,{day:"numeric",month:"short"})}</span><div class="grow"><b>${pratIc(x)} ${esc(x.passo.t)}</b><small>${esc(x.t)} · ${rel(x.passo.d)}</small></div></div>`).join("")}</div>`;
   // conti
   const np=nextPayments(7),mt=monthTotals(t.slice(0,7));
   o+=`<div class="card${P.conti.hide?" hidden-amt":""}"><h3>💶 Conti <button class="lnk" data-go="conti">Apri ›</button></h3><div class="row"><div class="grow">Questo mese<small>entrate − uscite previste</small></div><span class="amt ${mt.e-mt.u>=0?"e":"u"}">${euro(mt.e-mt.u)}</span></div>${np.length?np.slice(0,4).map(p=>`<div class="row"><div class="grow">${esc(p.r.t)}<small>${fmt(p.d)} · ${rel(p.d)}</small></div><span class="amt ${p.r.tipo==="e"?"e":"u"}">${euro(p.r.imp)}</span></div>`).join(""):'<div class="row"><span class="empty">Nessun pagamento nei prossimi 7 giorni.</span></div>'}</div>`;
@@ -1264,6 +1403,8 @@ function vScad(){
   if(!L.length)o+=`<div class="card"><p class="empty">Nessuna scadenza aperta. Aggiungi la prima qui sopra.</p></div>`;
   const ce=(P.cal.ev||[]).filter(e=>e.d>=t&&diff(t,e.d)<=30&&calIc(e)!=="🎂");
   if(ce.length)o+=`<h2>📆 Dal Calendario (prossimi 30 giorni)</h2><div class="card">${ce.map(e=>`<div class="row"><span class="pill">${fmt(e.d,{weekday:"short",day:"numeric",month:"short"})}${e.o?" "+esc(e.o):""}</span><div class="grow"><b>${calIc(e)} ${esc(e.t)}</b><small>${esc(e.cal)}${e.loc?" · "+esc(e.loc):""} · ${rel(e.d)}</small></div><button class="btn sm" data-c2s="${esc(e.k)}">➕ Scadenza</button></div>`).join("")}</div>`;
+  const pp=typeof pratDue==="function"?pratDue(60):[];
+  if(pp.length)o+=`<h2>🗂️ Prossimi passi delle pratiche</h2><div class="card">${pp.map(x=>`<div class="row"><span class="pill ${x.passo.d<t?"warn":diff(t,x.passo.d)<=7?"soon":""}">${fmt(x.passo.d,{day:"numeric",month:"short"})}</span><div class="grow"><b>${pratIc(x)} ${esc(x.passo.t)}</b><small>${esc(x.t)} · ${rel(x.passo.d)}</small></div><button class="btn sm" data-psel="${x.id}">Apri</button></div>`).join("")}</div>`;
   const done=P.scad.filter(y=>y.done).sort((a,b)=>a.doneAt<b.doneAt?1:-1).slice(0,10);
   if(done.length)o+=`<h2>Fatte</h2><div class="card">${done.map(y=>`<div class="row"><button class="chk done" data-undo="${y.id}" aria-label="Riapri">✓</button><div class="grow"><b>${esc(y.t)}</b><small>fatta il ${fmt(y.doneAt)}</small></div></div>`).join("")}</div>`;
   return o;
@@ -1281,8 +1422,8 @@ function vCalImport(){
   <div class="btns"><button class="btn pri" id="calPasteGo">Inserisci</button><button class="btn" id="calSym">Copia il simbolo §</button>${P.cal.at?'<button class="btn danger" id="calClear">Togli gli eventi importati</button>':""}</div></div>`;
 }
 function vCalExport(){
-  const opt=P.ics.opt||{abs:true,app:true,scad:true,pay:true,fam:true},items=icsItems(opt),news=items.filter(i=>P.ics.sent[i.uid]!==i.sig);
-  const lab={abs:"🏖️ Periodi a casa (dalle Licenze)",app:"📅 Appuntamenti delle Licenze e congedo",scad:"📌 Scadenze e pratiche (con promemoria)",pay:"💶 Pagamenti ricorrenti",fam:"👨‍👧 Attività della famiglia"};
+  const opt=P.ics.opt||{abs:true,app:true,scad:true,prat:true,pay:true,fam:true},items=icsItems(opt),news=items.filter(i=>P.ics.sent[i.uid]!==i.sig);
+  const lab={abs:"🏖️ Periodi a casa (dalle Licenze)",app:"📅 Appuntamenti delle Licenze e congedo",scad:"📌 Scadenze (con promemoria)",prat:"🗂️ Prossimi passi delle pratiche",pay:"💶 Pagamenti ricorrenti",fam:"👨‍👧 Attività della famiglia"};
   return `<h2>📤 Esporta verso il Calendario</h2><p class="sub">Crea un file da aggiungere al Calendario dell’iPad: così i promemoria arrivano anche ad app chiusa, e si vedono su tutti i tuoi dispositivi con iCloud.</p>
   <div class="card"><h3>Che cosa mettere nel Calendario</h3>${Object.keys(lab).map(k=>`<label class="row" style="cursor:pointer"><input type="checkbox" data-opt="${k}"${opt[k]?" checked":""} style="width:22px;height:22px"><span class="grow">${lab[k]}</span></label>`).join("")}
     <div class="kpi" style="margin-top:10px"><div><b>${items.length}</b><span>eventi in tutto</span></div><div><b>${news.length}</b><span>nuovi o cambiati dall’ultima volta</span></div></div>
@@ -1292,25 +1433,6 @@ function vCalExport(){
     <div class="row"><span class="pill">2</span><div class="grow">Qui tocca <b>Aggiungi le novità</b>: si apre il file. Scegli <b>Aggiungi tutti</b> e il calendario <b>Pianificazione</b>. Se compare la condivisione, scegli <b>Calendario</b> o salvalo su File e aprilo da lì.</div></div>
     <div class="row"><span class="pill">3</span><div class="grow">Le volte successive tocca di nuovo <b>Aggiungi le novità</b>: entrano solo gli eventi nuovi o cambiati, così non si duplicano.</div></div>
     <p class="lbl">Se cambi molto (per esempio ripianifichi le licenze), cancella il calendario Pianificazione nell’app Calendario, ricrealo e usa «Tutto da capo».</p></div>`;
-}
-function vFam(){
-  const S=licS(),days=[...Array(7)].map((_,i)=>add(famWeek,i)),t=today();
-  let o=`<h1>👨‍👧 Famiglia</h1><p class="sub">La settimana di tutti, accanto ai tuoi giorni in ufficio e a casa. In verde i giorni in cui sei a casa: tempo da passare insieme.</p>
-  <div class="btns" style="margin:0 0 10px"><button class="btn sm" id="fPrev">‹ Settimana prima</button><button class="btn sm" id="fNow">Questa settimana</button><button class="btn sm" id="fNext">Settimana dopo ›</button></div><div class="week">`;
-  days.forEach(s=>{const d=licDay(S,s),off=d.k!=="LAV"||(d.c&&d.c!=="P"),list=famOn(s);
-    o+=`<div class="day${s===t?" today":""}${off&&S?" together":""}"><b class="dn">${fmt(s,{weekday:"long",day:"numeric"})}</b>${S?`<div class="ev ${d.c==="P"?"job":d.c?"off":"off"}">${d.c==="P"?"🏢 "+(d.i||"")+"–"+(d.o||""):"🏡 "+esc(d.t)}</div>`:""}${calOn(s).map(e=>`<div class="ev" style="background:var(--euro-bg);color:var(--euro)">${e.o?esc(e.o)+" ":""}${calIc(e)} ${esc(e.t)}</div>`).join("")}${list.map(a=>`<div class="ev">${a.o?esc(a.o)+" ":""}${esc(a.chi?a.chi+": ":"")}${esc(a.t)}${a.acc?" · 🚗 "+esc(a.acc):""}<button class="x" data-fdel="${a.tipo}:${a.id}" aria-label="Togli">×</button></div>`).join("")}</div>`;});
-  o+=`</div><div class="card" style="margin-top:12px"><h3>➕ Attività che si ripete ogni settimana</h3><div class="form">
-    <label>Chi<input id="aC" list="chiL" placeholder="es. il nome di chi la fa"><datalist id="chiL">${chiList().map(c=>`<option value="${esc(c)}">`).join("")}</datalist></label>
-    <label>Che cosa<input id="aT" maxlength="60" placeholder="es. pattinaggio, nuoto, scuola"></label>
-    <label>Giorno<select id="aG">${GIORNI.map((g,i)=>`<option value="${i+1}">${g}</option>`).join("")}</select></label>
-    <label>Dalle<input id="aO" type="time"></label><label>Alle<input id="aF" type="time"></label>
-    <label>Chi accompagna<input id="aA" maxlength="40" placeholder="facoltativo"></label>
-  </div><div class="btns"><button class="btn pri" id="aAdd">Aggiungi</button></div></div>
-  <div class="card"><h3>➕ Impegno di un giorno solo</h3><div class="form">
-    <label class="wide">Che cosa<input id="eT" maxlength="80" placeholder="es. colloquio con le maestre, gara, festa"></label>
-    <label>Data<input id="eD" type="date"></label><label>Dalle (facoltativo)<input id="eO" type="time"></label><label>Alle<input id="eF" type="time"></label>
-  </div><div class="btns"><button class="btn pri" id="eAdd">Aggiungi</button></div></div>`;
-  return o;
 }
 function vBen(){
   const t=today(),bd=benDay(t),tc=tcSessions(),days=[...Array(14)].map((_,i)=>add(t,i-13));
@@ -1347,6 +1469,8 @@ function vSic(){
 }
 /* ---------- eventi ---------- */
 function bind(){
+  if(cur!=="prat")document.querySelectorAll("[data-psel]").forEach(b=>b.onclick=()=>{pratSel=b.dataset.psel;go("prat");});
+  if(cur==="prat"&&typeof bindPrat==="function")bindPrat();
   if(cur==="cal"&&typeof bindCal==="function")bindCal();
   if(typeof bindConti==="function"&&cur==="conti")bindConti();
   if($("lkAv")&&window.__pnLock)window.__pnLock.available().then(ok=>{const e=$("lkAv");if(e)e.textContent=ok?"✓ Questo iPad può usare Face ID (o il suo codice).":"⚠️ Qui Face ID non è disponibile per le app web: puoi usare solo il codice di riserva.";});
@@ -1354,7 +1478,7 @@ function bind(){
     try{await window.__pnLock.enable(a);toast("🔒 Blocco attivato");render();}catch(e){toast(e&&e.name==="NotAllowedError"?"Face ID annullato":"Non riuscito: "+(e&&e.message||e));}};
   if($("lkOff"))$("lkOff").onclick=()=>{if(!confirm("Disattivare il blocco con Face ID?"))return;window.__pnLock.disable();render();toast("Blocco disattivato");};
   if($("lkNow"))$("lkNow").onclick=()=>window.__pnLock.lockNow();
-  document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>go(b.dataset.s));
+  document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{if(b.dataset.s==="prat")pratSel=null;if(b.dataset.s==="cal"){calFixed=false;calLink=false;}go(b.dataset.s);});
   document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
   document.querySelectorAll("[data-done]").forEach(b=>b.onclick=()=>doneScad(b.dataset.done));
   document.querySelectorAll("[data-undo]").forEach(b=>b.onclick=()=>{const x=P.scad.find(y=>y.id===b.dataset.undo);if(x){x.done=false;delete x.doneAt;save();render();}});
@@ -1365,7 +1489,7 @@ function bind(){
     if(editId){Object.assign(P.scad.find(y=>y.id===editId),o);editId=null;toast("Modificata");}else{P.scad.push(Object.assign({id:uid(),done:false},o));toast("Scadenza aggiunta");}save();render();};
   if($("sCancel"))$("sCancel").onclick=()=>{editId=null;render();};
   if($("sDel"))$("sDel").onclick=()=>{if(!confirm("Eliminare questa scadenza?"))return;P.scad=P.scad.filter(y=>y.id!==editId);editId=null;save();render();toast("Eliminata");};
-  document.querySelectorAll("[data-opt]").forEach(c=>c.onchange=()=>{P.ics.opt=Object.assign({abs:true,app:true,scad:true,pay:true,fam:true},P.ics.opt||{});P.ics.opt[c.dataset.opt]=c.checked;save();render();});
+  document.querySelectorAll("[data-opt]").forEach(c=>c.onchange=()=>{P.ics.opt=Object.assign({abs:true,app:true,scad:true,prat:true,pay:true,fam:true},P.ics.opt||{});P.ics.opt[c.dataset.opt]=c.checked;save();render();});
   if($("calRun"))$("calRun").onclick=runShortcut;
   if($("calClip"))$("calClip").onclick=pasteCal;
   if($("calPasteBtn"))$("calPasteBtn").onclick=pasteCal;
@@ -1377,16 +1501,10 @@ function bind(){
   document.querySelectorAll("[data-c2s]").forEach(b=>b.onclick=()=>{const e=(P.cal.ev||[]).find(x=>x.k===b.dataset.c2s);if(!e)return;P.scad.push({id:uid(),t:e.t,d:e.d,cat:/lavoro/i.test(e.cal)?"pratica":"altro",ric:"no",av:1,note:e.loc||"",done:false,fromCal:1});save();render();toast("Aggiunta alle scadenze");});
   if($("icsNew"))$("icsNew").onclick=()=>exportIcs(false);
   if($("icsAll"))$("icsAll").onclick=()=>exportIcs(true);
-  if($("fPrev"))$("fPrev").onclick=()=>{famWeek=add(famWeek,-7);render();};
-  if($("fNext"))$("fNext").onclick=()=>{famWeek=add(famWeek,7);render();};
-  if($("fNow"))$("fNow").onclick=()=>{famWeek=monday(today());render();};
-  if($("aAdd"))$("aAdd").onclick=()=>{const t=$("aT").value.trim();if(!t){toast("Scrivi l’attività");return;}P.fam.att.push({id:uid(),chi:$("aC").value.trim(),t,g:+$("aG").value,o:$("aO").value,f:$("aF").value,acc:$("aA").value.trim()});save();render();toast("Attività aggiunta");};
-  if($("eAdd"))$("eAdd").onclick=()=>{const t=$("eT").value.trim(),d=$("eD").value;if(!t||!d){toast("Scrivi che cosa e la data");return;}P.fam.ev.push({id:uid(),t,d,o:$("eO").value,f:$("eF").value});famWeek=monday(d);save();render();toast("Impegno aggiunto");};
-  document.querySelectorAll("[data-fdel]").forEach(b=>b.onclick=()=>{const[tp,id]=b.dataset.fdel.split(":");if(!confirm("Togliere questa voce?"))return;if(tp==="att")P.fam.att=P.fam.att.filter(a=>a.id!==id);else P.fam.ev=P.fam.ev.filter(a=>a.id!==id);save();render();});
   [["bS","sonno",v=>{const n=parseFloat(String(v).replace(",","."));return n>0&&n<=16?n:"";}],["bP","passi",v=>v?+v:""],["bE","energia",v=>v?+v:""],["bN","note",v=>v.trim()]].forEach(([id,k,f])=>{if($(id))$(id).onchange=e=>{setBen(today(),k,f(e.target.value));toast("Salvato");if(k!=="note")setTimeout(render,50);};});
 }
 async function exportIcs(all){
-  const opt=P.ics.opt||{abs:true,app:true,scad:true,pay:true,fam:true},items=icsItems(opt),list=all?items:items.filter(i=>P.ics.sent[i.uid]!==i.sig);
+  const opt=P.ics.opt||{abs:true,app:true,scad:true,prat:true,pay:true,fam:true},items=icsItems(opt),list=all?items:items.filter(i=>P.ics.sent[i.uid]!==i.sig);
   if(!list.length){toast("Niente di nuovo da aggiungere");return;}
   const txt=icsText(list),fn="pianificazione-"+today()+".ics",mark=()=>{if(all)P.ics.sent={};list.forEach(i=>P.ics.sent[i.uid]=i.sig);save();render();};
   try{const f=new File([txt],fn,{type:"text/calendar"});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:"Pianificazione"});mark();return;}}catch(e){if(e&&e.name==="AbortError")return;}
