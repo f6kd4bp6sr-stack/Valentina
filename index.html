@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<script>window.APP_VERSION="e634fbaf93";</script>
+<script>window.APP_VERSION="503c419bbe";</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://f6kd4bp6sr-stack.github.io; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://i.ytimg.com; font-src 'self' data:; media-src 'self' data: blob:; connect-src 'self' https://api.github.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src https://www.youtube-nocookie.com">
 <meta name="robots" content="noindex, nofollow, noarchive">
@@ -11928,6 +11928,7 @@ function fsClose(silent) {
   const o = FS.o; FS.timers.forEach(clearTimeout); cancelAnimationFrame(FS.raf); fBlowStop(); fSilence();
   try { speechSynthesis.cancel(); } catch (e) {}
   const wasMusic = FS.music; FS = null; o.remove(); document.body.classList.remove('fs-lock');
+  if (__fPrev && !silent) { festaPreviewEnd(); return; }
   if (silent) return;
   festaPaint();
   try { if (typeof Music !== 'undefined' && (wasMusic || Music.pref().on) && !Music.playing) Music.start(); } catch (e) {}
@@ -12276,6 +12277,31 @@ function festaSorp(I) {
   };
 }
 
+
+/* ---------- anteprima per il genitore: indirizzo con ?festa=prova ----------
+   Mostra la festa com'è il giorno del compleanno, senza salvare nulla (regalo, capsula, gemme restano come prima). */
+let __fPrev = null;
+function festaPreview() {
+  if (__fPrev) return;
+  const tmp = {}, g0 = store.get, s0 = store.set, D0 = D, C0 = CHILD;
+  __fPrev = { g0, s0, D0, C0 };
+  store.get = (k, d) => Object.prototype.hasOwnProperty.call(tmp, k) ? JSON.parse(JSON.stringify(tmp[k])) : g0.call(store, k, d);
+  store.set = (k, v) => { tmp[k] = JSON.parse(JSON.stringify(v)); };
+  if (!D) D = { name: 'il tuo drago', color: 'verde', energy: 60 };
+  const t = fDay0(), bd = CHILD.bd || {};
+  let age = 10;
+  if (bd.y && bd.m && bd.d) { const ny = fBdIn(t.getFullYear()) < t ? t.getFullYear() + 1 : t.getFullYear(); age = ny - bd.y; }
+  CHILD = Object.assign({}, CHILD, { bd: { d: t.getDate(), m: t.getMonth() + 1, y: t.getFullYear() - age } });
+  __fMemo.k = ''; festaOpen();
+  const b = $('fs-enter'); if (b) b.insertAdjacentHTML('beforebegin', '<span class="fs-tb" style="pointer-events:none">👀 Anteprima</span>');
+}
+function festaPreviewEnd() {
+  const P = __fPrev; if (!P) return; __fPrev = null;
+  store.get = P.g0; store.set = P.s0; D = P.D0; CHILD = P.C0; __fMemo.k = '';
+  try { history.replaceState(null, '', location.pathname); } catch (e) {}
+  festaShop(); try { Gems.paint(); } catch (e) {} if (D) updateBar(); festaPaint(); if (typeof go === 'function' && D) go(current);
+}
+
 /* ---------- casa in festa ---------- */
 function festaPaint() {
   const on = !!festaActive(); document.body.classList.toggle('festa-on', on);
@@ -12316,7 +12342,9 @@ function capsulaCard() {
   const i0 = PAGES.io; PAGES.io = el => { i0(el); try { const c = festaCard(), k = capsulaCard(), g = el.querySelector('.v2-grid'); if (g && (c || k)) { g.insertAdjacentHTML('afterend', (c ? '<div style="margin-top:14px">' + c + '</div>' : '') + k); festaCardBind(el); } } catch (e) {} };
   let hid = 0;
   const maybe = () => {
-    if (!D || FS) return;
+    if (FS) return;
+    if (/[?&]festa=prova\b/.test(location.search)) { festaPreview(); return; }
+    if (!D) return;
     if ($('lesson') && !$('lesson').hidden) return;
     const I = festaInfo(); if (!I) { festaPaint(); return; }
     if (I.kind === 'day' || I.kind === 'after') festaOpen();
