@@ -214,6 +214,22 @@ html.locked #lockScr{display:grid}
     <div class="btns" id="lnkOn" hidden style="margin-top:8px"><button id="lnkNow">🔄 Aggiorna ora</button><button id="lnkOff">Scollega</button></div>
   </div>
 
+  <div class="card" id="pair">
+    <b>📲 Collega l’iPad della bimba con un QR</b>
+    <div class="lbl" id="pairSt">Il modo più semplice: la chiave GitHub si scrive solo qui; sull’iPad della bimba basta inquadrare un QR.</div>
+    <details id="pairBox" style="margin-top:6px"><summary class="lbl" style="cursor:pointer"><b>Prepara il QR di collegamento (anche per una chiave nuova)</b></summary>
+      <ol class="lbl" style="padding-left:20px;margin:6px 0">
+        <li>Crea la chiave: <a href="https://github.com/settings/tokens/new?scopes=gist&amp;description=mie-app%20progressi" target="_blank" rel="noopener">github.com/settings/tokens/new</a> → spunta solo <b>gist</b>, scadenza <b>No expiration</b> → <b>Generate token</b> → copia la chiave.</li>
+        <li>Incollala qui sotto, scegli un codice (almeno 6 caratteri; se c’è già un collegamento usa lo stesso) e tocca <b>Prepara il QR</b>.</li>
+        <li>Sull’iPad della bimba: <b>🐉 Io → 💾 Salvataggi → 📷 Collegati con il QR</b> e inquadra questo schermo.</li>
+      </ol>
+      <div class="btns"><input id="pairTok" type="password" placeholder="Chiave GitHub (inizia con ghp_)" autocomplete="off" style="flex:1;min-width:220px;font:inherit;padding:9px 12px;border-radius:10px;border:1px solid var(--line,#ccc);background:transparent;color:inherit"></div>
+      <div class="btns"><input id="pairCode" placeholder="Codice (almeno 6 caratteri)" autocomplete="off" autocapitalize="off" spellcheck="false" style="flex:1;min-width:220px;font:inherit;padding:9px 12px;border-radius:10px;border:1px solid var(--line,#ccc);background:transparent;color:inherit"><button id="pairGo" class="primary">Prepara il QR</button></div>
+      <div id="pairQR" style="text-align:center"></div>
+      <div class="lbl">🔒 Il QR contiene la chiave: mostralo solo all’iPad della bimba. Si chiude da solo dopo 3 minuti. La chiave resta su questo iPad (non va nelle copie) e sull’iPad della bimba.</div>
+    </details>
+  </div>
+
   <div id="out"></div>
 </main>
 <div class="toast" id="toast"></div>
@@ -931,11 +947,13 @@ const LKEY="prog-link-v1";
 const unb64=s=>{s=s.replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";const b=atob(s),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a;};
 function parseCode(c){const m=String(c||"").trim().match(/^MM1-([0-9a-f]{20,40})-([A-Za-z0-9_-]{40,46})$/);if(m)return{gist:m[1],key:m[2]};const n=String(c||"").trim().toLowerCase().replace(/\s+/g,"");return n.length>=6?{short:n}:null;}
 /* codice scelto dal genitore: stessa chiave e stessa etichetta calcolate sull'iPad */
-async function shortLink(n){
+async function deriveLink(n){
   const base=await crypto.subtle.importKey("raw",new TextEncoder().encode(n),"PBKDF2",false,["deriveBits"]);
   const bits=await crypto.subtle.deriveBits({name:"PBKDF2",salt:new TextEncoder().encode("mie-app-mondo-v2"),iterations:310000,hash:"SHA-256"},base,256);
   let s="";new Uint8Array(bits).forEach(x=>s+=String.fromCharCode(x));const key=btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
   const h=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("tag:mie-app-mondo:"+n));const tag=Array.from(new Uint8Array(h)).slice(0,10).map(x=>("0"+x.toString(16)).slice(-2)).join("");
+  return{key,tag};}
+async function shortLink(n){const {key,tag}=await deriveLink(n);
   const owner=(location.hostname.match(/^([^.]+)\.github\.io$/)||[])[1]||"f6kd4bp6sr-stack";
   const r=await fetch("https://api.github.com/users/"+owner+"/gists?per_page=100",{cache:"no-store",headers:{Accept:"application/vnd.github+json"}});
   if(!r.ok)throw new Error(r.status===403?"troppi controlli in un’ora, riprova più tardi":"errore "+r.status);
@@ -953,7 +971,7 @@ function paintLink(){
   if(!on){$("lnkSt").textContent="Non collegato: i dati arrivano solo caricando i file.";return;}
   const age=LINK.sent?(Date.now()-new Date(LINK.sent).getTime())/36e5:null;
   $("lnkSt").innerHTML=(LINK.err?`⚠️ ${esc(LINK.err)}<br>`:"")+`✅ Collegato. Ultimo invio dall’iPad: <b>${whenTxt(LINK.sent)}</b> · controllato ${whenTxt(LINK.checked)}`+
-    (age!=null&&age>36?`<div class="lnkwarn"><b>⚠️ L’iPad non invia da ${Math.floor(age/24)} ${Math.floor(age/24)===1?"giorno":"giorni"}.</b> Perché succede e cosa fare:<ol><li>«Il mio mondo» non è stato aperto con internet: aprilo e aspetta 10 secondi.</li><li><b>La chiave GitHub è scaduta</b> (la causa più comune): sull’iPad della bimba vai in <b>🐉 Io</b> → riquadro <b>💾 Salvataggi</b>. Se vedi ⚠️, crea una chiave nuova su <a href="https://github.com/settings/tokens/new?scopes=gist&amp;description=mie-app%20progressi" target="_blank" rel="noopener">github.com/settings/tokens/new</a> (spunta solo <b>gist</b>, scadenza <b>No expiration</b>), tocca <b>🔑 Nuova chiave</b> e incollala. Qui non devi rifare niente.</li><li>Se in quel riquadro non c’è più «Invio automatico attivo», ricollega con <b>lo stesso codice</b>.</li></ol></div>`:"");
+    (age!=null&&age>36?`<div class="lnkwarn"><b>⚠️ L’iPad non invia da ${Math.floor(age/24)} ${Math.floor(age/24)===1?"giorno":"giorni"}.</b> Perché succede e cosa fare:<ol><li>«Il mio mondo» non è stato aperto con internet: aprilo e aspetta 10 secondi.</li><li><b>La chiave GitHub è scaduta</b> (la causa più comune): sull’iPad della bimba vai in <b>🐉 Io</b> → riquadro <b>💾 Salvataggi</b>. Se vedi ⚠️, crea una chiave nuova e prepara il QR qui sotto (<b>📲 Collega l’iPad della bimba con un QR</b>), poi sull’iPad della bimba tocca <b>📷 Collegati con il QR</b>. In alternativa: <b>🔑 Nuova chiave</b> e incollala a mano.</li><li>Se in quel riquadro non c’è più «Invio automatico attivo», ricollega con il QR (stesso codice).</li></ol></div>`:"");
 }
 async function pull(manual){
   if(!LINK||!LINK.gist||pulling)return; pulling=true;
@@ -962,6 +980,7 @@ async function pull(manual){
     if(!r.ok)throw new Error(r.status===404?"collegamento non trovato: rifai il collegamento":r.status===403?"troppi controlli in un’ora, riprova più tardi":"errore "+r.status);
     const g=await r.json(),f=g.files&&g.files["mondo.json"];if(!f)throw new Error("nessun dato inviato ancora");
     let txt=f.content;if(f.truncated&&f.raw_url)txt=await (await fetch(f.raw_url,{cache:"no-store"})).text();
+    if(/"wait":1/.test(txt))throw new Error("collegato: aspetto il primo invio dall’iPad della bimba");
     const pack=normalize(await decrypt(LINK.key,txt));
     LINK.checked=new Date().toISOString();LINK.err="";
     const isNew=!STATE.pack||STATE.pack.from!=="collegamento automatico"||pack.saved!==STATE.pack.saved;
@@ -980,12 +999,49 @@ $("lnkOff").onclick=()=>{if($("lnkOff").dataset.sure){LINK=null;try{localStorage
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")pull(false);});
 setInterval(()=>pull(false),30*60e3);
 window.__pull=pull;
+/* ---------- 📲 collegamento con QR e controllo della chiave (la chiave resta su questo iPad, fuori dalle copie) ---------- */
+const GKEY="prog-gh-v1", GH="https://api.github.com";
+const b64u=s=>btoa(unescape(encodeURIComponent(s))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+async function ghCheck(token){
+  const r=await fetch(GH+"/user",{cache:"no-store",headers:{Authorization:"Bearer "+token,Accept:"application/vnd.github+json"}});
+  if(r.status===401)return{ok:false,why:"la chiave GitHub non è valida o è scaduta"};
+  if(!r.ok)return{ok:null,why:"GitHub non risponde ("+r.status+")"};
+  const u=await r.json(),sc=r.headers.get("x-oauth-scopes"),exp=r.headers.get("github-authentication-token-expiration");
+  if(sc!=null&&!/\bgist\b/.test(sc))return{ok:false,why:"alla chiave manca il permesso «gist»",login:u.login};
+  return{ok:true,login:u.login,exp:exp?new Date(exp.replace(" UTC","Z").replace(" ","T")).toISOString():""};}
+function ghPaint(){const g=lsGet(GKEY),el=$("pairSt");if(!el)return;
+  if(!g){el.textContent="Il modo più semplice: la chiave GitHub si scrive solo qui; sull’iPad della bimba basta inquadrare un QR.";return;}
+  const days=g.exp?Math.floor((new Date(g.exp)-Date.now())/864e5):null;
+  el.innerHTML=g.ok===false?`<b style="color:#c2410c">⚠️ ${esc(g.why||"la chiave non funziona")}.</b> Creane una nuova e prepara un nuovo QR qui sotto: sull’iPad della bimba basta inquadrarlo.`
+    :`🔑 Chiave di <b>${esc(g.login||"GitHub")}</b> · controllata ${whenTxt(g.checked)}${days!=null?(days<=10?` · <b style="color:#c2410c">scade tra ${Math.max(0,days)} giorni</b>: prepara un QR con una chiave nuova`:` · scade il ${new Date(g.exp).toLocaleDateString("it-IT")}`):""} · se smette di funzionare te lo dico qui e in Oggi`;}
+async function ghDaily(force){const g=lsGet(GKEY);if(!g||!g.token||navigator.onLine===false)return;if(!force&&g.checked&&Date.now()-new Date(g.checked).getTime()<20*36e5)return;
+  try{const r=await ghCheck(g.token);if(r.ok===null)return;Object.assign(g,r,{checked:new Date().toISOString()});lsSet(GKEY,g);}catch(e){}ghPaint();}
+let pairTimer=null;
+$("pairGo").onclick=async()=>{const t=$("pairTok").value.trim(),code=$("pairCode").value.trim().toLowerCase().replace(/\s+/g,""),box=$("pairQR");
+  if(!/^(ghp_|github_pat_)/.test(t)){toast("Incolla la chiave GitHub (inizia con ghp_)");return;}
+  if(code.length<6){toast("Il codice deve avere almeno 6 caratteri");return;}
+  box.innerHTML='<p class="lbl">⏳ Controllo la chiave…</p>';
+  try{
+    const chk=await ghCheck(t);if(!chk.ok)throw new Error(chk.why);
+    const {key,tag}=await deriveLink(code),desc="mie-app-mondo "+tag,H={Authorization:"Bearer "+t,Accept:"application/vnd.github+json","Content-Type":"application/json"};
+    let id=null;const l=await fetch(GH+"/gists?per_page=100",{cache:"no-store",headers:H});if(l.ok){const hit=(await l.json()).find(g=>g.description===desc);if(hit)id=hit.id;}
+    if(!id){const r=await fetch(GH+"/gists",{method:"POST",headers:H,body:JSON.stringify({description:desc,public:true,files:{"mondo.json":{content:JSON.stringify({app:"mondo-sync",v:1,wait:1})}}})});
+      if(!r.ok)throw new Error(r.status===403||r.status===404?"alla chiave manca il permesso «gist»":"GitHub ha risposto "+r.status);id=(await r.json()).id;}
+    lsSet(GKEY,Object.assign({token:t,code,checked:new Date().toISOString()},chk));
+    LINK={gist:id,key,code};lsSet(LKEY,LINK);kv("readwrite","progressi-link",JSON.stringify(LINK)).catch(()=>{});paintLink();ghPaint();
+    await new Promise((res,rej)=>{if(window.qrcode)return res();const s=document.createElement("script");s.src="qrcode.js";s.onload=res;s.onerror=()=>rej(new Error("serve internet la prima volta"));document.head.appendChild(s);});
+    const q=qrcode(0,"M");q.addData("MMQR1."+b64u(JSON.stringify({t,g:id,k:key,c:code})));q.make();
+    box.innerHTML=`<div style="background:#fff;display:inline-block;padding:14px;border-radius:14px;margin:10px 0">${q.createSvgTag({cellSize:6,margin:2,scalable:false})}</div><div class="btns" style="justify-content:center"><button id="pairHide">Chiudi il QR</button></div><p class="lbl">Sull’iPad della bimba: 🐉 Io → 💾 Salvataggi → 📷 Collegati con il QR.</p>`;
+    $("pairTok").value="";const hide=()=>{clearTimeout(pairTimer);box.innerHTML="";};$("pairHide").onclick=hide;clearTimeout(pairTimer);pairTimer=setTimeout(hide,180000);
+  }catch(e){box.innerHTML=`<p class="lbl" style="color:#c2410c">⚠️ ${esc(e.message||String(e))}</p>`;}
+};
+(()=>{const g=lsGet(GKEY);if(g&&g.code)$("pairCode").value=g.code;else if(LINK&&LINK.code)$("pairCode").value=LINK.code;ghPaint();setTimeout(()=>ghDaily(false),1200);})();
 
 window.__analyze=analyze; window.__normalize=normalize;
 
 })();
 </script>
-<script>window.APP_VERSION="d1b01722ab";window.APP_BUILD="2026-10-05T14:12+02:00";</script>
+<script>window.APP_VERSION="e639cc4b6f";window.APP_BUILD="2026-10-10T09:52+02:00";</script>
 <script>
 /* ===== Aggiornamento automatico e controllo versione (uguale in tutte le sezioni di Pianificazione: costruita da comune/barra.html) =====
    - all'apertura, al ritorno sull'app e ogni 30 minuti legge version.json saltando ogni copia vecchia (anche quella del server di GitHub);

@@ -53,6 +53,7 @@ button,input,select,textarea{font:inherit}
 .chk.done{background:var(--ok);border-color:var(--ok);color:#fff}
 .form{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;align-items:end}
 .form label{display:grid;gap:4px;font-size:13px;font-weight:700;color:var(--muted)}
+[hidden]{display:none!important}
 .form input,.form select,.form textarea{border:1px solid var(--line);border-radius:10px;padding:9px 10px;background:#fff;color:var(--ink);width:100%;min-height:42px}
 .form .wide{grid-column:1/-1}
 .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
@@ -77,6 +78,7 @@ button,input,select,textarea{font:inherit}
 .amt.e{color:var(--ok)}.amt.u{color:var(--warn)}
 .hidden-amt .amt{filter:blur(6px)}
 .empty{color:var(--muted);padding:6px 0}
+.cena{border-top:1px solid var(--line);padding:7px 0}.cena summary{cursor:pointer;font-weight:700}.cena summary small{color:var(--muted);font-weight:600;margin-left:4px}.cena div{margin-top:4px;color:var(--ok,#2e7d5b);font-weight:700}
 .warnbox{margin-top:8px;padding:9px 12px;border-radius:10px;background:#fff4e8;border:1px solid #f0a35e;font-size:14px;line-height:1.4}@media(prefers-color-scheme:dark){.warnbox{background:#3a2a1c;border-color:#b8743c}}
 a.btn{text-decoration:none}
 .saved{font-size:12.5px;color:var(--muted);margin:6px 0 0}
@@ -84,7 +86,7 @@ a.btn{text-decoration:none}
 @media (prefers-color-scheme:dark){:root{--bg:#0f1216;--card:#1a1e24;--ink:#eef0f3;--muted:#9aa3ae;--line:#2a3038;--seg:#242a32;--ok-bg:#16301f;--warn-bg:#3a1b19;--soon-bg:#33270f;--lp-bg:#3a2218;--fam-bg:#271f3d;--ben-bg:#14302f;--euro-bg:#172739}
   .form input,.form select,.form textarea,.chk,.mood button{background:#12161b;color:var(--ink)}.day.together{background:linear-gradient(180deg,#1a1e24,#14261b)}}
 </style>
-<script>window.APP_VERSION="d1b01722ab";window.APP_BUILD="2026-10-05T14:12+02:00";</script>
+<script>window.APP_VERSION="e639cc4b6f";window.APP_BUILD="2026-10-10T09:52+02:00";</script>
 </head>
 <body>
 <style id="lockCss">
@@ -266,6 +268,49 @@ function tcSessions(){const m=lsJ("tc_sessions")||{};return Object.values(m).fil
 function valeSum(d){let l=0;try{Object.values((d.path&&d.path.sum)||{}).forEach(e=>l+=(+e.l||0));}catch(e){}
   const pad=x=>{const m=String(x).match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);return m?m[1]+"-"+m[2].padStart(2,"0")+"-"+m[3].padStart(2,"0"):String(x);};
   const days=(Array.isArray(d.days)?d.days:Object.keys(d.days||{})).map(pad).filter(x=>x>=add(today(),-14));return{l,days};}
+/* ---------- 📅 la settimana di «Il mio mondo»: solo numeri (giorni, risposte, nozioni per materia) ---------- */
+const VMAT={mate:"🔢 Matematica",ita:"📖 Italiano",eng:"🇬🇧 Inglese",storia:"🏛️ Storia",geo:"🗺️ Geografia",scienze:"🔬 Scienze",civica:"🤝 Ed. civica",soldi:"🐷 Soldi e risparmio",lavo:"🧼 Perché mi lavo",vesto:"👗 Come mi vesto",tecno:"💡 Tecnologia",arte:"🎨 Arte",musica:"🎵 Musica",media:"🎒 Verso la 1ª media",sport:"⛸️ Sport",roblox:"🧱 Roblox"};
+const VUNIT=u=>u==="parlo"?"eng":/^sci-/.test(u)?"scienze":/^sp-/.test(u)?"sport":u;
+/* domande da fare a cena (con la risposta), per le materie studiate nella settimana */
+const VCENA={
+  mate:[["Quanto fa 7 × 8?","56"],["Come si trova il perimetro di un quadrato?","Si somma il lato 4 volte (lato × 4)"],["Quanto fa la metà di 3,40?","1,70"]],
+  ita:[["Qual è il plurale di «uovo»?","Uova"],["Dimmi un nome collettivo","Per esempio gregge, flotta, sciame"],["In «Il gatto dorme», chi compie l’azione?","Il gatto: è il soggetto"]],
+  eng:[["Come si dice «ho freddo» in inglese?","I'm cold"],["Come chiedi «che tempo fa?» in inglese?","What's the weather like?"],["Dimmi in inglese «mettiti la sciarpa»","Put on your scarf!"]],
+  storia:[["Per che cosa erano famosi i Fenici?","Navigatori e mercanti; diffusero un alfabeto"],["Come si chiamava la scrittura degli antichi Egizi?","I geroglifici"]],
+  geo:[["Qual è il capoluogo del Piemonte?","Torino"],["Qual è il fiume più lungo d’Italia?","Il Po"]],
+  scienze:[["A che cosa serve il cuore?","Spinge il sangue in tutto il corpo"],["Che cosa fanno le piante con la luce del sole?","Producono il loro nutrimento (fotosintesi)"]],
+  civica:[["Che cos’è la Costituzione?","La legge più importante dello Stato"]],
+  soldi:[["Paghi 2,50 € con una moneta da 5 €: quanto resto ricevi?","2,50 €"],["Che differenza c’è tra un bisogno e un desiderio?","Un bisogno serve davvero (cibo, scarpe che vanno bene); un desiderio si può aspettare"],["Se risparmi 2 € a settimana, quanto hai dopo 5 settimane?","10 €"]],
+  lavo:[["Per quanto tempo ci si lavano le mani?","Circa 40 secondi, con il sapone"]],
+  vesto:[["Che cosa ti metti se fa freddo e nevica?","Strati caldi: maglione, giacca, guanti, sciarpa, cappello"]]};
+function valeWeekData(d,prev){const out={},t=today(),from=add(t,-14);
+  const pd=d["prog-days"]||{},pdx={};Object.keys(pd).filter(x=>x>=from).forEach(x=>pdx[x]=pd[x]);out.pdays=pdx;
+  const su={};try{Object.entries((d.path&&d.path.sum)||{}).forEach(([u,e])=>{const k=VUNIT(u),x=su[k]||(su[k]={l:0,d:0});x.l+=+e.l||0;x.d+=+e.d||0;});}catch(e){}out.su=su;
+  const h=(prev&&Array.isArray(prev.hist)?prev.hist:[]).filter(x=>x.d>=add(t,-30)&&x.d!==t);h.push({d:t,su:Object.fromEntries(Object.entries(su).map(([k,v])=>[k,v.l]))});out.hist=h.slice(-31);return out;}
+function valeWeek(){let w=lsJ(VIN);const p=lsJ("prog-vale-v1");
+  if((!w||!w.pdays)&&p){const d=(p.state&&p.state.data)||p.data||{};w=Object.assign({saved:p.saved},valeSum(d),valeWeekData(d,null));}
+  if(!w||!w.pdays)return null;const t=today(),from=add(t,-6),per={};let ok=0,ko=0;const days=new Set((w.days||[]).filter(x=>x>=from));
+  Object.entries(w.pdays).forEach(([day,m])=>{if(day<from)return;days.add(day);Object.entries(m||{}).forEach(([k,v])=>{const x=per[k]||(per[k]={ok:0,ko:0});x.ok+=+v.ok||0;x.ko+=+v.ko||0;ok+=+v.ok||0;ko+=+v.ko||0;});});
+  const base=(w.hist||[]).filter(x=>x.d<=add(t,-6)).slice(-1)[0];let nuove=null;const nu={};
+  if(base&&w.su){nuove=0;Object.entries(w.su).forEach(([k,v])=>{const n=Math.max(0,(v.l||0)-((base.su||{})[k]||0));if(n){nu[k]=n;nuove+=n;}});}
+  const L=Object.entries(per).map(([k,v])=>({k,n:v.ok+v.ko,pc:Math.round(v.ok/Math.max(1,v.ok+v.ko)*100)})).filter(x=>x.n>=5);
+  const best=L.slice().sort((a,b)=>b.pc-a.pc)[0],weak=L.slice().sort((a,b)=>a.pc-b.pc)[0];
+  const rip=Object.entries(w.su||{}).filter(([k,v])=>v.d>=5).sort((a,b)=>b[1].d-a[1].d)[0];
+  const studied=Object.keys(per).concat(Object.keys(nu)).filter((k,i,a)=>a.indexOf(k)===i&&VCENA[k]);
+  const pickQ=[];const order=(weak?[weak.k]:[]).concat(studied);const seed=+t.replace(/-/g,"");
+  order.forEach(k=>{if(pickQ.length<2&&VCENA[k]&&!pickQ.some(q=>q.k===k)){const L2=VCENA[k];pickQ.push({k,q:L2[seed%L2.length]});}});
+  if(pickQ.length<2&&VCENA.soldi&&!pickQ.some(q=>q.k==="soldi"))pickQ.push({k:"soldi",q:VCENA.soldi[seed%VCENA.soldi.length]});
+  return{giorni:days.size,ok,ko,nuove,nu,best:best&&best!==weak?best:null,weak:weak&&weak.pc<80?weak:null,rip:rip?{k:rip[0],n:rip[1].d}:null,cena:pickQ,saved:w.saved};}
+function weekCard(){const w=valeWeek();if(!w)return "";const tot=w.ok+w.ko,nm=k=>VMAT[k]||k;
+  return `<div class="card"><h3>📅 La settimana in breve <a href="progressi.html">Progressi ›</a></h3><div class="lbl">«Il mio mondo» negli ultimi 7 giorni</div>
+    <div class="row"><div class="grow">Giorni di studio</div><b>${w.giorni}/7</b></div>
+    <div class="row"><div class="grow">Risposte</div><b>${tot}${tot?` · ${Math.round(w.ok/tot*100)}% giuste`:""}</b></div>
+    ${w.nuove!=null?`<div class="row"><div class="grow">Nozioni nuove<small>${Object.entries(w.nu).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,n])=>esc(nm(k))+" "+n).join(" · ")}</small></div><b>+${w.nuove}</b></div>`:""}
+    ${w.best?`<div class="row"><div class="grow">Va meglio in</div><b>${esc(nm(w.best.k))} · ${w.best.pc}%</b></div>`:""}
+    ${w.weak?`<div class="row"><div class="grow">Da rinforzare</div><b>${esc(nm(w.weak.k))} · ${w.weak.pc}%</b></div>`:""}
+    ${w.rip?`<div class="row"><div class="grow">Ricordi da ripassare</div><b>${esc(nm(w.rip.k))} · ${w.rip.n}</b></div>`:""}
+    ${w.cena.length?`<div class="lbl" style="margin-top:8px"><b>🍽️ A cena chiedile</b> (tocca per la risposta)</div>${w.cena.map(c=>`<details class="cena"><summary>${esc(c.q[0])} <small>${esc(nm(c.k))}</small></summary><div>${esc(c.q[1])}</div></details>`).join("")}`:""}
+    <div class="lbl">Dati del ${w.saved?new Date(w.saved).toLocaleDateString("it-IT",{day:"numeric",month:"short"}):"—"}.</div></div>`;}
 function valeInfo(){
   const p=lsJ("prog-vale-v1"),inb=lsJ(VIN),L=lsJ("prog-link-v1");let o=null;
   if(p){const d=(p.state&&p.state.data)||p.data||{};o=Object.assign({saved:p.saved},valeSum(d));}
@@ -276,6 +321,13 @@ function valeInfo(){
 /* «Il mio mondo»: Oggi scarica da sola l'ultimo invio cifrato dell'iPad (stesso collegamento della sezione Progressi; massimo ogni 10 minuti) */
 const VIN="prog-vale-in";let valeBusy=false;
 const vub=s=>{s=String(s).replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";const b=atob(s),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a;};
+/* chiave GitHub (salvata da Progressi → 📲 Collega con un QR): controllo una volta al giorno */
+async function ghDaily(){const g=lsJ("prog-gh-v1");if(!g||!g.token||navigator.onLine===false)return;if(g.checked&&Date.now()-new Date(g.checked).getTime()<20*36e5)return;
+  try{const r=await fetch("https://api.github.com/user",{cache:"no-store",headers:{Authorization:"Bearer "+g.token,Accept:"application/vnd.github+json"}});
+    if(r.status===401){g.ok=false;g.why="la chiave GitHub non è valida o è scaduta";}else if(r.ok){g.ok=true;g.why="";const ex=r.headers.get("github-authentication-token-expiration");if(ex)g.exp=new Date(ex.replace(" UTC","Z").replace(" ","T")).toISOString();}else return;
+    g.checked=new Date().toISOString();localStorage.setItem("prog-gh-v1",JSON.stringify(g));if(cur==="oggi")render();}catch(e){}}
+function ghWarn(){const g=lsJ("prog-gh-v1");if(!g)return "";if(g.ok===false)return `<div class="warnbox">⚠️ ${esc(g.why||"La chiave GitHub non funziona")}: in <a href="progressi.html">Progressi</a> → 📲 Collega con un QR, prepara un QR con una chiave nuova.</div>`;
+  const d=g.exp?Math.floor((new Date(g.exp)-Date.now())/864e5):null;return d!=null&&d<=10?`<div class="warnbox">⏳ La chiave GitHub scade tra ${Math.max(0,d)} giorni: in <a href="progressi.html">Progressi</a> prepara un QR con una chiave nuova.</div>`:"";}
 async function valePull(force){
   const L=lsJ("prog-link-v1");if(!L||!L.gist||!L.key||valeBusy||navigator.onLine===false)return;
   const inb=lsJ(VIN)||{};if(!force&&inb.checked&&Date.now()-new Date(inb.checked).getTime()<10*60e3)return;
@@ -285,11 +337,11 @@ async function valePull(force){
     if(!r.ok)throw new Error(r.status===404?"collegamento non trovato: rifallo nella sezione Progressi":r.status===403?"troppi controlli in un’ora, riprovo più tardi":"errore "+r.status);
     const g=await r.json(),f=g.files&&g.files["mondo.json"];if(!f)throw new Error("l’iPad non ha ancora inviato niente");
     let txt=f.content;if(f.truncated&&f.raw_url)txt=await(await fetch(f.raw_url,{cache:"no-store"})).text();
-    const o=JSON.parse(txt);if(o.app!=="mondo-sync")throw new Error("contenuto non riconosciuto");
+    const o=JSON.parse(txt);if(o.app!=="mondo-sync")throw new Error("contenuto non riconosciuto");if(o.wait)throw new Error("collegato: aspetto il primo invio dall’iPad della bimba");
     const k=await crypto.subtle.importKey("raw",vub(L.key),"AES-GCM",false,["decrypt"]);
     const pt=JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:vub(o.iv)},k,vub(o.ct))));
     const d=(pt.state&&pt.state.data)||pt.data||{},now=new Date().toISOString();
-    try{localStorage.setItem(VIN,JSON.stringify(Object.assign({saved:pt.saved,checked:now,err:""},valeSum(d))));}catch(e){}
+    try{const prev=lsJ(VIN)||{};localStorage.setItem(VIN,JSON.stringify(Object.assign({saved:pt.saved,checked:now,err:""},valeSum(d),valeWeekData(d,prev))));}catch(e){}
     L.sent=pt.saved;L.checked=now;L.err="";try{localStorage.setItem("prog-link-v1",JSON.stringify(L));}catch(e){}
   }catch(e){inb.checked=new Date().toISOString();inb.err=e&&e.name==="OperationError"?"il codice non corrisponde: ricollega nella sezione Progressi":String((e&&e.message)||e);try{localStorage.setItem(VIN,JSON.stringify(inb));}catch(x){}}
   finally{valeBusy=false;const now=lsJ(VIN)||{};if(cur==="oggi"&&(now.saved!==JSON.parse(before).saved||now.err!==JSON.parse(before).err))render();}
@@ -468,7 +520,13 @@ if (typeof module !== "undefined") module.exports = Fogli;
    proiezione «Dopo il congedo». Tutti gli importi sono quelli inseriti o importati dall'utente. */
 const FREQ={m:["ogni mese",1],b:["ogni 2 mesi",2],t:["ogni 3 mesi",3],s:["ogni 6 mesi",6],a:["ogni anno",12]};
 const BANCHE={fineco:["Fineco","#0a3e8a"],bnl:["BNL","#00915a"],n26:["N26","#36a18b"],bbva:["BBVA","#004481"],contanti:["Contanti","#6b7280"],altro:["Altra banca","#6b7280"]};
-const TIPI_ACC={conto:"🏦 Conto corrente",credito:"💳 Carta di credito",debito:"💳 Carta di debito / prepagata",contanti:"💵 Contanti"};
+const TIPI_ACC={conto:"🏦 Conto corrente",credito:"💳 Carta di credito",debito:"💳 Carta di debito",prepagata:"💳 Carta prepagata",deposito:"🐖 Conto deposito / risparmio",wallet:"👛 Portafoglio (PayPal, Satispay…)",contanti:"💵 Contanti"};
+const isCard=t=>t==="credito"||t==="debito"||t==="prepagata";
+/* banche: quelle già pronte più quelle aggiunte da te (Impostazioni in «Conti e carte»), tutte con nome e colore */
+const bankOf=id=>{const b=(C().banks||[]).find(x=>x.id===id);return b?[b.n,b.col||"#6b7280"]:(BANCHE[id]||BANCHE.altro);};
+const allBanks=()=>Object.entries(BANCHE).filter(([k])=>k!=="altro").map(([k,v])=>({id:k,n:v[0],col:v[1]})).concat(C().banks||[]).concat([{id:"altro",n:"Altra banca",col:"#6b7280"}]);
+const accActive=()=>C().acc.filter(a=>!a.arch);
+const accLabel=a=>a.n+(a.l4?" ··"+a.l4:"");
 const AIUTO_BANCA={
   fineco:"Sito Fineco → Movimenti conto → «Esporta in Excel» (file .xlsx). Carte: Movimenti carte → Esporta (file .xls).",
   n26:"Sito web N26 (non l’app) → Movimenti → Scarica → scegli le date → file CSV.",
@@ -500,7 +558,7 @@ const KCAT=Object.fromEntries(KCATS.map(c=>[c[0],c]));
 const catName=id=>(KCAT[id]||KCAT.altro)[1]+" "+(KCAT[id]||KCAT.altro)[2];
 
 /* ---------- dati ---------- */
-function C(){const c=P.conti;["acc","mov","ric","rules"].forEach(k=>{if(!Array.isArray(c[k]))c[k]=[];});if(!c.bud)c.bud={};if(!c.proj)c.proj={};
+function C(){const c=P.conti;["acc","mov","ric","rules","banks"].forEach(k=>{if(!Array.isArray(c[k]))c[k]=[];});if(!c.bud)c.bud={};if(!c.proj)c.proj={};if(!c.bmap)c.bmap={};
   c.mov.forEach(m=>{if(!m.cat)m.cat=m.tipo==="e"?"entrate":"altro";});return c;}
 const cents=n=>Math.round((+n||0)*100);
 const normDesc=s=>String(s||"").toLowerCase().replace(/\s+/g," ").replace(/[^a-z0-9àèéìòù ]/g,"").trim();
@@ -517,9 +575,13 @@ function guessCat(desc,signed){const s=" "+String(desc||"").toLowerCase()+" ";
   for(const c of KCATS)if(c[3]&&c[0]!=="stipendio"&&c[3].test(s))return c[0];
   return "altro";}
 const hasCardMov=()=>{const c=C();const cards=new Set(c.acc.filter(a=>a.tipo==="credito").map(a=>a.id));return c.mov.some(m=>cards.has(m.acc));};
-const isTransfer=m=>m.cat==="giro"||(m.cat==="saldocarta"&&hasCardMov());
+/* portafogli (PayPal, Satispay…) con «ricariche come giroconti»: la ricarica dal conto non è una spesa, le spese vere sono nei movimenti del portafoglio */
+function walletTopUp(m){const ws=C().acc.filter(a=>a.tipo==="wallet"&&a.giro);if(!ws.length)return false;const w=ws.find(x=>x.id===m.acc);
+  if(w)return m.tipo==="e"; // nel portafoglio: le entrate sono ricariche dal conto
+  const d=normDesc(m.t);return ws.some(x=>String(x.key||bankOf(x.bank)[0]).toLowerCase().split(",").map(k=>normDesc(k)).filter(k=>k.length>2).some(k=>d.includes(k)));}
+const isTransfer=m=>m.cat==="giro"||(m.cat==="saldocarta"&&hasCardMov())||walletTopUp(m);
 function accBal(a){const c=C();let b=+a.s0||0;c.mov.forEach(m=>{if(m.acc===a.id&&(!a.d0||m.d>a.d0))b+=m.tipo==="e"?+m.imp:-m.imp;});return b;}
-function totBal(){return C().acc.filter(a=>a.tipo!=="credito").reduce((s,a)=>s+accBal(a),0);} // le carte di credito si pagano dal conto: non si sommano due volte
+function totBal(){return accActive().filter(a=>a.tipo!=="credito").reduce((s,a)=>s+accBal(a),0);} // le carte di credito si pagano dal conto: non si sommano due volte
 
 /* ---------- ricorrenti, rate e trattenute ---------- */
 function ricDates(r,from,to){const out=[],step=(FREQ[r.freq]||FREQ.m)[1];let d=r.d0||from;if(!d)return out;
@@ -580,12 +642,20 @@ function commitImport(){const R=buildImport(),c=C();
     const f={};R.out.filter(m=>m.tipo==="e").forEach(m=>{const x=String(m.t).toLowerCase().match(/\bben\w*:?\s+([a-zà-ù']+\s+[a-zà-ù']+)/);if(x)f[x[1]]=(f[x[1]]||0)+1;});
     const top=Object.entries(f).sort((a,b)=>b[1]-a[1])[0];if(top&&top[1]>=2)c.own=top[0];}
   c.mov.push(...R.out);
-  if(c.own)c.mov.forEach(m=>{if(m.cat!=="giro"&&isOwn(m.t,m.tipo==="e"?m.imp:-m.imp))m.cat="giro";});const a=c.acc.find(x=>x.id===IMP.acc);a.map=Object.assign({},IMP.map,{sig:IMP.sig});a.last=today();IMP=null;save();toast("📥 "+R.out.length+" movimenti importati"+(R.dup?" · "+R.dup+" già presenti":"")+(a.rec||a.tipo==="credito"?"":" · ora imposta il saldo con «Riconcilia»"));return R;}
+  if(c.own)c.mov.forEach(m=>{if(m.cat!=="giro"&&isOwn(m.t,m.tipo==="e"?m.imp:-m.imp))m.cat="giro";});const a=c.acc.find(x=>x.id===IMP.acc);a.map=Object.assign({},IMP.map,{sig:IMP.sig});c.bmap[a.bank]=Object.assign({},IMP.map,{sig:IMP.sig});a.last=today();IMP=null;save();toast("📥 "+R.out.length+" movimenti importati"+(R.dup?" · "+R.dup+" già presenti":"")+(a.rec||a.tipo==="credito"?"":" · ora imposta il saldo con «Riconcilia»"));return R;}
 async function readImportFile(file,accId){const u8=new Uint8Array(await file.arrayBuffer());const rows=await Fogli.readTable(u8);
   if(!C().own){for(const r of rows.slice(0,15)){const t=String((r||[])[0]||"");const m=t.match(/intestazi\w*[^:]*:\s*(.+)$/i)||t.match(/^intestatario:\s*(.+)$/i);if(m){C().own=m[1].trim();save();break;}}}
-  const a=C().acc.find(x=>x.id===accId);const det=detect(rows);if(!det)throw new Error("Non trovo le colonne Data e Importo in questo file");
-  const sig=(rows[det.row]||[]).map(low).join("|");const map=a.map&&a.map.sig===sig?Object.assign({},a.map):det;delete map.sig;
-  IMP={acc:accId,rows,map,sig,file:file.name};}
+  const a=C().acc.find(x=>x.id===accId),bm=C().bmap[a.bank],det=detect(rows),sigOf=r=>(rows[r]||[]).map(low).join("|");
+  // 1) colonne già scelte per questo conto 2) per la stessa banca 3) riconosciute da sole 4) scelte a mano
+  const same=m=>m&&m.sig&&rows.some((r,k)=>k<40&&sigOf(k)===m.sig)?m:null;
+  let map=null,from="",manual=false,mm=same(a.map)||same(bm);
+  if(mm){map=Object.assign({},mm);map.row=rows.findIndex((r,k)=>k<40&&sigOf(k)===mm.sig);from=mm===a.map?"":bankOf(a.bank)[0];}
+  else if(det)map=det;
+  else{if(!rows.some(r=>(r||[]).filter(x=>x!==""&&x!=null).length>=2))throw new Error("Questo file non sembra una tabella di movimenti");
+    manual=true;const r0=Math.max(0,rows.findIndex(r=>(r||[]).filter(x=>x!==""&&x!=null).length>=3));map={row:r0,date:-1,amount:-1,credit:-1,debit:-1,desc:[],status:-1,bcat:-1};}
+  delete map.sig;if(!Array.isArray(map.desc))map.desc=[];if(map.bcat==null)map.bcat=-1;
+  IMP={acc:accId,rows,map,sig:sigOf(map.row),file:file.name,from,manual};}
+function impHelp(a){if(!a)return AIUTO_BANCA.altro;const k=a.bank;return (AIUTO_BANCA[k]||("Scarica i movimenti in Excel o CSV dal sito di "+bankOf(k)[0]+"."))+(C().bmap[k]?" Le colonne di questa banca sono già memorizzate.":" Se le colonne non vengono riconosciute, le scegli tu e restano memorizzate per questa banca.");}
 
 /* ---------- proiezione «Dopo il congedo» ---------- */
 function projDefaults(){const c=C(),pr=c.proj,S=typeof licS==="function"?licS():null;
@@ -617,7 +687,7 @@ function vConti(){const c=C();
   o+=({pan:cPan,mov:cMov,imp:cImp,acc:cAcc,bud:cBud,ric:cRic,proj:cProj,stat:cStat,risp:cRisp}[CT]||cPan)();
   return o+"</div>";}
 function cPan(){const c=C(),t=today(),ym=t.slice(0,7),a=monthActual(ym),np=nextPayments(30),bud=Object.entries(c.bud).filter(([k,v])=>+v>0);
-  let o=`<div class="kpi">${c.acc.map(x=>`<div><b class="amt ${accBal(x)>=0?"e":"u"}">${euro(accBal(x))}</b><span>${esc(x.n)}${x.tipo==="credito"?" · speso dal "+fmt(x.d0,{day:"numeric",month:"short"}):""}${!x.rec&&x.tipo!=="credito"?' · <b style="color:var(--soon)">saldo da impostare</b>':""}</span></div>`).join("")}${c.acc.filter(x=>x.tipo!=="credito").length>1?`<div style="border-color:var(--accent)"><b class="amt">${euro(totBal())}</b><span>totale sui conti</span></div>`:""}</div>
+  let o=`<div class="kpi">${accActive().map(x=>`<div><b class="amt ${accBal(x)>=0?"e":"u"}">${euro(accBal(x))}</b><span>${esc(accLabel(x))}${x.tipo==="credito"?" · speso dal "+fmt(x.d0,{day:"numeric",month:"short"}):""}${!x.rec&&x.tipo!=="credito"?' · <b style="color:var(--soon)">saldo da impostare</b>':""}</span></div>`).join("")}${accActive().filter(x=>x.tipo!=="credito").length>1?`<div style="border-color:var(--accent)"><b class="amt">${euro(totBal())}</b><span>totale sui conti</span></div>`:""}</div>
   <h2>${parse(t).toLocaleDateString("it-IT",{month:"long",year:"numeric"})}</h2><div class="kpi"><div><b class="amt e">${euro(a.e)}</b><span>entrate</span></div><div><b class="amt u">${euro(a.u)}</b><span>uscite</span></div><div><b class="amt ${a.e-a.u>=0?"e":"u"}">${euro(a.e-a.u)}</b><span>differenza</span></div></div>`;
   if(bud.length)o+=`<h2>Budget del mese</h2><div class="card">${bud.map(([k,v])=>{const s=a.per[k]||0,pct=Math.min(100,Math.round(s/v*100));return `<div class="row"><div class="grow"><b>${catName(k)}</b><div style="height:8px;border-radius:5px;background:var(--seg);margin-top:5px"><div style="height:8px;border-radius:5px;width:${pct}%;background:${s>v?"var(--warn)":s>v*.8?"var(--soon)":"var(--ok)"}"></div></div></div><span class="amt">${euro(s)} / ${euro(v)}</span></div>`;}).join("")}</div>`;
   const top=Object.entries(a.per).sort((x,y)=>y[1]-x[1]).slice(0,6);
@@ -631,34 +701,49 @@ function cMov(){const c=C(),F=movF;let L=c.mov.filter(m=>(!F.ym||m.d.slice(0,7)=
     <label>Conto<select id="fA"><option value="">tutti</option>${c.acc.map(a=>`<option value="${a.id}"${a.id===F.acc?" selected":""}>${esc(a.n)}</option>`).join("")}</select></label>
     <label>Categoria<select id="fC"><option value="">tutte</option>${KCATS.map(k=>`<option value="${k[0]}"${k[0]===F.cat?" selected":""}>${k[1]} ${k[2]}</option>`).join("")}</select></label>
     <label>Cerca<input id="fQ" value="${esc(F.q)}" placeholder="es. esselunga"></label></div></div>
-  <div class="card">${L.length?L.slice(0,300).map(m=>{const a=c.acc.find(x=>x.id===m.acc);return `<div class="row"><div class="grow"><b>${esc(m.t)}</b><small>${fmt(m.d)}${a?" · "+esc(a.n):""}${m.p?" · ⏳ in attesa":""}${isTransfer(m)?" · non conta nei totali":""}</small></div>
+  <div class="card">${L.length?L.slice(0,300).map(m=>{const a=c.acc.find(x=>x.id===m.acc);return `<div class="row"><div class="grow"><b>${esc(m.t)}</b><small>${fmt(m.d)}${a?" · "+esc(accLabel(a)):""}${m.p?" · ⏳ in attesa":""}${isTransfer(m)?(m.cat!=="giro"&&walletTopUp(m)?" · ricarica del portafoglio, non conta nei totali":" · non conta nei totali"):""}</small></div>
     <select data-mcat="${m.id}" style="max-width:170px;border:1px solid var(--line);border-radius:8px;padding:5px">${KCATS.map(k=>`<option value="${k[0]}"${k[0]===m.cat?" selected":""}>${k[1]} ${k[2]}</option>`).join("")}</select>
     <span class="amt ${m.tipo==="e"?"e":"u"}">${m.tipo==="e"?"+":"−"}${euro(m.imp)}</span><button class="btn sm" data-mdel="${m.id}" aria-label="Togli">×</button></div>`;}).join("")+(L.length>300?`<p class="lbl">Mostro i primi 300 di ${L.length}: usa i filtri.</p>`:""):'<p class="empty">Nessun movimento con questi filtri.</p>'}</div>
   <div class="card"><h3>➕ Movimento a mano</h3><div class="form"><label>Che cosa<input id="mT" maxlength="80"></label><label>Importo €<input id="mI" type="text" inputmode="decimal" placeholder="0,00"></label><label>Tipo<select id="mTp"><option value="u">uscita</option><option value="e">entrata</option></select></label>
-    <label>Conto<select id="mA">${c.acc.map(a=>`<option value="${a.id}">${esc(a.n)}</option>`).join("")}<option value="">—</option></select></label><label>Data<input id="mD" type="date" value="${today()}"></label></div><div class="btns"><button class="btn pri" id="mAdd">Aggiungi</button></div></div>`;}
+    <label>Conto<select id="mA">${accActive().map(a=>`<option value="${a.id}">${esc(accLabel(a))}</option>`).join("")}<option value="">—</option></select></label><label>Data<input id="mD" type="date" value="${today()}"></label></div><div class="btns"><button class="btn pri" id="mAdd">Aggiungi</button></div></div>`;}
 function cImp(){const c=C();if(!c.acc.length)return "";
   if(IMP){const R=buildImport(),M=IMP.map,hdr=IMP.rows[M.row]||[],opt=(sel,none)=>`<option value="-1">${none||"—"}</option>`+hdr.map((h,j)=>`<option value="${j}"${j===sel?" selected":""}>${esc(h||"colonna "+(j+1))}</option>`).join("");
-    return `<div class="card"><h3>📄 ${esc(IMP.file)} → ${esc(c.acc.find(a=>a.id===IMP.acc).n)}</h3><p class="lbl">Controlla le colonne: le ho riconosciute da sole. Se una è sbagliata, cambiala.</p>
-      <div class="form"><label>Data<select data-map="date">${opt(M.date)}</select></label><label>Importo (con segno)<select data-map="amount">${opt(M.amount,"— usa Entrate/Uscite —")}</select></label>
+    return `<div class="card"><h3>📄 ${esc(IMP.file)} → ${esc(accLabel(c.acc.find(a=>a.id===IMP.acc)))}</h3><p class="lbl">${IMP.manual?"<b>Non ho riconosciuto da solo le colonne di questo file.</b> Scegli tu la riga dei titoli e le colonne di data, importo e descrizione: le ricordo per i prossimi file di questa banca.":IMP.from?"Colonne come l’ultima volta per "+esc(IMP.from)+". Se una è sbagliata, cambiala.":"Controlla le colonne: le ho riconosciute da sole. Se una è sbagliata, cambiala."}</p>
+      <div class="form"><label>Riga dei titoli<select data-map="row">${IMP.rows.slice(0,25).map((r,j)=>`<option value="${j}"${j===M.row?" selected":""}>${j+1}: ${esc((r||[]).filter(x=>x!==""&&x!=null).slice(0,3).join(" · ").slice(0,40)||"(vuota)")}</option>`).join("")}</select></label><label>Data<select data-map="date">${opt(M.date)}</select></label><label>Importo (con segno)<select data-map="amount">${opt(M.amount,"— usa Entrate/Uscite —")}</select></label>
       <label>Entrate<select data-map="credit">${opt(M.credit)}</select></label><label>Uscite<select data-map="debit">${opt(M.debit)}</select></label>
       <label>Descrizione<select data-map="desc0">${opt(M.desc[0])}</select></label><label>Descrizione 2<select data-map="desc1">${opt(M.desc[1])}</select></label><label>Stato<select data-map="status">${opt(M.status)}</select></label></div>
       <div class="kpi" style="margin-top:10px"><div><b>${R.out.length}</b><span>movimenti nuovi</span></div><div><b>${R.dup}</b><span>già presenti (saltati)</span></div><div><b>${R.pend}</b><span>in attesa di contabilizzazione</span></div><div><b>${R.skip}</b><span>righe non movimento</span></div></div>
       <div style="margin-top:10px">${R.out.slice(0,8).map(m=>`<div class="row"><div class="grow"><b>${esc(m.t)}</b><small>${fmt(m.d)} · ${catName(m.cat)}</small></div><span class="amt ${m.tipo==="e"?"e":"u"}">${m.tipo==="e"?"+":"−"}${euro(m.imp)}</span></div>`).join("")}</div>
       <div class="btns"><button class="btn pri" id="impGo"${R.out.length?"":" disabled"}>Importa ${R.out.length} movimenti</button><button class="btn" id="impNo">Annulla</button></div></div>`;}
   return `<div class="card"><h3>📥 Importa i movimenti della banca</h3><p class="lbl">Scarica i movimenti dal sito della banca (Excel o CSV) e scegli il file qui. Il file viene letto solo su questo iPad. I doppioni vengono saltati, quindi puoi importare anche periodi che si sovrappongono.</p>
-    <div class="form"><label>In quale conto o carta<select id="impAcc">${c.acc.map(a=>`<option value="${a.id}">${esc(a.n)}</option>`).join("")}</select></label><label>File<input id="impFile" type="file" accept=".csv,.txt,.xls,.xlsx,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></label></div>
-    <p class="lbl" id="impHelp">${esc(AIUTO_BANCA[(c.acc[0]||{}).bank]||AIUTO_BANCA.altro)}</p></div>
-    <div class="card"><h3>Ultime importazioni</h3>${c.acc.map(a=>`<div class="row"><div class="grow">${esc(a.n)}</div><span class="lbl">${a.last?"il "+fmt(a.last):"mai"}</span></div>`).join("")}</div>`;}
-function cAcc(){const c=C();
-  return `<div class="card"><h3>I tuoi conti e carte</h3>${c.acc.length?c.acc.map(a=>{const link=a.tipo==="credito"&&a.link?c.acc.find(x=>x.id===a.link):null;return `<div class="row"><span class="pill" style="background:${(BANCHE[a.bank]||BANCHE.altro)[1]};color:#fff">${(BANCHE[a.bank]||BANCHE.altro)[0]}</span><div class="grow"><b>${esc(a.n)}</b><small>${TIPI_ACC[a.tipo]||""}${link?" · addebitata su "+esc(link.n):""}</small></div><span class="amt ${accBal(a)>=0?"e":"u"}">${euro(accBal(a))}</span><button class="btn sm" data-arec="${a.id}">Riconcilia</button><button class="btn sm" data-adel="${a.id}">Togli</button></div>`;}).join(""):'<p class="empty">Nessun conto ancora.</p>'}</div>
-  <div class="card"><h3>➕ Aggiungi conto o carta</h3><div class="form">
-    <label>Banca<select id="aB">${Object.entries(BANCHE).map(([k,v])=>`<option value="${k}">${v[0]}</option>`).join("")}</select></label>
-    <label>Tipo<select id="aT">${Object.entries(TIPI_ACC).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select></label>
-    <label>Nome<input id="aN" maxlength="40" placeholder="es. Fineco conto"></label>
-    <label>Saldo di oggi €<input id="aS" type="text" inputmode="decimal" placeholder="0,00"></label>
-    <label>Carta addebitata su<select id="aL"><option value="">—</option>${c.acc.filter(x=>x.tipo==="conto").map(x=>`<option value="${x.id}">${esc(x.n)}</option>`).join("")}</select></label></div>
+    <div class="form"><label>In quale conto o carta<select id="impAcc">${accActive().map(a=>`<option value="${a.id}">${esc(accLabel(a))}</option>`).join("")}</select></label><label>File<input id="impFile" type="file" accept=".csv,.txt,.xls,.xlsx,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></label></div>
+    <p class="lbl" id="impHelp">${esc(impHelp(accActive()[0]))}</p></div>
+    <div class="card"><h3>Ultime importazioni</h3>${accActive().map(a=>`<div class="row"><div class="grow">${esc(accLabel(a))}</div><span class="lbl">${a.last?"il "+fmt(a.last):"mai"}</span></div>`).join("")}</div>`;}
+let ACC_ED=null; // conto in modifica
+function accForm(a){const c=C(),id=a?"e":"a",bk=a?a.bank:"fineco",tp=a?a.tipo:"conto";
+  return `<div class="form">
+    <label>Banca<select id="${id}B">${allBanks().map(b=>`<option value="${b.id}"${b.id===bk?" selected":""}>${esc(b.n)}</option>`).join("")}</select></label>
+    <label>Tipo<select id="${id}T">${Object.entries(TIPI_ACC).map(([k,v])=>`<option value="${k}"${k===tp?" selected":""}>${v}</option>`).join("")}</select></label>
+    <label>Nome<input id="${id}N" maxlength="40" value="${a?esc(a.n):""}" placeholder="es. Fineco conto"></label>
+    <label>Ultime 4 cifre (carte)<input id="${id}4" maxlength="4" inputmode="numeric" pattern="[0-9]*" value="${a&&a.l4?esc(a.l4):""}" placeholder="es. 1234"></label>
+    ${a?`<label>Saldo iniziale €<input id="eS" type="text" inputmode="decimal" value="${String(Math.round((+a.s0||0)*100)/100).replace(".",",")}"></label><label>Saldo alla data<input id="eD" type="date" value="${a.d0||""}"></label>`:`<label>Saldo di oggi €<input id="aS" type="text" inputmode="decimal" placeholder="0,00"></label>`}
+    <label>Carta addebitata su<select id="${id}L"><option value="">—</option>${accActive().filter(x=>x.tipo==="conto"&&(!a||x.id!==a.id)).map(x=>`<option value="${x.id}"${a&&a.link===x.id?" selected":""}>${esc(x.n)}</option>`).join("")}</select></label>
+    <label class="wide" data-wallet ${tp==="wallet"?"":"hidden"}><span><input type="checkbox" id="${id}G"${a&&a.giro?" checked":""} style="width:auto;margin-right:6px">Le ricariche dal conto sono giroconti (importo anche i movimenti di questo portafoglio)</span></label>
+    <label class="wide" data-wallet ${tp==="wallet"?"":"hidden"}>Parole che riconoscono le ricariche nel conto (separate da virgola)<input id="${id}K" maxlength="80" value="${a&&a.key?esc(a.key):""}" placeholder="es. satispay"></label></div>`;}
+function cAcc(){const c=C(),act=accActive(),arch=c.acc.filter(a=>a.arch);
+  const row=a=>{const link=a.link?c.acc.find(x=>x.id===a.link):null,b=bankOf(a.bank);
+    if(ACC_ED===a.id)return `<div class="card" style="border-color:var(--accent)"><h3>✏️ ${esc(a.n)}</h3>${accForm(a)}<div class="btns"><button class="btn pri" id="eSave">Salva</button><button class="btn" id="eArch">${a.arch?"Ripristina":"📦 Archivia (conto chiuso)"}</button><button class="btn" id="eNo">Annulla</button></div>
+      <p class="lbl">Archiviato, il conto sparisce dagli elenchi e dal totale, ma i suoi movimenti restano nelle statistiche. «Togli» invece cancella anche i movimenti.</p></div>`;
+    return `<div class="row"><span class="pill" style="background:${b[1]};color:#fff">${esc(b[0])}</span><div class="grow"><b>${esc(accLabel(a))}</b><small>${TIPI_ACC[a.tipo]||""}${link?" · addebitata su "+esc(link.n):""}${a.tipo==="wallet"?(a.giro?" · ricariche = giroconti":" · ricariche contate come spesa"):""}</small></div><span class="amt ${accBal(a)>=0?"e":"u"}">${euro(accBal(a))}</span><button class="btn sm" data-aed="${a.id}">✏️ Modifica</button>${a.arch?"":`<button class="btn sm" data-arec="${a.id}">Riconcilia</button>`}<button class="btn sm" data-adel="${a.id}">Togli</button></div>`;};
+  return `<div class="card"><h3>I tuoi conti e carte</h3>${act.length?act.map(row).join(""):'<p class="empty">Nessun conto ancora.</p>'}</div>
+  ${arch.length?`<details class="card"${arch.some(a=>a.id===ACC_ED)?" open":""}><summary><b>📦 Archiviati (${arch.length})</b></summary>${arch.map(row).join("")}</details>`:""}
+  <div class="card"><h3>➕ Aggiungi conto o carta</h3>${accForm(null)}
     <div class="btns"><button class="btn pri" id="aAddAcc">Aggiungi</button><button class="btn" id="aPreset">Crea Fineco, BNL, N26 e BBVA (conto + carta)</button></div>
-    <p class="lbl">Le carte di debito (N26, bancomat) addebitano ogni spesa sul conto: basta importare il conto. Per le carte di credito importa il file della carta: l’addebito mensile sul conto viene escluso dai totali, così non conti la spesa due volte. Per la carta di credito il saldo è il debito del periodo (negativo).</p></div>`;}
+    <p class="lbl">Le carte di debito (N26, bancomat) addebitano ogni spesa sul conto: basta importare il conto. Per le carte di credito importa il file della carta: l’addebito mensile sul conto viene escluso dai totali, così non conti la spesa due volte. Per la carta di credito il saldo è il debito del periodo (negativo). Per un <b>portafoglio</b> (PayPal, Satispay…): se importi anche i suoi movimenti, spunta «le ricariche sono giroconti», così le spese si contano una volta sola.</p></div>
+  <div class="card"><h3>🏦 Le tue banche</h3><p class="lbl">Aggiungi qualsiasi banca o servizio con un nome e un colore: compare nell’elenco delle banche.</p>
+    ${c.banks.length?c.banks.map(b=>`<div class="row"><span class="pill" style="background:${b.col};color:#fff">${esc(b.n)}</span><div class="grow"><small>${c.acc.filter(a=>a.bank===b.id).length} conti</small></div><input type="color" data-bcol="${b.id}" value="${b.col}" aria-label="Colore" style="width:44px;height:34px;border:0;background:none"><button class="btn sm" data-bren="${b.id}">Rinomina</button><button class="btn sm" data-bdel="${b.id}">Togli</button></div>`).join(""):'<p class="empty">Nessuna banca aggiunta.</p>'}
+    <div class="form" style="margin-top:8px"><label>Nome<input id="bN" maxlength="30" placeholder="es. Intesa, Poste, Revolut, Satispay"></label><label>Colore<input id="bC" type="color" value="#7a4fd1" style="height:42px"></label></div>
+    <div class="btns"><button class="btn pri" id="bAdd">Aggiungi banca</button></div></div>`;}
 function cBud(){const c=C(),a=monthActual(today().slice(0,7)),avg={};lastMonths(4).slice(0,3).forEach(ym=>{const x=monthActual(ym);Object.entries(x.per).forEach(([k,v])=>avg[k]=(avg[k]||0)+v/3);});
   return `<div class="card"><h3>Budget mensile per categoria</h3><p class="lbl">Lascia vuoto dove non vuoi un tetto. Accanto: speso questo mese e media degli ultimi 3 mesi.</p>
     ${KCATS.filter(k=>!["stipendio","entrate","giro","saldocarta"].includes(k[0])).map(k=>`<div class="row"><div class="grow"><b>${k[1]} ${k[2]}</b><small>questo mese ${euro(a.per[k[0]]||0)} · media ${euro(avg[k[0]]||0)}</small></div><input data-bud="${k[0]}" type="text" inputmode="decimal" value="${c.bud[k[0]]||""}" placeholder="€" style="width:110px;border:1px solid var(--line);border-radius:10px;padding:8px"></div>`).join("")}</div>
@@ -699,14 +784,29 @@ function bindConti(){const c=C();if(typeof bindStat==="function")bindStat();
   if($("mAdd"))$("mAdd").onclick=()=>{const t=$("mT").value.trim(),i=num($("mI").value);if(!t||!(i>0)){toast("Scrivi che cosa e importo");return;}const tp=$("mTp").value,acc=$("mA").value,d=$("mD").value||today();
     c.mov.push({id:uid(),d,t,imp:i,tipo:tp,cat:guessCat(t,tp==="e"?i:-i),acc,h:movHash(acc||"-",d,tp==="e"?i:-i,t),src:"man"});save();render();toast("Aggiunto");};
   // importazione
-  if($("impAcc"))$("impAcc").onchange=e=>{const a=c.acc.find(x=>x.id===e.target.value);$("impHelp").textContent=AIUTO_BANCA[a&&a.bank]||AIUTO_BANCA.altro;};
+  if($("impAcc"))$("impAcc").onchange=e=>{const a=c.acc.find(x=>x.id===e.target.value);$("impHelp").textContent=impHelp(a);};
   if($("impFile"))$("impFile").onchange=async e=>{const f=e.target.files[0];if(!f)return;try{await readImportFile(f,$("impAcc").value);render();}catch(err){toast(err.message||"File non leggibile");}};
-  document.querySelectorAll("[data-map]").forEach(s=>s.onchange=()=>{const k=s.dataset.map,v=+s.value;if(k==="desc0"||k==="desc1"){const d=IMP.map.desc.slice();d[k==="desc0"?0:1]=v;IMP.map.desc=d.filter(x=>x>=0);}else IMP.map[k]=v;render();});
+  document.querySelectorAll("[data-map]").forEach(s=>s.onchange=()=>{const k=s.dataset.map,v=+s.value;if(k==="desc0"||k==="desc1"){const d=IMP.map.desc.slice();d[k==="desc0"?0:1]=v;IMP.map.desc=d.filter(x=>x>=0);}else IMP.map[k]=v;if(k==="row")IMP.sig=(IMP.rows[v]||[]).map(low).join("|");render();});
   if($("impGo"))$("impGo").onclick=()=>{commitImport();CT="mov";movF={ym:"",acc:"",cat:"",q:""};render();};
   if($("impNo"))$("impNo").onclick=()=>{IMP=null;render();};
   // conti e carte
-  if($("aAddAcc"))$("aAddAcc").onclick=()=>{const b=$("aB").value,tp=$("aT").value,n=$("aN").value.trim()||(BANCHE[b][0]+" "+(tp==="conto"?"conto":tp==="contanti"?"":"carta")).trim(),s=num($("aS").value)||0;
-    c.acc.push({id:uid(),n,bank:b,tipo:tp,link:tp==="credito"?$("aL").value:"",s0:s,d0:today(),rec:$("aS").value.trim()?1:0});save();render();toast("Aggiunto");};
+  const showWallet=pre=>{const t=$(pre+"T");if(!t)return;const f=()=>document.querySelectorAll("[data-wallet]").forEach(x=>{if(x.closest(".card").contains(t))x.hidden=t.value!=="wallet";});t.addEventListener("change",f);};
+  showWallet("a");showWallet("e");
+  const l4=v=>String(v||"").replace(/\D/g,"").slice(-4);
+  if($("aAddAcc"))$("aAddAcc").onclick=()=>{const b=$("aB").value,tp=$("aT").value,bn=bankOf(b)[0],n=$("aN").value.trim()||(bn+" "+(tp==="conto"?"conto":tp==="contanti"||tp==="wallet"?"":tp==="deposito"?"deposito":"carta")).trim(),s=num($("aS").value)||0;
+    c.acc.push({id:uid(),n,bank:b,tipo:tp,link:isCard(tp)?$("aL").value:"",l4:l4($("a4").value),giro:tp==="wallet"&&$("aG").checked?1:0,key:tp==="wallet"?($("aK").value.trim()||bn.toLowerCase()):"",s0:s,d0:today(),rec:$("aS").value.trim()?1:0});save();render();toast("Aggiunto");};
+  document.querySelectorAll("[data-aed]").forEach(b=>b.onclick=()=>{ACC_ED=b.dataset.aed;render();const e=$("eN");if(e)e.scrollIntoView({block:"center"});});
+  if($("eNo"))$("eNo").onclick=()=>{ACC_ED=null;render();};
+  if($("eSave"))$("eSave").onclick=()=>{const a=c.acc.find(x=>x.id===ACC_ED);if(!a)return;const n=$("eN").value.trim();if(!n){toast("Scrivi un nome");return;}const s0=num($("eS").value);if(s0==null){toast("Saldo non valido");return;}
+    const tp=$("eT").value;Object.assign(a,{n,bank:$("eB").value,tipo:tp,l4:l4($("e4").value),link:isCard(tp)?$("eL").value:"",s0,d0:$("eD").value||a.d0,giro:tp==="wallet"&&$("eG").checked?1:0,key:tp==="wallet"?($("eK").value.trim()||bankOf($("eB").value)[0].toLowerCase()):""});
+    ACC_ED=null;save();render();toast("Salvato");};
+  if($("eArch"))$("eArch").onclick=()=>{const a=c.acc.find(x=>x.id===ACC_ED);if(!a)return;a.arch=a.arch?0:1;ACC_ED=null;save();render();toast(a.arch?"📦 Archiviato: i movimenti restano nelle statistiche":"Ripristinato");};
+  // banche tue
+  if($("bAdd"))$("bAdd").onclick=()=>{const n=$("bN").value.trim();if(!n){toast("Scrivi il nome della banca");return;}if(allBanks().some(b=>b.n.toLowerCase()===n.toLowerCase())){toast("C’è già");return;}
+    c.banks.push({id:"b"+uid(),n,col:$("bC").value||"#7a4fd1"});save();render();toast("Banca aggiunta: ora scegli «"+n+"» nel nuovo conto");};
+  document.querySelectorAll("[data-bcol]").forEach(i=>i.onchange=()=>{const b=c.banks.find(x=>x.id===i.dataset.bcol);if(b){b.col=i.value;save();render();}});
+  document.querySelectorAll("[data-bren]").forEach(x=>x.onclick=()=>{const b=c.banks.find(y=>y.id===x.dataset.bren);const v=b&&prompt("Nuovo nome per «"+b.n+"»:",b.n);if(v&&v.trim()){b.n=v.trim();save();render();}});
+  document.querySelectorAll("[data-bdel]").forEach(x=>x.onclick=()=>{const id=x.dataset.bdel,n=c.acc.filter(a=>a.bank===id).length;if(n){toast("Ci sono "+n+" conti di questa banca: cambiali o toglili prima");return;}c.banks=c.banks.filter(b=>b.id!==id);delete c.bmap[id];save();render();});
   if($("aPreset"))$("aPreset").onclick=()=>{if(c.acc.length&&!confirm("Aggiungere i conti di Fineco, BNL, N26 e BBVA a quelli che hai già?"))return;
     [["fineco","Fineco"],["bnl","BNL"],["n26","N26"],["bbva","BBVA"]].forEach(([b,nm])=>{const id=uid();c.acc.push({id,n:nm+" conto",bank:b,tipo:"conto",s0:0,d0:today()});if(b!=="n26")c.acc.push({id:uid(),n:nm+" carta di credito",bank:b,tipo:"credito",link:id,s0:0,d0:today()});});
     save();render();toast("Creati: imposta i saldi con «Riconcilia»");};
@@ -918,7 +1018,8 @@ function vOggi(){
     <div class="row"><div class="grow">Tai Chi oggi</div><b>${tcToday?"✓ "+tcToday:"—"}</b></div><div class="row"><div class="grow">Sessioni questa settimana</div><b>${tcWeek}</b><a class="btn sm" href="taichi.html">Apri</a></div></div>`;
   // valentina
   const v=valeInfo(),vd=v&&v.saved?new Date(v.saved):null;
-  o+=`<div class="card"><h3>🐉 Il mio mondo <a href="progressi.html">Progressi ›</a></h3>${v&&v.saved?`<div class="row"><div class="grow">Nozioni imparate nel percorso</div><b>${v.l}</b></div><div class="row"><div class="grow">Giorni di studio negli ultimi 7</div><b>${v.w}</b></div><div class="row"><span class="lbl">Ultimo invio dall’iPad: ${vd.toDateString()===new Date().toDateString()?"oggi alle "+vd.toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"}):vd.toLocaleDateString("it-IT",{weekday:"short",day:"numeric",month:"short"})}</span></div>`:v&&v.linked?'<p class="empty">Collegato: in attesa del primo invio dall’iPad.</p>':'<p class="empty">Collega «Il mio mondo» nella sezione Progressi.</p>'}${v&&(v.err||(v.age!=null&&v.age>1.5))?`<div class="warnbox">⚠️ ${v.err?esc(v.err)+".":`L’iPad non invia da ${Math.floor(v.age)} ${Math.floor(v.age)===1?"giorno":"giorni"}. Sull’iPad della bimba: <b>🐉 Io</b> → riquadro <b>💾 Salvataggi</b>; se c’è ⚠️, tocca <b>🔑 Nuova chiave</b>.`}</div>`:""}</div>`;
+  o+=`<div class="card"><h3>🐉 Il mio mondo <a href="progressi.html">Progressi ›</a></h3>${v&&v.saved?`<div class="row"><div class="grow">Nozioni imparate nel percorso</div><b>${v.l}</b></div><div class="row"><div class="grow">Giorni di studio negli ultimi 7</div><b>${v.w}</b></div><div class="row"><span class="lbl">Ultimo invio dall’iPad: ${vd.toDateString()===new Date().toDateString()?"oggi alle "+vd.toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"}):vd.toLocaleDateString("it-IT",{weekday:"short",day:"numeric",month:"short"})}</span></div>`:v&&v.linked?'<p class="empty">Collegato: in attesa del primo invio dall’iPad.</p>':'<p class="empty">Collega «Il mio mondo» nella sezione Progressi.</p>'}${v&&(v.err||(v.age!=null&&v.age>1.5))?`<div class="warnbox">⚠️ ${v.err?esc(v.err)+".":`L’iPad non invia da ${Math.floor(v.age)} ${Math.floor(v.age)===1?"giorno":"giorni"}. Sull’iPad della bimba guarda <b>🐉 Io → 💾 Salvataggi</b>: se c’è ⚠️, prepara un QR con una chiave nuova in <a href="progressi.html">Progressi</a> e inquadralo con <b>📷 Collegati con il QR</b>.`}</div>`:""}${ghWarn()}</div>`;
+  o+=weekCard();
   return o+"</div>";
 }
 function vScad(){
@@ -1066,7 +1167,7 @@ window.addEventListener("hashchange",()=>{const k=(location.hash||"").slice(1);i
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"){render();valePull(false);}});
 window.addEventListener("online",()=>valePull(false));setInterval(()=>valePull(false),30*60e3);
 window.__pn={icsItems,icsText,licCalc,licS,absBlocks,nextPayments,monthTotals,proj:()=>projection(),get P(){return P;}};
-render(); recover(); setTimeout(()=>valePull(false),800);
+render(); recover(); setTimeout(()=>valePull(false),800); setTimeout(ghDaily,1500);
 </script>
 <script>
 /* ===== Aggiornamento automatico e controllo versione (uguale in tutte le sezioni di Pianificazione: costruita da comune/barra.html) =====
