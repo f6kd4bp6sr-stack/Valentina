@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<script>window.APP_VERSION="f407bbc1df";</script>
+<script>window.APP_VERSION="6892eadf87";</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://f6kd4bp6sr-stack.github.io; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://i.ytimg.com; font-src 'self' data:; media-src 'self' data: blob:; connect-src 'self' https://api.github.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src https://www.youtube-nocookie.com">
 <meta name="robots" content="noindex, nofollow, noarchive">
@@ -3349,6 +3349,7 @@ const store = (() => {
   }
   const api = {
     local: !!ls, cloud: null, onCloud: null,
+    fresh: Object.keys(mem).length === 0,   // memoria del browser vuota all'avvio (prima volta o svuotata dall'iPad)
     get(k, d) { return Object.prototype.hasOwnProperty.call(mem, k) ? JSON.parse(JSON.stringify(mem[k])) : d; },
     set(k, v, fromCloud, t) {
       mem[k] = JSON.parse(JSON.stringify(v)); stamp[k] = t || Date.now();
@@ -9504,7 +9505,10 @@ const CLOUD_SNAPS = [];
     function proceed() {
       // confronto: vince la voce più recente
       let changed = false;
-      Object.keys(all).forEach(k => { const r = all[k]; if (r && (r.t || 0) > (store._stamp[k] || 0)) { store.set(k, r.v, true, r.t); changed = true; } });
+      // se la memoria del browser era vuota all'avvio, i dati salvati nel database vincono sempre
+      // (all'avvio l'app scrive valori iniziali più «nuovi», che altrimenti coprirebbero quelli veri)
+      const rescue = store.fresh && Object.keys(all).length > 0;
+      Object.keys(all).forEach(k => { const r = all[k]; if (r && (rescue || (r.t || 0) > (store._stamp[k] || 0))) { store.set(k, r.v, true, r.t); changed = true; } });
       const missing = Object.keys(store._mem).filter(k => !all[k] || (all[k].t || 0) < (store._stamp[k] || 0));
       missing.forEach(idbPut);
       dailySnapshot();
