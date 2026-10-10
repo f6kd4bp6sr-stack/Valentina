@@ -86,7 +86,7 @@ a.btn{text-decoration:none}
 @media (prefers-color-scheme:dark){:root{--bg:#0f1216;--card:#1a1e24;--ink:#eef0f3;--muted:#9aa3ae;--line:#2a3038;--seg:#242a32;--ok-bg:#16301f;--warn-bg:#3a1b19;--soon-bg:#33270f;--lp-bg:#3a2218;--fam-bg:#271f3d;--ben-bg:#14302f;--euro-bg:#172739}
   .form input,.form select,.form textarea,.chk,.mood button{background:#12161b;color:var(--ink)}.day.together{background:linear-gradient(180deg,#1a1e24,#14261b)}}
 </style>
-<script>window.APP_VERSION="e639cc4b6f";window.APP_BUILD="2026-10-10T09:52+02:00";</script>
+<script>window.APP_VERSION="53e9039d41";window.APP_BUILD="2026-10-10T11:24+02:00";</script>
 </head>
 <body>
 <style id="lockCss">
@@ -1016,7 +1016,7 @@ function vOggi(){
   const bd=benDay(t),tc=tcSessions(),tcToday=tc.filter(x=>x.d===t).length,tcWeek=tc.filter(x=>x.d>=monday(t)).length;
   o+=`<div class="card"><h3>🧘 Benessere <button class="lnk" data-go="ben">Diario ›</button></h3><div class="lbl">Come ti senti oggi?</div><div class="mood" style="margin:6px 0">${UMORE.map((u,i)=>`<button data-mood="${i+1}" class="${+bd.umore===i+1?"on":""}" aria-label="umore ${i+1}">${u}</button>`).join("")}</div>
     <div class="row"><div class="grow">Tai Chi oggi</div><b>${tcToday?"✓ "+tcToday:"—"}</b></div><div class="row"><div class="grow">Sessioni questa settimana</div><b>${tcWeek}</b><a class="btn sm" href="taichi.html">Apri</a></div></div>`;
-  // valentina
+  // il mio mondo
   const v=valeInfo(),vd=v&&v.saved?new Date(v.saved):null;
   o+=`<div class="card"><h3>🐉 Il mio mondo <a href="progressi.html">Progressi ›</a></h3>${v&&v.saved?`<div class="row"><div class="grow">Nozioni imparate nel percorso</div><b>${v.l}</b></div><div class="row"><div class="grow">Giorni di studio negli ultimi 7</div><b>${v.w}</b></div><div class="row"><span class="lbl">Ultimo invio dall’iPad: ${vd.toDateString()===new Date().toDateString()?"oggi alle "+vd.toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"}):vd.toLocaleDateString("it-IT",{weekday:"short",day:"numeric",month:"short"})}</span></div>`:v&&v.linked?'<p class="empty">Collegato: in attesa del primo invio dall’iPad.</p>':'<p class="empty">Collega «Il mio mondo» nella sezione Progressi.</p>'}${v&&(v.err||(v.age!=null&&v.age>1.5))?`<div class="warnbox">⚠️ ${v.err?esc(v.err)+".":`L’iPad non invia da ${Math.floor(v.age)} ${Math.floor(v.age)===1?"giorno":"giorni"}. Sull’iPad della bimba guarda <b>🐉 Io → 💾 Salvataggi</b>: se c’è ⚠️, prepara un QR con una chiave nuova in <a href="progressi.html">Progressi</a> e inquadralo con <b>📷 Collegati con il QR</b>.`}</div>`:""}${ghWarn()}</div>`;
   o+=weekCard();
@@ -1143,7 +1143,9 @@ function bind(){
   if($("calClip"))$("calClip").onclick=pasteCal;
   if($("calPasteBtn"))$("calPasteBtn").onclick=pasteCal;
   if($("calPasteGo"))$("calPasteGo").onclick=()=>{importCal($("calPaste").value);};
-  if($("calSym"))$("calSym").onclick=()=>{try{navigator.clipboard.writeText("§");toast("§ copiato");}catch(e){}};
+  if($("calSym"))$("calSym").onclick=()=>{const old=()=>{try{const t=document.createElement("textarea");t.value="§";t.style.cssText="position:fixed;opacity:0";document.body.appendChild(t);t.select();const ok=document.execCommand("copy");t.remove();return ok;}catch(e){return false;}};
+    const done=ok=>toast(ok?"§ copiato":"Non riesco a copiare: tieni premuto sul simbolo § e scegli Copia");
+    try{navigator.clipboard.writeText("§").then(()=>done(true),()=>done(old()));}catch(e){done(old());}};
   if($("calClear"))$("calClear").onclick=()=>{if(!confirm("Togliere gli eventi presi dal Calendario?"))return;P.cal={at:null,ev:[]};save();render();};
   document.querySelectorAll("[data-c2s]").forEach(b=>b.onclick=()=>{const e=(P.cal.ev||[]).find(x=>x.k===b.dataset.c2s);if(!e)return;P.scad.push({id:uid(),t:e.t,d:e.d,cat:/lavoro/i.test(e.cal)?"pratica":"altro",ric:"no",av:1,note:e.loc||"",done:false,fromCal:1});save();render();toast("Aggiunta alle scadenze");});
   if($("icsNew"))$("icsNew").onclick=()=>exportIcs(false);

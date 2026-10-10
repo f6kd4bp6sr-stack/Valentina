@@ -72,7 +72,7 @@
     busy = true;
     try {
       var body = JSON.stringify({ files: (function () { var f = {}; f[FILE] = { content: "" }; return f; })() });
-      var content = await encrypt(c.key, { app: "mondo-valentina", saved: new Date().toISOString(), state: { data: data } });
+      var content = await encrypt(c.key, { app: "il-mio-mondo", saved: new Date().toISOString(), state: { data: data } });
       var f = {}; f[FILE] = { content: content }; body = JSON.stringify({ files: f });
       var r = await fetch(API + "/gists/" + c.gist, { method: "PATCH", headers: headers(c.token), body: body, keepalive: body.length < 60000, cache: "no-store" });
       c = cfg() || c;
@@ -86,7 +86,7 @@
     var nc = normCode(myCode);
     if (nc.length < 6) throw new Error("il codice deve avere almeno 6 caratteri");
     var keyStr = await codeKey(nc), tag = await codeTag(nc), desc = "mie-app-mondo " + tag;
-    var content = await encrypt(keyStr, { app: "mondo-valentina", saved: new Date().toISOString(), state: { data: collect() } });
+    var content = await encrypt(keyStr, { app: "il-mio-mondo", saved: new Date().toISOString(), state: { data: collect() } });
     var f = {}; f[FILE] = { content: content };
     // se esiste già uno spazio con lo stesso codice, si riusa
     var id = null;

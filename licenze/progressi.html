@@ -199,13 +199,13 @@ html.locked #lockScr{display:grid}
     <b>🔗 Collegamento automatico con «Il mio mondo»</b>
     <div class="lbl" id="lnkSt">Non collegato: i dati arrivano solo caricando i file.</div>
     <div id="lnkSet">
-      <div class="lbl" style="margin-top:6px">Una volta sola: sull’iPad di «Il mio mondo» apri <b>🐉 Io</b> → riquadro <b>💾 Salvataggi</b> → <b>🔗 Invio automatico con GitHub</b>, incolla la chiave GitHub, scegli un codice (almeno 6 caratteri) e tocca «Collega»; poi scrivi qui lo stesso codice. Da quel momento l’iPad invia i progressi da solo, cifrati, ogni volta che l’app si apre e almeno una volta al giorno, e questa pagina li scarica da sola.</div>
+      <div class="lbl" style="margin-top:6px">Una volta sola: sull’iPad di «Il mio mondo» apri <b>🐉 Io</b> → riquadro <b>💾 Salvataggi</b> → <b>🔗 Oppure collega a mano con la chiave GitHub</b>, incolla la chiave GitHub, scegli un codice (almeno 6 caratteri) e tocca «Collega»; poi scrivi qui lo stesso codice. Da quel momento l’iPad invia i progressi da solo, cifrati, ogni volta che l’app si apre e almeno una volta al giorno, e questa pagina li scarica da sola.</div>
       <details style="margin-top:8px"><summary class="lbl" style="cursor:pointer"><b>Come creare la chiave GitHub (5 minuti, una volta sola)</b></summary>
         <ol class="lbl" style="padding-left:20px;margin:6px 0">
           <li>In Safari apri <a href="https://github.com/settings/tokens/new?scopes=gist&amp;description=mie-app%20progressi" target="_blank" rel="noopener">github.com/settings/tokens/new</a> ed entra con il tuo account GitHub.</li>
           <li>In «Note» lascia <i>mie-app progressi</i>; in «Expiration» scegli <b>No expiration</b> (o un anno, e poi la rinnovi).</li>
           <li>Spunta <b>solo</b> la casella <b>gist</b>; tutto il resto vuoto.</li>
-          <li>Tocca <b>Generate token</b> e copia la chiave (inizia con <i>ghp_</i>): si vede una volta sola. Mandala all’iPad con AirDrop o Note e incollala in «🔗 Invio automatico con GitHub».</li>
+          <li>Tocca <b>Generate token</b> e copia la chiave (inizia con <i>ghp_</i>): si vede una volta sola. Mandala all’iPad con AirDrop o Note e incollala in «🔗 Oppure collega a mano con la chiave GitHub».</li>
         </ol>
         <div class="lbl">La chiave può solo scrivere note private («gist») sul tuo GitHub: non dà accesso al resto. I progressi viaggiano cifrati: senza il codice MM1 nessuno li può leggere.</div>
       </details>
@@ -215,7 +215,7 @@ html.locked #lockScr{display:grid}
   </div>
 
   <div class="card" id="pair">
-    <b>📲 Collega l’iPad della bimba con un QR</b>
+    <b>📲 Collega con un QR</b> <span class="lbl">(iPad della bimba)</span>
     <div class="lbl" id="pairSt">Il modo più semplice: la chiave GitHub si scrive solo qui; sull’iPad della bimba basta inquadrare un QR.</div>
     <details id="pairBox" style="margin-top:6px"><summary class="lbl" style="cursor:pointer"><b>Prepara il QR di collegamento (anche per una chiave nuova)</b></summary>
       <ol class="lbl" style="padding-left:20px;margin:6px 0">
@@ -260,7 +260,7 @@ async function loadAll(){let pack=lsGet(KEY),hist=lsGet(HKEY)||[];
 
 /* ---------- lettura del file di «Il mio mondo» ---------- */
 function normalize(o){
-  // formati accettati: {app:'mondo-valentina', saved, state:{data,t}}  ·  {data,t}  ·  oggetto chiave→valore
+  // formati accettati: {app:'il-mio-mondo' (o i file di prima «mondo-…»), saved, state:{data,t}}  ·  {data,t}  ·  oggetto chiave→valore
   if(!o||typeof o!=="object") throw new Error("file non valido");
   let data=null,saved=o.saved||null;
   if(o.state&&o.state.data) data=o.state.data;
@@ -971,7 +971,7 @@ function paintLink(){
   if(!on){$("lnkSt").textContent="Non collegato: i dati arrivano solo caricando i file.";return;}
   const age=LINK.sent?(Date.now()-new Date(LINK.sent).getTime())/36e5:null;
   $("lnkSt").innerHTML=(LINK.err?`⚠️ ${esc(LINK.err)}<br>`:"")+`✅ Collegato. Ultimo invio dall’iPad: <b>${whenTxt(LINK.sent)}</b> · controllato ${whenTxt(LINK.checked)}`+
-    (age!=null&&age>36?`<div class="lnkwarn"><b>⚠️ L’iPad non invia da ${Math.floor(age/24)} ${Math.floor(age/24)===1?"giorno":"giorni"}.</b> Perché succede e cosa fare:<ol><li>«Il mio mondo» non è stato aperto con internet: aprilo e aspetta 10 secondi.</li><li><b>La chiave GitHub è scaduta</b> (la causa più comune): sull’iPad della bimba vai in <b>🐉 Io</b> → riquadro <b>💾 Salvataggi</b>. Se vedi ⚠️, crea una chiave nuova e prepara il QR qui sotto (<b>📲 Collega l’iPad della bimba con un QR</b>), poi sull’iPad della bimba tocca <b>📷 Collegati con il QR</b>. In alternativa: <b>🔑 Nuova chiave</b> e incollala a mano.</li><li>Se in quel riquadro non c’è più «Invio automatico attivo», ricollega con il QR (stesso codice).</li></ol></div>`:"");
+    (age!=null&&age>36?`<div class="lnkwarn"><b>⚠️ L’iPad non invia da ${Math.floor(age/24)} ${Math.floor(age/24)===1?"giorno":"giorni"}.</b> Perché succede e cosa fare:<ol><li>«Il mio mondo» non è stato aperto con internet: aprilo e aspetta 10 secondi.</li><li><b>La chiave GitHub è scaduta</b> (la causa più comune): sull’iPad della bimba vai in <b>🐉 Io</b> → riquadro <b>💾 Salvataggi</b>. Se vedi ⚠️, crea una chiave nuova e prepara il QR qui sotto (<b>📲 Collega con un QR</b>), poi sull’iPad della bimba tocca <b>📷 Collegati con il QR</b>. In alternativa: <b>🔑 Nuova chiave</b> e incollala a mano.</li><li>Se in quel riquadro non c’è più «Invio automatico attivo», ricollega con il QR (stesso codice).</li></ol></div>`:"");
 }
 async function pull(manual){
   if(!LINK||!LINK.gist||pulling)return; pulling=true;
@@ -1041,7 +1041,7 @@ window.__analyze=analyze; window.__normalize=normalize;
 
 })();
 </script>
-<script>window.APP_VERSION="e639cc4b6f";window.APP_BUILD="2026-10-10T09:52+02:00";</script>
+<script>window.APP_VERSION="53e9039d41";window.APP_BUILD="2026-10-10T11:24+02:00";</script>
 <script>
 /* ===== Aggiornamento automatico e controllo versione (uguale in tutte le sezioni di Pianificazione: costruita da comune/barra.html) =====
    - all'apertura, al ritorno sull'app e ogni 30 minuti legge version.json saltando ogni copia vecchia (anche quella del server di GitHub);

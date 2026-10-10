@@ -1439,7 +1439,7 @@ $("bExport").onclick=async()=>{
     const blob=new Blob([data],{type:"application/json"});
     const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=filename;
     document.body.appendChild(a);a.click();a.remove(); markBk();
-  }catch(e){ try{navigator.clipboard.writeText(data);toast("Copia negli appunti");}catch(_){} }
+  }catch(e){ try{navigator.clipboard.writeText(data).then(()=>toast("Copia negli appunti"),()=>toast("Non riesco a salvare né a copiare la copia: riprova"));}catch(_){toast("Non riesco a salvare la copia: riprova");} }
 };
 $("bImport").onchange=e=>{
   const f=e.target.files[0]; if(!f)return;
@@ -1479,7 +1479,7 @@ setSaveStat("init");
 window.__flush=()=>{ try{ flushAll(); }catch(e){} };
 })();
 </script>
-<script>window.APP_VERSION="e639cc4b6f";window.APP_BUILD="2026-10-10T09:52+02:00";</script>
+<script>window.APP_VERSION="53e9039d41";window.APP_BUILD="2026-10-10T11:24+02:00";</script>
 <script>
 /* ===== Aggiornamento automatico e controllo versione (uguale in tutte le sezioni di Pianificazione: costruita da comune/barra.html) =====
    - all'apertura, al ritorno sull'app e ogni 30 minuti legge version.json saltando ogni copia vecchia (anche quella del server di GitHub);
