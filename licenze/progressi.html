@@ -204,7 +204,7 @@ html.locked #lockScr{display:grid}
   };
 })();
 </script>
-<nav class="appsw" aria-label="App"><a href="./">🏠 Pianificazione</a><a href="licenze.html">📅 Licenze</a><a href="taichi.html">🧘 Tai Chi</a><a class="on" href="progressi.html" aria-current="page">🐉 Progressi</a></nav>
+<nav class="appsw" aria-label="App"><a href="./">🏠 Pianificazione</a><a href="licenze.html">📅 Licenze</a><a href="taichi.html">🧘 Tai Chi</a><a class="on" href="progressi.html" aria-current="page">🐉 Progressi</a><a href="semestre.html">🩺 Semestre filtro</a></nav>
 <main>
   <h1 id="title">I progressi</h1>
   <div class="stbar" id="stbar"></div>
@@ -1224,7 +1224,7 @@ window.__analyze=analyze; window.__normalize=normalize;
 
 })();
 </script>
-<script>window.APP_VERSION="af8f687aa6";window.APP_BUILD="2026-10-10T17:35+02:00";</script>
+<script>window.APP_VERSION="d6a2177f37";window.APP_BUILD="2026-10-10T21:00+02:00";</script>
 <script>
 /* ===== Aggiornamento automatico e controllo versione (uguale in tutte le sezioni di Pianificazione: costruita da comune/barra.html) =====
    - all'apertura, al ritorno sull'app e ogni 30 minuti legge version.json saltando ogni copia vecchia (anche quella del server di GitHub);
@@ -1262,7 +1262,7 @@ window.__analyze=analyze; window.__normalize=normalize;
   }
   /* ---------- salvataggio automatico comune a tutte le sezioni ----------
      Ogni sezione salva subito le proprie modifiche sul dispositivo. Qui, da qualsiasi sezione:
-     copia giornaliera completa (Pianificazione + Licenze + Tai Chi + Progressi) negli ultimi 30 giorni e copia su File / iCloud. */
+     copia giornaliera completa (Pianificazione + Licenze + Tai Chi + Progressi + Semestre filtro) negli ultimi 30 giorni e copia su File / iCloud. */
   function lsJ(k){try{return JSON.parse(localStorage.getItem(k)||"null");}catch(e){return null;}}
   function dumpAll(){
     var S=lsJ("licenze-marco-v1"), tc={}, n=0;
@@ -1270,8 +1270,9 @@ window.__analyze=analyze; window.__normalize=normalize;
     var pack=lsJ("prog-vale-v1"), link=lsJ("prog-link-v1");
     var pg=pack||link?{pack:pack,hist:lsJ("prog-vale-hist-v1")||[],link:link}:null;
     var pn=lsJ("pn-v1");
-    if(!S&&!n&&!pg&&!pn)return null;
-    var o={}; if(S)for(var x in S)o[x]=S[x]; o.taichi=tc; o.progressi=pg; if(pn)o.pianifica=pn; o.app="le-mie-app"; return o;
+    var sf=lsJ("semestre-v1");
+    if(!S&&!n&&!pg&&!pn&&!sf)return null;
+    var o={}; if(S)for(var x in S)o[x]=S[x]; o.taichi=tc; o.progressi=pg; if(pn)o.pianifica=pn; if(sf)o.semestre=sf; o.app="le-mie-app"; return o;
   }
   function kvDb(){return new Promise(function(res,rej){try{var r=indexedDB.open("licenze-marco",1);r.onupgradeneeded=function(){if(!r.result.objectStoreNames.contains("kv"))r.result.createObjectStore("kv");};r.onsuccess=function(){res(r.result);};r.onerror=function(){rej(r.error);};}catch(e){rej(e);}});}
   function today(){var d=new Date();return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2);}
