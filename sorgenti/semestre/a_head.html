@@ -6,11 +6,14 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Pianificazione">
-<meta name="theme-color" content="#f3f4f7">
+<meta name="apple-mobile-web-app-title" content="Semestre filtro">
+<meta name="theme-color" content="#f3f4f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1216" media="(prefers-color-scheme: dark)">
+<meta name="description" content="Preparazione agli esami del semestre filtro di Medicina 2026/27: Fisica, Chimica, Biologia">
 <meta name="robots" content="noindex, nofollow">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
 <title>Semestre filtro</title>
 /*APPVERSION*/
 <style>
@@ -23,7 +26,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system
 .appsw{display:flex;justify-content:center;gap:4px;margin:10px auto 0;padding:4px;background:var(--seg);border-radius:999px;width:max-content;max-width:calc(100% - 32px);overflow-x:auto}
 .appsw a{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:999px;font-weight:700;font-size:15px;color:var(--muted);text-decoration:none;white-space:nowrap}
 .appsw a.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
-.wrap{max-width:1180px;margin:0 auto;padding:14px 16px 0;display:grid;grid-template-columns:210px 1fr;gap:18px;align-items:start}
+.wrap{max-width:1180px;margin:0 auto;padding:calc(14px + env(safe-area-inset-top)) 16px 0;display:grid;grid-template-columns:210px 1fr;gap:18px;align-items:start}
 .side{position:sticky;top:12px;display:grid;gap:4px}
 .side button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;background:none;font:inherit;font-weight:700;font-size:16px;color:var(--muted);padding:11px 12px;border-radius:12px;cursor:pointer}
 .side button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
@@ -82,6 +85,9 @@ a.btn{text-decoration:none}
 .hero{display:flex;gap:16px;align-items:center}
 .lead{font-size:17px;line-height:1.5}
 .breve{margin:0;padding-left:20px}.breve li{margin:6px 0;line-height:1.5}
+.expl p{margin:0 0 10px;line-height:1.6}.expl p:last-child{margin:0}
+.esv{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:8px 0}.esv summary{cursor:pointer;line-height:1.5}.esv ol{margin:8px 0 4px;padding-left:22px}.esv li{margin:4px 0;font-variant-numeric:tabular-nums}.esr{margin:6px 0 0;font-weight:700;color:var(--ok)}
+.med{border-left:4px solid var(--accent)}
 .formula{font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:15px;background:var(--seg);border-radius:10px;padding:8px 12px;margin:6px 0;overflow-x:auto;white-space:nowrap}
 .formula small{font-family:-apple-system,BlinkMacSystemFont,sans-serif;color:var(--muted);margin-left:10px;white-space:normal}
 .trap{background:var(--soon-bg);color:var(--ink);border-left:4px solid var(--soon);border-radius:10px;padding:10px 12px;margin:10px 0}
@@ -145,7 +151,6 @@ details.more>summary{cursor:pointer;font-weight:700;color:var(--accent);margin:8
 </style>
 </head>
 <body>
-<nav class="appsw" aria-label="App"><a href="./">🏠 Pianificazione</a><a href="licenze.html">📅 Licenze</a><a href="taichi.html">🧘 Tai Chi</a><a href="progressi.html">🐉 Progressi</a><a class="on" href="semestre.html" aria-current="page">🩺 Semestre filtro</a></nav>
 <div class="wrap">
   <nav class="side" id="side" aria-label="Sezioni"></nav>
   <main id="main"></main>

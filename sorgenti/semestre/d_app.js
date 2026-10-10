@@ -2,7 +2,7 @@
    Un solo stato (chiave semestre-v1) con una sezione per esame: exams.fis / exams.chi / exams.bio.
    Ogni esame del registro EXAMS usa lo stesso motore (argomenti, test, esercizi, simulazione). */
 const KEY="semestre-v1",OLDKEY="fisica-v1";
-const STANDALONE=!!window.SF_STANDALONE,APP_URL="https://f6kd4bp6sr-stack.github.io/mie-app/semestre/";
+const APP_URL="https://f6kd4bp6sr-stack.github.io/mie-app/semestre/";
 const EDEF={pt:null,tp:{},qs:{},sims:[],run:null,days:{}};
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -22,14 +22,18 @@ function migrate(old){/* da «Fisica» (fisica-v1) alla piattaforma */const r=no
 function load(){let r=null;try{r=JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){}
   if(!r){try{const o=JSON.parse(localStorage.getItem(OLDKEY)||"null");if(o)return migrate(o);}catch(e){}}return norm(r);}
 let Rt=load();
-function kv(){return new Promise((res,rej)=>{try{const r=indexedDB.open("licenze-marco",1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains("kv"))r.result.createObjectStore("kv");};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);}catch(e){rej(e);}});}
-function idb(mode,k,v){return kv().then(db=>new Promise((res,rej)=>{const tx=db.transaction("kv",mode),st=tx.objectStore("kv"),q=mode==="readonly"?st.get(k):st.put(v,k);q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error);}));}
+const DBN="semestre-filtro";
+function kv(name){return new Promise((res,rej)=>{try{const r=indexedDB.open(name||DBN,1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains("kv"))r.result.createObjectStore("kv");};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);}catch(e){rej(e);}});}
+function idb(mode,k,v,name){return kv(name).then(db=>new Promise((res,rej)=>{const tx=db.transaction("kv",mode),st=tx.objectStore("kv"),q=mode==="readonly"?st.get(k):st.put(v,k);q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error);}));}
 let svT=null;
 function save(){Rt.savedAt=new Date().toISOString();Rt.sum=summaryAll();const t=JSON.stringify(Rt);try{localStorage.setItem(KEY,t);}catch(e){}clearTimeout(svT);svT=setTimeout(()=>idb("readwrite","semestre",t).catch(()=>{}),300);paintSaved();}
 window.__flush=()=>{try{const t=JSON.stringify(Rt);localStorage.setItem(KEY,t);idb("readwrite","semestre",t).catch(()=>{});}catch(e){}};
 function paintSaved(){const e=$("fzSaved");if(e)e.textContent=Rt.savedAt?"💾 Salvato automaticamente alle "+new Date(Rt.savedAt).toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"})+" su questo dispositivo":"💾 Salvataggio automatico attivo";}
+async function oldDb(){/* prima versione: copia nel database condiviso con Pianificazione (solo se esiste già) */
+  try{if(!indexedDB.databases)return null;const l=await indexedDB.databases();if(!l.some(x=>x.name==="licenze-marco"))return null;
+   const t=await idb("readonly","semestre",null,"licenze-marco");if(t)return JSON.parse(t);const f=await idb("readonly","fisica",null,"licenze-marco");return f?migrate(JSON.parse(f)):null;}catch(e){return null;}}
 async function recover(){try{let t=await idb("readonly","semestre");let o=t?JSON.parse(t):null;
-  if(!o){const f=await idb("readonly","fisica");if(f)o=migrate(JSON.parse(f));}
+  if(!o)o=await oldDb();
   if(o&&(!Rt.savedAt||String(o.savedAt||"")>String(Rt.savedAt))){Rt=norm(o);useExam(EX);try{localStorage.setItem(KEY,JSON.stringify(Rt));}catch(e){}render();toast("Dati recuperati dalla copia del dispositivo");}}catch(e){}}
 function toast(m){const e=$("toast");e.textContent=m;e.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("on"),2200);}
 
@@ -144,8 +148,11 @@ function vTopic(id){const t=TP[id],u=UN[t.u],s=S.tp[id]||{},qs=QB.filter(q=>q.t=
   let o=`<p class="crumb"><button class="btn sm" data-go="${EX}/arg">‹ ${E.ready?"Argomenti":"Programma"}</button> <span class="lbl">${E.ic} ${esc(ename(EX))} · ${u.ic} ${esc(u.t)}</span></p><h1>${esc(t.t)}${t.tag?`<span class="tag26">${esc(t.tag)}</span>`:""}</h1><p class="sub" id="tSub">${stLab(tScore(id))[0]} · ${tScore(id)}%</p>`;
   if(t.breve)o+=`<div class="card"><h3>💡 In breve</h3><ul class="breve">${t.breve.map(b=>`<li>${esc(b)}</li>`).join("")}</ul></div>`;
   if(t.syl)o+=`<div class="card"><h3>📋 Dal syllabus ufficiale</h3><ul class="breve">${t.syl.map(b=>`<li>${esc(b)}</li>`).join("")}</ul><p class="lbl" style="margin:8px 0 0">Spiegazioni, animazioni ed esercizi di questo argomento sono in preparazione.</p></div>`;
+  if(t.sp)o+=`<div class="card expl"><h3>📖 Spiegazione</h3>${t.sp.map(p=>`<p>${esc(p)}</p>`).join("")}</div>`;
   if(t.anim)o+=`<div class="card"><h3>🎞️ Prova tu</h3><p class="lbl" style="margin:0">Muovi i cursori e guarda che cosa cambia.</p><div id="animBox"></div></div>`;
+  if(t.es&&t.es.length)o+=`<div class="card"><h3>🧮 Esempi svolti</h3>${t.es.map((e,j)=>`<details class="esv"${j?"":" open"}><summary><b>Esempio ${j+1}.</b> ${esc(e.q)}</summary><ol>${e.p.map(x=>`<li>${esc(x)}</li>`).join("")}</ol><p class="esr">➜ ${esc(e.r)}</p></details>`).join("")}<p class="lbl" style="margin:8px 0 0">Prova a risolverli da solo prima di aprire i passaggi.</p></div>`;
   if(t.form)o+=`<div class="card"><h3>📐 Formule</h3>${t.form.map(f=>`<div class="formula">${esc(f[0])}${f[1]?`<small>${esc(f[1])}</small>`:""}</div>`).join("")}${t.trap?`<div class="trap">⚠️ <b>Trappola d'esame:</b> ${esc(t.trap)}</div>`:""}</div>`;
+  if(t.med)o+=`<div class="card med"><h3>🩺 In medicina</h3><p style="margin:0">${esc(t.med)}</p></div>`;
   if(!qs.length)o+=`<div class="card"><h3>🙋 Quanto lo conosci?</h3><div class="segc" id="selfEv">${SELF.map((x,j)=>`<button type="button" data-v="${j+1}" class="${s.self===j+1?"on":""}">${x[1]}</button>`).join("")}</div><p class="lbl" style="margin:8px 0 0">La tua risposta aggiorna la percentuale dell'unità e il piano di studio.</p></div>`;
   else o+=`<div class="card"><h3>✏️ Esercizi (${qs.length}) <button class="lnk" data-pr="t:${id}">Allenamento ›</button></h3>${qs.map((q,j)=>qHTML(q,j+1,"tp")).join("")}</div>`;
   o+=`<div class="btns" style="justify-content:space-between"><span>${prev?`<button class="btn" data-go="${EX}/t/${prev.id}">‹ ${esc(prev.t)}</button>`:""}</span><button class="btn ${s.st?"ok":"pri"}" id="tStudied">${s.st?"✓ Studiato":"Segna come studiato"}</button><span>${next?`<button class="btn" data-go="${EX}/t/${next.id}">${esc(next.t)} ›</button>`:""}</span></div>`;
@@ -230,11 +237,11 @@ function vRegole(){return `<h1>🎓 Regole e UPO</h1><p class="sub">Regole 2026/
 /* ----- Progressi e copie ----- */
 function vProg(){const days=[];for(let i=13;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push(iso(d));}
   const per=days.map(d=>EXORD.map(k=>Rt.exams[k].days[d]||0)),mx=Math.max(1,...per.map(a=>a.reduce((x,y)=>x+y,0)));
-  let o=`<h1>📈 Progressi e copie</h1><p class="sub">Tutto viene salvato da solo su questo iPad: una copia al giorno resta sul dispositivo per 30 giorni. ${STANDALONE?"Con «Salva copia su File / iCloud» in fondo alla pagina puoi conservarli o passarli a un altro iPad.":"Le copie di Pianificazione (del giorno e su File / iCloud) li includono; in Pianificazione → 🩺 Semestre filtro trovi il riepilogo."}</p>
+  let o=`<h1>📈 Progressi e copie</h1><p class="sub">Tutto viene salvato da solo su questo iPad: una copia al giorno resta sul dispositivo per 30 giorni. Con «Salva copia su File / iCloud» in fondo alla pagina puoi conservarli o passarli a un altro iPad.</p>
   <div class="kpi">${EXORD.map(k=>`<div><b>${withExam(k,overall)}%</b><span>${EXAMS[k].ic} ${esc(ename(k))}</span></div>`).join("")}<div><b>${EXORD.reduce((a,k)=>a+Object.values(Rt.exams[k].qs).reduce((x,s)=>x+s.ok+s.ko,0),0)}</b><span>risposte date in totale</span></div></div>
   <div class="card"><h3>Ultimi 14 giorni (esercizi svolti)</h3><div style="display:flex;gap:4px;align-items:flex-end;height:90px">${days.map((d,i)=>{const n=per[i].reduce((x,y)=>x+y,0);return `<div title="${fmtD(d)}: ${n}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;height:100%;justify-content:flex-end"><div style="width:100%;height:${n/mx*70}px;min-height:${n?3:0}px;background:var(--accent);border-radius:4px"></div><span class="lbl" style="font-size:10px">${dOf(d).getDate()}</span></div>`;}).join("")}</div></div>`;
   o+=EXORD.map(k=>withExam(k,()=>`<div class="card"><h3>${E.ic} ${esc(E.t)} <button class="lnk" data-go="${k}/arg">Apri ›</button></h3><table class="t"><tr><th>Argomento</th><th>${QB.length?"Giuste":"Autovalutazione"}</th><th>Stato</th></tr>${TOPICS.map(t=>{const s=S.tp[t.id]||{},sc=tScore(t.id);return `<tr><td>${UN[t.u].ic} <a href="#${k}/t/${t.id}" style="color:inherit">${esc(t.t)}</a>${s.st?" ✓":""}</td><td>${hasQ(t.id)?`${s.ok||0}/${(s.ok||0)+(s.ko||0)}`:(s.self?SELF[s.self-1][0]:"—")}</td><td><span class="pill ${stLab(sc)[1]}">${sc}%</span></td></tr>`;}).join("")}</table></div>`)).join("");
-  o+=`<div class="card"><h3>Copie e ripristino</h3><p class="lbl">Il salvataggio è automatico (memoria del browser + database del dispositivo). Per passare i dati su un altro iPad o tenerne una copia, usa «Salva copia su File / iCloud» in fondo alla pagina${STANDALONE?"":" (contiene anche Licenze, Tai Chi e Progressi)"}. Sull'altro iPad, qui, tocca «Ripristina da una copia».</p>
+  o+=`<div class="card"><h3>Copie e ripristino</h3><p class="lbl">Il salvataggio è automatico (memoria del browser + database del dispositivo). Per passare i dati su un altro iPad o tenerne una copia, usa «Salva copia su File / iCloud» in fondo alla pagina. Sull'altro iPad, qui, tocca «Ripristina da una copia».</p>
   <div class="btns"><label class="btn" style="cursor:pointer">Ripristina da una copia<input type="file" id="fzImp" accept="application/json,.json" hidden></label><button class="btn danger" id="fzReset">Azzera i progressi del semestre filtro</button></div></div>`;
   return o;}
 
@@ -272,7 +279,7 @@ document.addEventListener("click",e=>{
   if(e.target.closest("#shUrl")){navigator.share({title:"Semestre filtro",text:"App per preparare gli esami del semestre filtro di Medicina",url:APP_URL}).catch(()=>{});return;}
   if(e.target.closest("#simEnd")||e.target.closest("#simEnd2")){const n=S.run.q.filter((id,i)=>S.run.a[i]==null||S.run.a[i]==="").length;if(!confirm(n?`Ci sono ${n} risposte vuote. Consegnare comunque?`:"Consegnare la prova?"))return;finishSim(false);return;}
   const so=e.target.closest("[data-si] .opt");if(so&&S.run){const i=+so.closest("[data-si]").dataset.si,j=+so.dataset.o;S.run.a[i]=S.run.a[i]===j?null:j;so.parentNode.querySelectorAll(".opt").forEach((b,k)=>b.classList.toggle("sel",S.run.a[i]===k));save();return;}
-  if(e.target.closest("#fzReset")){if(confirm("Cancellare test, esercizi, autovalutazioni e simulazioni di tutti e tre gli esami? Le altre sezioni di Pianificazione non vengono toccate.")){Rt=norm(null);useExam(EX);save();render();toast("Progressi azzerati");}return;}
+  if(e.target.closest("#fzReset")){if(confirm("Cancellare test, esercizi, autovalutazioni e simulazioni di tutti e tre gli esami? L’operazione non si può annullare, salvo ripristinare una copia.")){Rt=norm(null);useExam(EX);save();render();toast("Progressi azzerati");}return;}
 });
 function afterPR(box,ok){if(box.dataset.ctx!=="pr")return;if(ok)PR.ok++;const n=$("prNext");if(n){n.hidden=false;n.focus();}}
 let svT2=null;

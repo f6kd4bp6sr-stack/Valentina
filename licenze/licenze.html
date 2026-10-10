@@ -370,7 +370,7 @@ html.locked #lockScr{display:grid}
   };
 })();
 </script>
-<nav class="appsw" aria-label="App"><a href="./">🏠 Pianificazione</a><a class="on" href="licenze.html" aria-current="page">📅 Licenze</a><a href="taichi.html">🧘 Tai Chi</a><a href="progressi.html">🐉 Progressi</a><a href="semestre.html">🩺 Semestre filtro</a></nav>
+<nav class="appsw" aria-label="App"><a href="./">🏠 Pianificazione</a><a class="on" href="licenze.html" aria-current="page">📅 Licenze</a><a href="taichi.html">🧘 Tai Chi</a><a href="progressi.html">🐉 Progressi</a></nav>
 
 <!-- ================= PAGINA 1: SITUAZIONE ================= -->
 <main id="pg1">
@@ -636,7 +636,7 @@ async function idbKV(mode,key,val){ const db=await idbOpen(); return new Promise
   q.onsuccess=()=>{out=q.result}; tx.oncomplete=()=>res(out); tx.onerror=()=>rej(tx.error); }); }
 async function dailySnapshot(text){ // copia giornaliera: ultima situazione di ogni giorno, ultimi 30 giorni
   try{ const k="snap-"+today(); const keys=(await idbKV("readonly",null))||[];
-    try{ text=JSON.stringify(Object.assign(JSON.parse(text),{taichi:tcDump(),progressi:progDump(),pianifica:pnDump(),semestre:sfDump()})); }catch(e){}
+    try{ text=JSON.stringify(Object.assign(JSON.parse(text),{taichi:tcDump(),progressi:progDump(),pianifica:pnDump()})); }catch(e){}
     await idbKV("readwrite",k,text); try{ localStorage.setItem("mie-app-lastSnap",new Date().toISOString()); }catch(e){}
     const snaps=keys.filter(x=>String(x).startsWith("snap-")&&!String(x).includes("~")).concat(keys.includes(k)?[]:[k]).sort();
     for(const old of snaps.slice(0,Math.max(0,snaps.length-30))) await idbKV("readwrite",old);
@@ -1327,8 +1327,6 @@ function tcRestore(tc){ if(!tc||typeof tc!=="object") return; try{ for(const k i
   idbKV("readwrite","taichi",JSON.stringify({savedAt:new Date().toISOString(),keys:tc})).catch(()=>{}); }
 
 /* ---------- dati di Pianificazione (Oggi, Scadenze, Famiglia, Conti, Benessere): inclusi nelle copie ---------- */
-function sfDump(){ try{ return JSON.parse(localStorage.getItem("semestre-v1")||"null"); }catch(e){ return null; } }
-function sfRestore(sf){ if(!sf||typeof sf!=="object") return; try{ localStorage.setItem("semestre-v1",JSON.stringify(sf)); }catch(e){} idbKV("readwrite","semestre",JSON.stringify(sf)).catch(()=>{}); }
 function pnDump(){ try{ return JSON.parse(localStorage.getItem("pn-v1")||"null"); }catch(e){ return null; } }
 function pnRestore(pn){ if(!pn||typeof pn!=="object") return; try{ localStorage.setItem("pn-v1",JSON.stringify(pn)); }catch(e){} idbKV("readwrite","pianifica",JSON.stringify(pn)).catch(()=>{}); }
 function progDump(){ try{ const pack=JSON.parse(localStorage.getItem("prog-vale-v1")||"null"), link=JSON.parse(localStorage.getItem("prog-link-v1")||"null"); return pack||link?{pack,hist:JSON.parse(localStorage.getItem("prog-vale-hist-v1")||"[]"),link}:null; }catch(e){ return null; } }
@@ -1428,7 +1426,7 @@ $("rApply").onclick=()=>{
   save();renderP2();toast(n+" giorni aggiornati");
 };
 $("bExport").onclick=async()=>{
-  const data=JSON.stringify(Object.assign({},S,{taichi:tcDump(),progressi:progDump(),pianifica:pnDump(),semestre:sfDump()}),null,1), filename="marco-backup-"+today()+".json";
+  const data=JSON.stringify(Object.assign({},S,{taichi:tcDump(),progressi:progDump(),pianifica:pnDump()}),null,1), filename="marco-backup-"+today()+".json";
   let dl=null; try{ if(window.claude&&window.claude.use) dl=await window.claude.use("downloads"); }catch(e){}
   if(dl){ try{ await dl.save({filename,data}); markBk(); toast("Copia esportata"); }catch(e){ if(!(e&&e.code==="cancelled")) toast("Esportazione non riuscita"); } return; }
   try{
@@ -1446,9 +1444,9 @@ $("bExport").onclick=async()=>{
 $("bImport").onchange=e=>{
   const f=e.target.files[0]; if(!f)return;
   const rd=new FileReader(); rd.onload=()=>{
-    let o; try{o=JSON.parse(rd.result); if(!o||!(o.bal||o.taichi||o.progressi||o.pianifica||o.semestre))throw 0;}catch(_){toast("File non valido");return;}
-    const tc=o.taichi; delete o.taichi; tcRestore(tc); const pg=o.progressi; delete o.progressi; progRestore(pg); const pn=o.pianifica; delete o.pianifica; pnRestore(pn); const sf=o.semestre; delete o.semestre; sfRestore(sf);
-    if(!o.bal){ toast("Copia ripristinata (Pianificazione, Tai Chi, Progressi e Semestre filtro)"); return; }
+    let o; try{o=JSON.parse(rd.result); if(!o||!(o.bal||o.taichi||o.progressi||o.pianifica))throw 0;}catch(_){toast("File non valido");return;}
+    const tc=o.taichi; delete o.taichi; tcRestore(tc); const pg=o.progressi; delete o.progressi; progRestore(pg); const pn=o.pianifica; delete o.pianifica; pnRestore(pn);
+    if(!o.bal){ toast("Copia ripristinata (Pianificazione, Tai Chi e Progressi)"); return; }
     S=normalize(o); S.ver=o.ver; migrateV2(); save(); calMonth=selDay=weekStart=null; renderP2(); toast(tc||pg?"Copia ripristinata (tutte le sezioni)":"Copia ripristinata");
   }; rd.readAsText(f); e.target.value="";
 };
@@ -1481,7 +1479,7 @@ setSaveStat("init");
 window.__flush=()=>{ try{ flushAll(); }catch(e){} };
 })();
 </script>
-<script>window.APP_VERSION="56463adb8d";window.APP_BUILD="2026-10-10T19:37+02:00";</script>
+<script>window.APP_VERSION="17b6b6711a";window.APP_BUILD="2026-10-10T20:00+02:00";</script>
 <script>
 /* ===== Aggiornamento automatico e controllo versione (uguale in tutte le sezioni di Pianificazione: costruita da comune/barra.html) =====
    - all'apertura, al ritorno sull'app e ogni 30 minuti legge version.json saltando ogni copia vecchia (anche quella del server di GitHub);
@@ -1519,7 +1517,7 @@ window.__flush=()=>{ try{ flushAll(); }catch(e){} };
   }
   /* ---------- salvataggio automatico comune a tutte le sezioni ----------
      Ogni sezione salva subito le proprie modifiche sul dispositivo. Qui, da qualsiasi sezione:
-     copia giornaliera completa (Pianificazione + Licenze + Tai Chi + Progressi + Semestre filtro) negli ultimi 30 giorni e copia su File / iCloud. */
+     copia giornaliera completa (Pianificazione + Licenze + Tai Chi + Progressi) negli ultimi 30 giorni e copia su File / iCloud. */
   function lsJ(k){try{return JSON.parse(localStorage.getItem(k)||"null");}catch(e){return null;}}
   function dumpAll(){
     var S=lsJ("licenze-marco-v1"), tc={}, n=0;
@@ -1527,9 +1525,8 @@ window.__flush=()=>{ try{ flushAll(); }catch(e){} };
     var pack=lsJ("prog-vale-v1"), link=lsJ("prog-link-v1");
     var pg=pack||link?{pack:pack,hist:lsJ("prog-vale-hist-v1")||[],link:link}:null;
     var pn=lsJ("pn-v1");
-    var sf=lsJ("semestre-v1");
-    if(!S&&!n&&!pg&&!pn&&!sf)return null;
-    var o={}; if(S)for(var x in S)o[x]=S[x]; o.taichi=tc; o.progressi=pg; if(pn)o.pianifica=pn; if(sf)o.semestre=sf; o.app="le-mie-app"; return o;
+    if(!S&&!n&&!pg&&!pn)return null;
+    var o={}; if(S)for(var x in S)o[x]=S[x]; o.taichi=tc; o.progressi=pg; if(pn)o.pianifica=pn; o.app="le-mie-app"; return o;
   }
   function kvDb(){return new Promise(function(res,rej){try{var r=indexedDB.open("licenze-marco",1);r.onupgradeneeded=function(){if(!r.result.objectStoreNames.contains("kv"))r.result.createObjectStore("kv");};r.onsuccess=function(){res(r.result);};r.onerror=function(){rej(r.error);};}catch(e){rej(e);}});}
   function today(){var d=new Date();return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2);}

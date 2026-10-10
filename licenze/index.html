@@ -137,7 +137,7 @@ a.btn{text-decoration:none}
 @media (prefers-color-scheme:dark){:root{--bg:#0f1216;--card:#1a1e24;--ink:#eef0f3;--muted:#9aa3ae;--line:#2a3038;--seg:#242a32;--ok-bg:#16301f;--warn-bg:#3a1b19;--soon-bg:#33270f;--lp-bg:#3a2218;--fam-bg:#271f3d;--ben-bg:#14302f;--euro-bg:#172739}
   .form input,.form select,.form textarea,.chk,.mood button{background:#12161b;color:var(--ink)}.day.together{background:linear-gradient(180deg,#1a1e24,#14261b)}}
 </style>
-<script>window.APP_VERSION="56463adb8d";window.APP_BUILD="2026-10-10T19:37+02:00";</script>
+<script>window.APP_VERSION="17b6b6711a";window.APP_BUILD="2026-10-10T20:00+02:00";</script>
 </head>
 <body>
 <style id="lockCss">
@@ -236,7 +236,7 @@ html.locked #lockScr{display:grid}
   };
 })();
 </script>
-<nav class="appsw" aria-label="App"><a class="on" href="./" aria-current="page">🏠 Pianificazione</a><a href="licenze.html">📅 Licenze</a><a href="taichi.html">🧘 Tai Chi</a><a href="progressi.html">🐉 Progressi</a><a href="semestre.html">🩺 Semestre filtro</a></nav>
+<nav class="appsw" aria-label="App"><a class="on" href="./" aria-current="page">🏠 Pianificazione</a><a href="licenze.html">📅 Licenze</a><a href="taichi.html">🧘 Tai Chi</a><a href="progressi.html">🐉 Progressi</a></nav>
 <div class="wrap">
   <nav class="side" id="side" aria-label="Sezioni"></nav>
   <main id="main"></main>
@@ -244,7 +244,7 @@ html.locked #lockScr{display:grid}
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
 /* ================= PIANIFICAZIONE =================
-   Sezioni: Semestre filtro (riepilogo degli esami di Medicina) · Calendario (punto di partenza: giorno, settimana, mese, anno; il giorno di oggi contiene il riepilogo; dentro ci sono anche gli impegni e le attività fisse della famiglia) · Scadenze · Pratiche · Conti · Benessere.
+   Sezioni: Calendario (punto di partenza: giorno, settimana, mese, anno; il giorno di oggi contiene il riepilogo; dentro ci sono anche gli impegni e le attività fisse della famiglia) · Scadenze · Pratiche · Conti · Benessere.
    Tutti i dati restano su questo dispositivo: localStorage «pn-v1» + copia nel database del dispositivo (IndexedDB «licenze-marco», voce «pianifica»)
    + copie giornaliere e copia su File/iCloud insieme a Licenze, Tai Chi e Progressi (barra in fondo). Nessun dato personale nel codice. */
 "use strict";
@@ -1345,32 +1345,13 @@ function icsText(items){const L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Pian
   items.forEach(i=>{L.push("BEGIN:VEVENT","UID:"+i.uid+"@pianificazione","DTSTAMP:"+ds,...i.lines,"END:VEVENT");});L.push("END:VCALENDAR");return L.map(fold).join("\r\n")+"\r\n";}
 
 /* ---------- interfaccia ---------- */
-
-/* ---------- Semestre filtro (dati salvati da semestre.html: semestre-v1 → sum) ---------- */
-function semSum(){const f=lsJ("semestre-v1");return f&&f.sum?f:null;}
-function semDays(s){return Math.round((new Date(s+"T00:00")-new Date(today()+"T00:00"))/864e5);}
-function semCard(){const f=semSum(),d=semDays("2026-12-10");
-  if(!f)return `<div class="card"><h3>🩺 Semestre filtro <a href="semestre.html">Apri ›</a></h3><div class="big">${Math.max(0,d)}</div><div class="lbl">giorni al 1° appello (10 dicembre)</div><p class="empty">Inizia dal test d'ingresso di Fisica.</p></div>`;
-  const E=f.sum.exams||{};return `<div class="card"><h3>🩺 Semestre filtro <button class="lnk" data-go="sem">Progressi ›</button></h3><div class="lbl">${Math.max(0,d)} giorni al 1° appello</div>${["fis","chi","bio"].filter(k=>E[k]).map(k=>`<div class="row"><span class="pill">${E[k].ic}</span><div class="grow">${esc(E[k].t)}${E[k].next?`<small>prossimo: ${esc(E[k].next.t)}</small>`:""}</div><b>${E[k].overall}%</b></div>`).join("")}<div class="btns"><a class="btn sm" href="semestre.html">Apri</a></div></div>`;}
-function semBar(s,c){return `<div style="height:7px;background:var(--seg);border-radius:6px;margin-top:5px;overflow:hidden"><i style="display:block;height:100%;width:${s}%;background:${c||(s>=80?"var(--ok)":s>=50?"var(--accent)":"var(--soon)")};border-radius:6px"></i></div>`;}
-function vSem(){const f=semSum(),d1=semDays("2026-12-10"),d2=semDays("2027-01-11");
-  let o=`<h1>🩺 Semestre filtro</h1><p class="sub">Medicina UPO 2026/27 · esami nazionali di Fisica, Chimica e Biologia il 10 dicembre 2026 e l'11 gennaio 2027 (ore 11). I progressi arrivano dalla sezione Semestre filtro di questa app.</p>
-  <div class="btns" style="margin:0 0 12px"><a class="btn pri" href="semestre.html">🩺 Apri Semestre filtro</a><a class="btn" href="semestre.html#fis">⚛️ Fisica</a><a class="btn" href="semestre.html#fis/sim">⏱️ Simulazione di Fisica</a><a class="btn" href="semestre.html#regole">🎓 Regole e UPO</a><a class="btn" href="semestre.html#installa">📲 Installa su un altro iPad</a></div>`;
-  if(!f)return o+`<div class="card"><p class="empty">Ancora nessun dato: apri Semestre filtro e fai il test d'ingresso di Fisica per avere il piano di studio.</p></div>`;
-  const E=f.sum.exams||{};
-  o+=`<div class="kpi"><div><b>${Math.max(0,d1)}</b><span>giorni al 1° appello</span></div><div><b>${Math.max(0,d2)}</b><span>giorni al 2° appello</span></div>${["fis","chi","bio"].filter(k=>E[k]).map(k=>`<div><b>${E[k].overall}%</b><span>${E[k].ic} ${esc(E[k].t)}${E[k].ready?"":" (in costruzione)"}</span></div>`).join("")}</div><div class="grid">`;
-  o+=["fis","chi","bio"].filter(k=>E[k]).map(k=>{const s=E[k];return `<div class="card"><h3>${s.ic} ${esc(s.t)} <a href="semestre.html#${k}">Apri ›</a></h3>${Object.values(s.units).map(u=>`<div class="row"><span class="pill">${u.ic}</span><div class="grow">${esc(u.t)}${semBar(u.s)}</div><b>${u.s}%</b></div>`).join("")}
-   ${s.next?`<div class="row"><div class="grow">Prossimo: <b>${esc(s.next.t)}</b><small>${esc(s.next.u)}</small></div><a class="btn sm pri" href="semestre.html#${k}/t/${s.next.id}">Studia</a></div>`:""}
-   ${s.ready?`<div class="row"><div class="grow">Test d'ingresso</div><b>${s.pt?s.pt.score+"/"+s.pt.n+" · "+s.pt.lev:"da fare"}</b></div><div class="row"><div class="grow">Esercizi negli ultimi 7 giorni</div><b>${s.week}</b></div><div class="row"><div class="grow">Ultima simulazione</div><b>${s.sim?String(s.sim.pts).replace(".",",")+" punti · "+(s.sim.pass?"✓ sopra 18":"sotto 18"):"—"}</b></div>`:`<p class="lbl">Programma ufficiale con autovalutazione; esercizi e simulazioni in arrivo.</p>`}</div>`;}).join("");
-  o+=`</div><p class="lbl">Aggiornato: ${new Date(f.savedAt||f.sum.date).toLocaleString("it-IT",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</p>`;
-  return o;}
-const SECT=[["cal","📆","Calendario"],["scad","📌","Scadenze"],["prat","🗂️","Pratiche"],["conti","💶","Conti"],["ben","🧘","Benessere"],["sem","🩺","Semestre filtro"],["sic","🔒","Blocco"]];
+const SECT=[["cal","📆","Calendario"],["scad","📌","Scadenze"],["prat","🗂️","Pratiche"],["conti","💶","Conti"],["ben","🧘","Benessere"],["sic","🔒","Blocco"]];
 let cur=(location.hash||"").slice(1)||"cal"; if(cur==="oggi"){cur="cal";calV="giorno";calD=calSel=today();} if(cur==="fam"){cur="cal";calV="sett";} if(!SECT.some(x=>x[0]===cur))cur="cal";
 let editId=null;
 function side(){const late=scadOpen().filter(x=>scadState(x)==="warn").length;
   $("side").innerHTML=SECT.map(([k,i,t])=>`<button data-s="${k}" class="${k===cur?"on":""}"${k===cur?' aria-current="page"':""}><span class="ic">${i}</span>${t}${k==="scad"&&late?`<span class="n">${late}</span>`:""}</button>`).join("");}
 function go(k){if(k==="oggi"){k="cal";setCalV("giorno");calD=calSel=today();}if(k==="fam"){k="cal";setCalV("sett");calD=today();}if(k==="cal"){calLink=false;calFixed=false;}if(k==="prat")pratNew=false;cur=k;try{history.replaceState(null,"","#"+k);}catch(e){}render();window.scrollTo(0,0);}
-function render(){side();const m=$("main");m.innerHTML=({cal:vCal,oggi:vOggi,scad:vScad,prat:vPrat,conti:vConti,ben:vBen,sem:vSem,sic:vSic}[cur]||vOggi)()+'<p class="saved" id="pnSaved"></p>';paintSaved();bind();}
+function render(){side();const m=$("main");m.innerHTML=({cal:vCal,oggi:vOggi,scad:vScad,prat:vPrat,conti:vConti,ben:vBen,sic:vSic}[cur]||vOggi)()+'<p class="saved" id="pnSaved"></p>';paintSaved();bind();}
 
 function vOggi(){
   const t=today(),S=licS(),h=new Date().getHours();
@@ -1403,7 +1384,6 @@ function vOggi(){
   // il mio mondo
   const v=valeInfo(),vd=v&&v.saved?new Date(v.saved):null;
   o+=`<div class="card"><h3>🐉 Il mio mondo <a href="progressi.html">Progressi ›</a></h3>${v&&v.saved?`<div class="row"><div class="grow">Nozioni imparate nel percorso</div><b>${v.l}</b></div><div class="row"><div class="grow">Giorni di studio negli ultimi 7</div><b>${v.w}</b></div><div class="row"><span class="lbl">Ultimo invio dall’iPad: ${vd.toDateString()===new Date().toDateString()?"oggi alle "+vd.toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"}):vd.toLocaleDateString("it-IT",{weekday:"short",day:"numeric",month:"short"})}</span></div>`:v&&v.linked?'<p class="empty">Collegato: in attesa del primo invio dall’iPad.</p>':'<p class="empty">Collega «Il mio mondo» nella sezione Progressi.</p>'}${v&&(v.err||(v.age!=null&&v.age>1.5))?`<div class="warnbox">⚠️ ${v.err?esc(v.err)+".":`L’iPad non invia da ${Math.floor(v.age)} ${Math.floor(v.age)===1?"giorno":"giorni"}. Sull’iPad della bimba guarda <b>🐉 Io → 💾 Salvataggi</b>: se c’è ⚠️, prepara un QR con una chiave nuova in <a href="progressi.html">Progressi</a> e inquadralo con <b>📷 Collegati con il QR</b>.`}</div>`:""}${ghWarn()}</div>`;
-  o+=semCard();
   o+=weekCard();
   return o+"</div>";
 }
@@ -1530,7 +1510,6 @@ async function exportIcs(all){
   try{const f=new File([txt],fn,{type:"text/calendar"});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:"Pianificazione"});mark();return;}}catch(e){if(e&&e.name==="AbortError")return;}
   try{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([txt],{type:"text/calendar"}));a.download=fn;document.body.appendChild(a);a.click();a.remove();mark();}catch(e){toast("Non riesco a creare il file");}
 }
-window.addEventListener("storage",e=>{if(e.key==="semestre-v1"&&(cur==="sem"||cur==="cal"))render();});
 window.addEventListener("hashchange",()=>{const k=(location.hash||"").slice(1);if(k&&k!==cur&&SECT.some(x=>x[0]===k)){cur=k;render();}});
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"){render();valePull(false);}});
 window.addEventListener("online",()=>valePull(false));setInterval(()=>valePull(false),30*60e3);
@@ -1574,7 +1553,7 @@ render(); recover(); setTimeout(()=>valePull(false),800); setTimeout(ghDaily,150
   }
   /* ---------- salvataggio automatico comune a tutte le sezioni ----------
      Ogni sezione salva subito le proprie modifiche sul dispositivo. Qui, da qualsiasi sezione:
-     copia giornaliera completa (Pianificazione + Licenze + Tai Chi + Progressi + Semestre filtro) negli ultimi 30 giorni e copia su File / iCloud. */
+     copia giornaliera completa (Pianificazione + Licenze + Tai Chi + Progressi) negli ultimi 30 giorni e copia su File / iCloud. */
   function lsJ(k){try{return JSON.parse(localStorage.getItem(k)||"null");}catch(e){return null;}}
   function dumpAll(){
     var S=lsJ("licenze-marco-v1"), tc={}, n=0;
@@ -1582,9 +1561,8 @@ render(); recover(); setTimeout(()=>valePull(false),800); setTimeout(ghDaily,150
     var pack=lsJ("prog-vale-v1"), link=lsJ("prog-link-v1");
     var pg=pack||link?{pack:pack,hist:lsJ("prog-vale-hist-v1")||[],link:link}:null;
     var pn=lsJ("pn-v1");
-    var sf=lsJ("semestre-v1");
-    if(!S&&!n&&!pg&&!pn&&!sf)return null;
-    var o={}; if(S)for(var x in S)o[x]=S[x]; o.taichi=tc; o.progressi=pg; if(pn)o.pianifica=pn; if(sf)o.semestre=sf; o.app="le-mie-app"; return o;
+    if(!S&&!n&&!pg&&!pn)return null;
+    var o={}; if(S)for(var x in S)o[x]=S[x]; o.taichi=tc; o.progressi=pg; if(pn)o.pianifica=pn; o.app="le-mie-app"; return o;
   }
   function kvDb(){return new Promise(function(res,rej){try{var r=indexedDB.open("licenze-marco",1);r.onupgradeneeded=function(){if(!r.result.objectStoreNames.contains("kv"))r.result.createObjectStore("kv");};r.onsuccess=function(){res(r.result);};r.onerror=function(){rej(r.error);};}catch(e){rej(e);}});}
   function today(){var d=new Date();return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2);}

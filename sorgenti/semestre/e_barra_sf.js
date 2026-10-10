@@ -23,7 +23,7 @@
     document.head.appendChild(css);var d=document.createElement("div");d.className="updbar";
     d.innerHTML="<span class=\"u-sv\" style=\"flex-basis:100%\"></span><button type=\"button\" class=\"u-bk\">💾 Salva copia su File / iCloud</button><span>Versione <b>"+V+"</b>"+(BUILT?" del "+fmtBuilt():"")+"</span><span class=\"u-st\"></span><button type=\"button\" class=\"u-ck\">Cerca aggiornamenti</button>";
     d.querySelector(".u-bk").addEventListener("click",exportAll);d.querySelector(".u-ck").addEventListener("click",function(){check(true);});document.body.appendChild(d);paint();}
-  function kvDb(){return new Promise(function(res,rej){try{var r=indexedDB.open("licenze-marco",1);r.onupgradeneeded=function(){if(!r.result.objectStoreNames.contains("kv"))r.result.createObjectStore("kv");};r.onsuccess=function(){res(r.result);};r.onerror=function(){rej(r.error);};}catch(e){rej(e);}});}
+  function kvDb(){return new Promise(function(res,rej){try{var r=indexedDB.open("semestre-filtro",1);r.onupgradeneeded=function(){if(!r.result.objectStoreNames.contains("kv"))r.result.createObjectStore("kv");};r.onsuccess=function(){res(r.result);};r.onerror=function(){rej(r.error);};}catch(e){rej(e);}});}
   var snapBusy=false;
   function snapAll(){if(snapBusy)return;var o=lsJ(KEY);if(!o)return;snapBusy=true;
     kvDb().then(function(db){return new Promise(function(res){var tx=db.transaction("kv","readwrite"),s=tx.objectStore("kv"),k="sf-snap-"+today();s.put(JSON.stringify(o),k);
