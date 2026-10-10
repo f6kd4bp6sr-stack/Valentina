@@ -84,6 +84,16 @@ button,.btn{font:inherit;border:0;border-radius:10px;padding:10px 14px;backgroun
 .dold summary{cursor:pointer;margin-top:12px;font-weight:700;color:var(--accent)}
 .heat{display:grid;grid-template-rows:repeat(7,14px);grid-auto-flow:column;grid-auto-columns:14px;gap:3px;margin:8px 0 4px}
 .heat i{border-radius:3px;background:var(--seg)} .heat i.on{background:var(--good)} .heat i.x{background:transparent}
+.stbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin:4px 2px 14px}
+.stchip{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:var(--seg);font-size:14px;font-weight:600}
+.stchip.ok{background:var(--good-bg);color:var(--good)}.stchip.warn{background:var(--bad-bg);color:var(--bad)}
+.stbar button{padding:7px 12px;font-size:14px}
+#setup{margin-bottom:6px}
+.brief{border-left:5px solid var(--accent)}
+.brief .big{font-size:20px;font-weight:800;line-height:1.35;margin:0 0 6px}
+.brief ul{margin:6px 0 0;padding-left:20px}.brief li{margin:4px 0}
+.cena{border-top:1px solid var(--line);padding:8px 0}.cena summary{cursor:pointer;font-weight:700}.cena summary small{color:var(--muted);font-weight:600;margin-left:4px}.cena div{margin-top:4px;color:var(--good);font-weight:700}
+details.more>summary{cursor:pointer;font-weight:700;color:var(--accent);margin:18px 4px 8px}
 .empty{text-align:center;padding:30px 16px;border:2px dashed var(--line);border-radius:16px;color:var(--muted)}
 .empty b{display:block;color:var(--ink);font-size:18px;margin-bottom:6px}
 .note{background:var(--seg);border-radius:12px;padding:10px 12px;font-size:14px;color:var(--muted)}
@@ -195,21 +205,23 @@ html.locked #lockScr{display:grid}
 <nav class="appsw" aria-label="App"><a href="./">🏠 Pianificazione</a><a href="licenze.html">📅 Licenze</a><a href="taichi.html">🧘 Tai Chi</a><a class="on" href="progressi.html" aria-current="page">🐉 Progressi</a></nav>
 <main>
   <h1 id="title">I progressi</h1>
-  <p class="sub" id="sub">Dall’app «Il mio mondo»: utilizzo e risultati, materia per materia.</p>
-
-  <div class="card">
-    <b>Carica i dati</b>
-    <div class="lbl"><b>Il modo più semplice:</b> sull’iPad apri <b>🐉 Io</b> → riquadro 💾 Salvataggi → <b>📱 Mostra il QR</b>, poi qui tocca <b>📷 Leggi il QR dall’iPad</b> e inquadralo (niente internet, niente chiavi). In alternativa, sull’iPad di «Il mio mondo» ci sono due modi: <b>🐉 Io → 💾 Salvataggi → 💾 Copia su iCloud</b> crea la copia completa (<i>drago-progressi-…json</i>: utilizzo, materie, tabelline, risposte); <b>🐉 Io → 📊 Progressi → 📤 Condividi</b> manda il file <i>progressi-…csv</i> con le risposte giuste e sbagliate per materia. Salvali in File / iCloud Drive (o inviali con AirDrop) e aprili qui con «Carica la copia»: vanno bene tutti e due, e il CSV aggiorna le percentuali della copia già caricata. I dati restano solo su questo dispositivo.</div>
-    <div class="btns">
-      <label class="btn primary" style="cursor:pointer">📂 Carica la copia<input type="file" id="fIn" accept="application/json,.json,text/csv,.csv,text/plain" hidden></label>
-      <button id="fQR">📷 Leggi il QR dall’iPad</button>
-      <label class="btn" style="cursor:pointer">📸 Fotografa il QR<input type="file" id="fQRp" accept="image/*" capture="environment" hidden></label>
-      <button id="fLocal" hidden>📱 Leggi da questo iPad</button>
-      <button id="fClear" hidden>Togli i dati</button>
-    </div>
-    <div class="lbl" id="srcInfo" style="margin-top:8px"></div>
+  <div class="stbar" id="stbar"></div>
+  <div id="setup" hidden>
+  <div class="card" id="pair">
+    <b>📲 Collega con un QR</b> <span class="lbl">(iPad della bimba)</span>
+    <div class="lbl" id="pairSt">Il modo più semplice: la chiave GitHub si scrive solo qui; sull’iPad della bimba basta inquadrare un QR.</div>
+    <details id="pairBox" style="margin-top:6px"><summary class="lbl" style="cursor:pointer"><b>Prepara il QR di collegamento (anche per una chiave nuova)</b></summary>
+      <ol class="lbl" style="padding-left:20px;margin:6px 0">
+        <li>Crea la chiave: <a href="https://github.com/settings/tokens/new?scopes=gist&amp;description=mie-app%20progressi" target="_blank" rel="noopener">github.com/settings/tokens/new</a> → spunta solo <b>gist</b>, scadenza <b>No expiration</b> → <b>Generate token</b> → copia la chiave.</li>
+        <li>Incollala qui sotto, scegli un codice (almeno 6 caratteri; se c’è già un collegamento usa lo stesso) e tocca <b>Prepara il QR</b>.</li>
+        <li>Sull’iPad della bimba: <b>🐉 Io → 💾 Salvataggi → 📷 Collegati con il QR</b> e inquadra questo schermo.</li>
+      </ol>
+      <div class="btns"><input id="pairTok" type="password" placeholder="Chiave GitHub (inizia con ghp_)" autocomplete="off" style="flex:1;min-width:220px;font:inherit;padding:9px 12px;border-radius:10px;border:1px solid var(--line,#ccc);background:transparent;color:inherit"></div>
+      <div class="btns"><input id="pairCode" placeholder="Codice (almeno 6 caratteri)" autocomplete="off" autocapitalize="off" spellcheck="false" style="flex:1;min-width:220px;font:inherit;padding:9px 12px;border-radius:10px;border:1px solid var(--line,#ccc);background:transparent;color:inherit"><button id="pairGo" class="primary">Prepara il QR</button></div>
+      <div id="pairQR" style="text-align:center"></div>
+      <div class="lbl">🔒 Il QR contiene la chiave: mostralo solo all’iPad della bimba. Si chiude da solo dopo 3 minuti. La chiave resta su questo iPad (non va nelle copie) e sull’iPad della bimba.</div>
+    </details>
   </div>
-
   <div class="card" id="lnk">
     <b>🔗 Collegamento automatico con «Il mio mondo»</b>
     <div class="lbl" id="lnkSt">Non collegato: i dati arrivano solo caricando i file.</div>
@@ -229,20 +241,18 @@ html.locked #lockScr{display:grid}
     <div class="btns" id="lnkOn" hidden style="margin-top:8px"><button id="lnkNow">🔄 Aggiorna ora</button><button id="lnkOff">Scollega</button></div>
   </div>
 
-  <div class="card" id="pair">
-    <b>📲 Collega con un QR</b> <span class="lbl">(iPad della bimba)</span>
-    <div class="lbl" id="pairSt">Il modo più semplice: la chiave GitHub si scrive solo qui; sull’iPad della bimba basta inquadrare un QR.</div>
-    <details id="pairBox" style="margin-top:6px"><summary class="lbl" style="cursor:pointer"><b>Prepara il QR di collegamento (anche per una chiave nuova)</b></summary>
-      <ol class="lbl" style="padding-left:20px;margin:6px 0">
-        <li>Crea la chiave: <a href="https://github.com/settings/tokens/new?scopes=gist&amp;description=mie-app%20progressi" target="_blank" rel="noopener">github.com/settings/tokens/new</a> → spunta solo <b>gist</b>, scadenza <b>No expiration</b> → <b>Generate token</b> → copia la chiave.</li>
-        <li>Incollala qui sotto, scegli un codice (almeno 6 caratteri; se c’è già un collegamento usa lo stesso) e tocca <b>Prepara il QR</b>.</li>
-        <li>Sull’iPad della bimba: <b>🐉 Io → 💾 Salvataggi → 📷 Collegati con il QR</b> e inquadra questo schermo.</li>
-      </ol>
-      <div class="btns"><input id="pairTok" type="password" placeholder="Chiave GitHub (inizia con ghp_)" autocomplete="off" style="flex:1;min-width:220px;font:inherit;padding:9px 12px;border-radius:10px;border:1px solid var(--line,#ccc);background:transparent;color:inherit"></div>
-      <div class="btns"><input id="pairCode" placeholder="Codice (almeno 6 caratteri)" autocomplete="off" autocapitalize="off" spellcheck="false" style="flex:1;min-width:220px;font:inherit;padding:9px 12px;border-radius:10px;border:1px solid var(--line,#ccc);background:transparent;color:inherit"><button id="pairGo" class="primary">Prepara il QR</button></div>
-      <div id="pairQR" style="text-align:center"></div>
-      <div class="lbl">🔒 Il QR contiene la chiave: mostralo solo all’iPad della bimba. Si chiude da solo dopo 3 minuti. La chiave resta su questo iPad (non va nelle copie) e sull’iPad della bimba.</div>
-    </details>
+  <div class="card">
+    <b>📥 Carica i dati a mano</b>
+    <div class="lbl"><b>Il modo più semplice:</b> sull’iPad apri <b>🐉 Io</b> → riquadro 💾 Salvataggi → <b>📱 Mostra il QR</b>, poi qui tocca <b>📷 Leggi il QR dall’iPad</b> e inquadralo (niente internet, niente chiavi). In alternativa, sull’iPad di «Il mio mondo» ci sono due modi: <b>🐉 Io → 💾 Salvataggi → 💾 Copia su iCloud</b> crea la copia completa (<i>drago-progressi-…json</i>: utilizzo, materie, tabelline, risposte); <b>🐉 Io → 📊 Progressi → 📤 Condividi</b> manda il file <i>progressi-…csv</i> con le risposte giuste e sbagliate per materia. Salvali in File / iCloud Drive (o inviali con AirDrop) e aprili qui con «Carica la copia»: vanno bene tutti e due, e il CSV aggiorna le percentuali della copia già caricata. I dati restano solo su questo dispositivo.</div>
+    <div class="btns">
+      <label class="btn primary" style="cursor:pointer">📂 Carica la copia<input type="file" id="fIn" accept="application/json,.json,text/csv,.csv,text/plain" hidden></label>
+      <button id="fQR">📷 Leggi il QR dall’iPad</button>
+      <label class="btn" style="cursor:pointer">📸 Fotografa il QR<input type="file" id="fQRp" accept="image/*" capture="environment" hidden></label>
+      <button id="fLocal" hidden>📱 Leggi da questo iPad</button>
+      <button id="fClear" hidden>Togli i dati</button>
+    </div>
+    <div class="lbl" id="srcInfo" style="margin-top:8px"></div>
+  </div>
   </div>
 
   <div id="out"></div>
@@ -426,12 +436,12 @@ function daysCard(h,ref){
 function pathCard(A){
   const P=A.path; if(!P&&!A.pd&&!A.gems&&A.figs==null&&A.piggy==null)return "";
   let h=`<h2>Percorso e memoria</h2><div class="kpi">`;
-  if(P)h+=`<div><b>${P.l}</b><span>nozioni imparate nel percorso</span></div><div><b>${P.s}</b><span>consolidate (ricordate dopo 2+ settimane)</span></div><div><b>${P.d}</b><span>da ripassare${P.d>=25?" · arretrato":""}</span></div><div><b>${P.tappe}</b><span>tappe completate</span></div>`;
+  if(P)h+=(P.l?`<div><b>${P.l}</b><span>nozioni imparate nel percorso</span></div>`:"")+(P.s?`<div><b>${P.s}</b><span>consolidate (ricordate dopo 2+ settimane)</span></div>`:"")+(P.d?`<div><b>${P.d}</b><span>da ripassare${P.d>=25?" · arretrato":""}</span></div>`:"")+(P.tappe?`<div><b>${P.tappe}</b><span>tappe completate</span></div>`:"");
   if(A.pd)h+=`<div><b>${A.pd.done||(A.pd.nuove>=12&&A.pd.rip>=(A.pd.ripGoal||0))?"✅":"…"}</b><span>obiettivo di oggi: ${+A.pd.nuove||0} nuove, ${+A.pd.rip||0} ripassi</span></div>`;
-  if(A.gems)h+=`<div><b>${+A.gems.tot||0}</b><span>gemme guadagnate (${+A.gems.n||0} da spendere)</span></div>`;
-  if(A.figs!=null)h+=`<div><b>${A.figs}<span class="lbl">/300</span></b><span>figurine dell’album</span></div>`;
-  if(A.piggy!=null)h+=`<div><b>${A.piggy}</b><span>nel salvadanaio</span></div>`;
-  h+=`</div>`;
+  if(A.gems&&+A.gems.tot)h+=`<div><b>${+A.gems.tot||0}</b><span>gemme guadagnate (${+A.gems.n||0} da spendere)</span></div>`;
+  if(A.figs)h+=`<div><b>${A.figs}<span class="lbl">/300</span></b><span>figurine dell’album</span></div>`;
+  if(A.piggy)h+=`<div><b>${A.piggy}</b><span>nel salvadanaio</span></div>`;
+  h+=`</div>`;if(h.endsWith('<div class="kpi"></div>'))h=h.replace(/<div class="kpi"><\/div>$/,"");
   if(P&&Object.keys(P.per).length){const rows=Object.entries(P.per).sort((a,b)=>b[1].l-a[1].l).map(([u,e])=>`<div class="row"><span>${esc(unitLabel(u))}</span><span class="v">${e.l} imparate · ${e.s} consolidate${e.d?` · <b style="color:var(--bad,#c2410c)">${e.d} da ripassare</b>`:""}</span></div>`).join("");
     h+=`<div class="card" style="margin-top:12px"><b>Materia per materia nel percorso</b>${rows}<div class="lbl">«Consolidate» = la nozione è stata ricordata più volte di fila e il prossimo ripasso è tra due settimane o più.</div></div>`;}
   return h;
@@ -459,7 +469,7 @@ function diaryInfo(D,ref){
   return {E,streak,strong,l30,cnt,per,pres,old:E.filter(e=>e.old).length,texts:E.filter(e=>e.w).length,ago};
 }
 function diaryCard(A){
-  const I=A.di; if(!I||!I.E.length)return `<h2>📅 Diario · come sta</h2><div class="card lbl">Ancora nessuna pagina di diario.</div>`;
+  const I=A.di; if(!I||!I.E.length)return "";
   const day=k=>new Date(k+"T12:00").toLocaleDateString("it-IT",{weekday:"short",day:"numeric",month:"short"});
   let h=`<h2>📅 Diario · come sta</h2>`;
   if(I.streak>=3||I.strong.length){
@@ -470,8 +480,8 @@ function diaryCard(A){
   }
   const tot=I.cnt.up+I.cnt.mid+I.cnt.tired+I.cnt.down;
   h+=`<div class="kpi"><div><b>${I.l30.length}</b><span>pagine negli ultimi 30 giorni</span></div>`+
-    Object.keys(MK).map(k=>`<div><b style="color:${MK[k][1]}">${I.cnt[k]}</b><span>${esc(MK[k][0])}</span></div>`).join("")+
-    `<div><b>${I.pres.P}<span class="lbl"> / ${I.pres.A} assenze</span></b><span>presenze a scuola segnate (30 gg)</span></div></div>`;
+    Object.keys(MK).filter(k=>I.cnt[k]).map(k=>`<div><b style="color:${MK[k][1]}">${I.cnt[k]}</b><span>${esc(MK[k][0])}</span></div>`).join("")+
+    (I.pres.P?`<div><b>${I.pres.P}</b><span>presenze a scuola segnate (30 gg)</span></div>`:"")+(I.pres.A?`<div><b>${I.pres.A}</b><span>assenze segnate (30 gg)</span></div>`:"")+`</div>`;
   // ultimi 14 giorni
   const end=new Date(A.ref+"T12:00"),map={};I.E.forEach(e=>map[e.d]=e);let cells="";
   for(let i=13;i>=0;i--){const d=new Date(end);d.setDate(d.getDate()-i);const k=iso(d),e=map[k];
@@ -493,7 +503,7 @@ function diaryCard(A){
 
 /* ---------- 🎬 video guardati (premio dell'app) ---------- */
 function videoCard(A){
-  const L=A.D&&A.D["vid-log"]; if(!L||typeof L!=="object")return `<h2>🎬 Video</h2><div class="card lbl">Ancora nessun video guardato. La sezione Video si apre sull’iPad come premio (obiettivo del giorno o 3 lezioni); ogni lezione finita regala un biglietto.</div>`;
+  const L=A.D&&A.D["vid-log"]; if(!L||typeof L!=="object"||!Object.keys(L).length)return "";
   const rows=Object.entries(L).map(([k,v])=>({d:k.split("|")[0],id:k.split("|")[1],t:v&&v.t||"",u:v&&v.u||"",f:!!(v&&v.f)})).sort((a,b)=>b.d<a.d?-1:b.d>a.d?1:0);
   const ref7=new Date(Date.now()-7*864e5).toISOString().slice(0,10), w=rows.filter(r=>r.d>=ref7), full=rows.filter(r=>r.f).length;
   let h=`<h2>🎬 Video</h2><div class="kpi"><div><b>${w.length}</b><span>video negli ultimi 7 giorni</span></div><div><b>${rows.length}</b><span>video in tutto</span></div><div><b>${full}</b><span>guardati fino alla fine</span></div></div>`;
@@ -502,51 +512,113 @@ function videoCard(A){
 }
 
 /* ---------- vista ---------- */
+const VCENA={
+  mate:[["Quanto fa 7 × 8?","56"],["Come si trova il perimetro di un quadrato?","Si somma il lato 4 volte (lato × 4)"],["Quanto fa la metà di 3,40?","1,70"]],
+  ita:[["Qual è il plurale di «uovo»?","Uova"],["Dimmi un nome collettivo","Per esempio gregge, flotta, sciame"],["In «Il gatto dorme», chi compie l’azione?","Il gatto: è il soggetto"]],
+  eng:[["Come si dice «ho freddo» in inglese?","I'm cold"],["Come chiedi «che tempo fa?» in inglese?","What's the weather like?"],["Dimmi in inglese «mettiti la sciarpa»","Put on your scarf!"]],
+  storia:[["Per che cosa erano famosi i Fenici?","Navigatori e mercanti; diffusero un alfabeto"],["Come si chiamava la scrittura degli antichi Egizi?","I geroglifici"]],
+  geo:[["Qual è il capoluogo del Piemonte?","Torino"],["Qual è il fiume più lungo d’Italia?","Il Po"]],
+  scienze:[["A che cosa serve il cuore?","Spinge il sangue in tutto il corpo"],["Che cosa fanno le piante con la luce del sole?","Producono il loro nutrimento (fotosintesi)"]],
+  civica:[["Che cos’è la Costituzione?","La legge più importante dello Stato"]],
+  soldi:[["Paghi 2,50 € con una moneta da 5 €: quanto resto ricevi?","2,50 €"],["Che differenza c’è tra un bisogno e un desiderio?","Un bisogno serve davvero (cibo, scarpe che vanno bene); un desiderio si può aspettare"],["Se risparmi 2 € a settimana, quanto hai dopo 5 settimane?","10 €"]],
+  lavo:[["Per quanto tempo ci si lavano le mani?","Circa 40 secondi, con il sapone"]],
+  vesto:[["Che cosa ti metti se fa freddo e nevica?","Strati caldi: maglione, giacca, guanti, sciarpa, cappello"]]};
+const NEVER=/mai provata|mai aperte|mai esplorate|non ancora aperte|mai allenate/;
+const SUBJ={mate:"🔢 Matematica",scienze:"🔬 Scienze",sport:"🤸 Sport",parlo:"🇬🇧 Parlo inglese"};
+const subjName=k=>SUBJ[k]||(SCOPRI[k]?SCOPRI[k][0]+" "+SCOPRI[k][1]:unitLabel(k));
+function weekStats(h,ref,from,to){const out={ok:0,ko:0,days:0,per:{}};if(!h)return out;const end=new Date(ref+"T12:00");
+  for(let i=from;i<to;i++){const d=new Date(end);d.setDate(d.getDate()-i);const v=h[iso(d)];if(!v)continue;let n=0;Object.entries(v).forEach(([k,r])=>{const ok=+r.ok||0,ko=+r.ko||0;n+=ok+ko;out.ok+=ok;out.ko+=ko;const x=out.per[k]||(out.per[k]={ok:0,ko:0});x.ok+=ok;x.ko+=ko;});if(n)out.days++;}
+  return out;}
+function brief(A){
+  const h=A.D["prog-days"],w=weekStats(h,A.ref,0,7),p=weekStats(h,A.ref,7,14),n=w.ok+w.ko,pn=p.ok+p.ko,pc=n?Math.round(w.ok/n*100):null,ppc=pn?Math.round(p.ok/pn*100):null;
+  const L=Object.entries(w.per).map(([k,v])=>({k,n:v.ok+v.ko,pc:Math.round(v.ok/Math.max(1,v.ok+v.ko)*100)})).filter(x=>x.n>=5);
+  const best=L.slice().sort((a,b)=>b.pc-a.pc)[0],weak=L.slice().sort((a,b)=>a.pc-b.pc)[0];
+  const lines=[];
+  lines.push(`<b>${A.last7} ${A.last7===1?"giorno":"giorni"} su 7</b> con «Il mio mondo»${A.streak>1?` · ${A.streak} di fila`:""}`);
+  if(n)lines.push(`<b>${n} risposte</b>, ${pc}% giuste${ppc!=null?` <span class="trend ${pc>=ppc?"up":"down"}">${pc>=ppc?"+":""}${pc-ppc} punti rispetto alla settimana prima</span>`:""}`);
+  if(best&&weak&&best.k!==weak.k&&weak.pc<80)lines.push(`Va meglio in <b>${esc(subjName(best.k))}</b> (${best.pc}%), da rinforzare <b>${esc(subjName(weak.k))}</b> (${weak.pc}%)`);
+  else if(best)lines.push(`Va bene in <b>${esc(subjName(best.k))}</b> (${best.pc}%)`);
+  if(A.path&&A.path.d>=10)lines.push(`${A.path.d} nozioni da ripassare nel percorso`);
+  if(A.lastUse&&daysAgo(A.lastUse)>=3)lines.push(`⚠️ Non apre l’app da ${daysAgo(A.lastUse)} giorni`);
+  const di=A.di,alert=di&&(di.streak>=3||di.strong.length);
+  // domande da fare a cena: materie studiate nella settimana, prima quella più debole
+  const studied=[...new Set((weak?[weak.k]:[]).concat(Object.keys(w.per)).map(k=>k==="parlo"?"eng":k))].filter(k=>VCENA[k]);
+  if(!studied.length)studied.push("soldi");
+  const seed=+A.ref.replace(/-/g,""),cena=studied.slice(0,2).map(k=>({k,q:VCENA[k][seed%VCENA[k].length]}));
+  return `<div class="card brief"><h3 style="margin-bottom:6px">📌 In breve · ultimi 7 giorni</h3>
+    ${alert?`<div class="evc bad" style="margin:4px 0 10px;padding:8px 12px"><b>⚠️ Diario: ${di.streak>=3?"si sente giù da "+di.streak+" pagine di fila":"emozione difficile «tanto» negli ultimi 7 giorni"}</b> · <a href="#diario">vedi sotto</a></div>`:""}
+    <ul>${lines.map(x=>`<li>${x}</li>`).join("")}</ul>
+    <div class="lbl" style="margin-top:10px"><b>🍽️ A cena chiedile</b> (tocca per la risposta)</div>${cena.map(c=>`<details class="cena"><summary>${esc(c.q[0])} <small>${esc(subjName(c.k))}</small></summary><div>${esc(c.q[1])}</div></details>`).join("")}
+    <div class="btns"><button id="shareSum">📤 Condividi il riepilogo</button></div></div>`;
+}
+function summaryText(A){ // testo da mandare (senza i testi del diario)
+  const h=A.D["prog-days"],w=weekStats(h,A.ref,0,7),n=w.ok+w.ko;
+  const L=[`I progressi${A.name?" di "+A.name:""} · settimana fino al ${fmt(A.ref,{day:"numeric",month:"long"})}`,`Giorni di studio: ${A.last7}/7`];
+  if(n)L.push(`Risposte: ${n}, ${Math.round(w.ok/n*100)}% giuste`);
+  Object.entries(w.per).map(([k,v])=>[k,v.ok+v.ko,Math.round(v.ok/Math.max(1,v.ok+v.ko)*100)]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]).forEach(([k,c,pc])=>L.push(`· ${subjName(k)}: ${c} risposte, ${pc}%`));
+  if(A.path&&A.path.l)L.push(`Nozioni imparate nel percorso: ${A.path.l}`);
+  const g=A.good.slice(0,3).map(x=>"+ "+x[0]),b=A.bad.filter(x=>!/^Diario/.test(x[0])).slice(0,3).map(x=>"− "+x[0]);
+  return L.concat(g,b).join("\n");
+}
+function tidySubjects(root){ // nelle schede per materia: via le righe a zero o mai aperte
+  root.querySelectorAll(".sj .row").forEach(r=>{const v=r.querySelector(".v");if(!v)return;
+    const parts=v.innerHTML.split(" · ").filter(x=>!/—\s*$/.test(x.replace(/<[^>]+>/g,"").trim())&&!/^(missioni|esperimenti) 0$/.test(x.trim()));
+    const t=parts.join(" · ").replace(/<[^>]+>/g,"").trim();
+    if(!parts.length||!/[1-9]/.test(t))r.remove();else v.innerHTML=parts.join(" · ");});
+  root.querySelectorAll(".sj").forEach(c=>{const g=c.querySelector(".tabs-grid");if(g&&!g.querySelector(":not(.t-none)"))(g.previousElementSibling&&g.previousElementSibling.remove(),g.remove());
+    if(!c.querySelector(".row")&&!c.querySelector(".tabs-grid"))c.remove();});
+}
+function paintStatus(){
+  const el=$("stbar");if(!el)return;const pk=STATE&&STATE.pack,on=!!(LINK&&LINK.gist),g=lsGet("prog-gh-v1");
+  const age=on&&LINK.sent?(Date.now()-new Date(LINK.sent).getTime())/36e5:null;
+  let chip;
+  if(on&&(LINK.err&&!/aspetto il primo/.test(LINK.err)))chip=`<span class="stchip warn">⚠️ ${esc(LINK.err)}</span>`;
+  else if(g&&g.ok===false)chip=`<span class="stchip warn">⚠️ La chiave GitHub non funziona più</span>`;
+  else if(on&&age!=null&&age>36)chip=`<span class="stchip warn">⚠️ L’iPad non invia da ${Math.floor(age/24)} ${Math.floor(age/24)===1?"giorno":"giorni"}</span>`;
+  else if(on)chip=`<span class="stchip ok">✅ Arrivano da soli dall’iPad · ultimo invio ${esc(whenTxt(LINK.sent))}</span>`;
+  else if(pk)chip=`<span class="stchip">📥 Dati del ${fmt(pk.saved,{day:"numeric",month:"short"})}${pk.from?" · "+esc(pk.from):""}</span>`;
+  else chip=`<span class="stchip">Nessun dato ancora</span>`;
+  const warn=/warn/.test(chip),setup=$("setup");
+  el.innerHTML=chip+(on?`<button id="stNow">🔄 Aggiorna</button>`:"")+`<button id="stSet" aria-expanded="${!setup.hidden}">⚙️ ${setup.hidden?"Collegamento e caricamento":"Chiudi il collegamento"}</button>`;
+  $("stSet").onclick=()=>{setup.hidden=!setup.hidden;paintStatus();if(!setup.hidden)setup.scrollIntoView({behavior:"smooth",block:"start"});};
+  if($("stNow"))$("stNow").onclick=()=>pull(true);
+  const need=warn||(!pk&&!on);
+  if(need&&!paintStatus.auto){paintStatus.auto=1;setup.hidden=false;el.querySelector("#stSet").textContent="⚙️ Chiudi il collegamento";}
+  else if(!need&&paintStatus.auto===1){paintStatus.auto=2;setup.hidden=true;el.querySelector("#stSet").textContent="⚙️ Collegamento e caricamento";}
+}
 function render(pack,hist){
   const out=$("out");
   $("fClear").hidden=!pack;
   if(!pack){ $("srcInfo").textContent=""; $("title").textContent="I progressi";
-    out.innerHTML=`<div class="empty"><b>Nessun dato caricato</b>Carica la copia di «Il mio mondo» per vedere l’utilizzo, le materie, i punti di forza e cosa rinforzare.</div>`; return; }
+    out.innerHTML=`<div class="empty"><b>Ancora nessun dato</b>Collega l’iPad di «Il mio mondo» con il QR (in «⚙️ Collegamento e caricamento»): poi i progressi arrivano da soli.</div>`; paintStatus(); return; }
   const A=analyze(pack);
+  A.bad=A.bad.filter(x=>!NEVER.test(x[0]));
   $("title").textContent=A.name?"I progressi di "+A.name:"I progressi";
   $("srcInfo").textContent="Dati del "+fmt(pack.saved,{weekday:"long",day:"numeric",month:"long",year:"numeric"})+(pack.progAt?" · risposte aggiornate il "+fmt(pack.progAt,{day:"numeric",month:"long"}):"")+(pack.from?" · "+pack.from:"");
   const prev=hist.filter(h=>h.d<A.ref).slice(-1)[0], now=summary(A);
   const tr=(k,inv)=>{if(!prev||prev[k]==null)return "";const d=now[k]-prev[k];if(!d)return "";const up=inv?d<0:d>0;return `<span class="trend ${up?"up":"down"}">${d>0?"+":""}${d}</span>`;};
-  // calendario d'uso (8 settimane)
   const set=new Set(A.days),end=new Date(A.ref+"T12:00"),start=new Date(end);start.setDate(start.getDate()-55);const lead=(start.getDay()+6)%7;
   let heat='<i class="x"></i>'.repeat(lead);for(let d=new Date(start);d<=end;d.setDate(d.getDate()+1)){const k=iso(d);heat+=`<i class="${set.has(k)?"on":""}" title="${fmt(k)}"></i>`;}
   const li=a=>a.length?`<ul>${a.map(([t,s])=>`<li>${esc(t)}${s?`<small>${esc(s)}</small>`:""}</li>`).join("")}</ul>`:`<p class="lbl" style="margin:0">Niente da segnalare.</p>`;
   const stTxt={good:"Bene",mid:"Da curare",bad:"Da rinforzare",none:"Non usata"};
+  const k=(v,t)=>v?`<div><b>${v}</b><span>${t}</span></div>`:"";
+  const subj=A.S.filter(x=>x.st!=="none");
   out.innerHTML=`
-  <h2>Utilizzo</h2>
-  <div class="kpi">
-    <div><b>${A.days.length}${tr("days")}</b><span>giorni di utilizzo in totale</span></div>
-    <div><b>${A.last7}<span class="lbl">/7</span></b><span>giorni negli ultimi 7</span></div>
-    <div><b>${A.last30}</b><span>giorni negli ultimi 30</span></div>
-    <div><b>${A.streak}</b><span>giorni di fila (serie attuale)</span></div>
-    <div><b>${A.lastUse?(daysAgo(A.lastUse)===0?"oggi":fmt(A.lastUse,{day:"numeric",month:"short"})):"—"}</b><span>ultimo utilizzo</span></div>
-    <div><b>${A.energy}${tr("energy")}</b><span>energia del drago${A.dragon?" «"+esc(A.dragon)+"»":""}</span></div>
-  </div>
+  ${A.days.length||A.D["prog-days"]?brief(A):""}
+  ${A.good.length||A.bad.length?`<h2>In evidenza</h2><div class="ev">${A.good.length?`<div class="evc good"><h3>✅ Punti di forza</h3>${li(A.good)}</div>`:""}${A.bad.length?`<div class="evc bad"><h3>⚠️ Da rinforzare</h3>${li(A.bad)}</div>`:""}</div>`:""}
+  <div id="diario">${diaryCard(A)}</div>
+  ${A.days.length?`<h2>Utilizzo</h2><div class="kpi">${k(A.days.length+tr("days"),"giorni di utilizzo in totale")}${k(A.last7?A.last7+'<span class="lbl">/7</span>':"","giorni negli ultimi 7")}${k(A.last30,"giorni negli ultimi 30")}${k(A.streak>1?A.streak:"","giorni di fila (serie attuale)")}${k(A.lastUse?(daysAgo(A.lastUse)===0?"oggi":fmt(A.lastUse,{day:"numeric",month:"short"})):"","ultimo utilizzo")}${k(A.energy?A.energy+tr("energy"):"","energia del drago"+(A.dragon?" «"+esc(A.dragon)+"»":""))}</div>`:""}
   ${daysCard(A.D["prog-days"],A.ref)}
-  <div class="card" style="margin-top:12px"><b>Giorni di utilizzo · ultime 8 settimane</b><div class="heat">${heat}</div><div class="lbl">Ogni quadratino è un giorno (righe: lunedì → domenica). Verde = app usata.</div></div>
-
-  ${diaryCard(A)}
-
+  ${A.days.length?`<div class="card" style="margin-top:12px"><b>Giorni di utilizzo · ultime 8 settimane</b><div class="heat">${heat}</div><div class="lbl">Ogni quadratino è un giorno (righe: lunedì → domenica). Verde = app usata.</div></div>`:""}
   ${pathCard(A)}
+  ${subj.length?`<h2>Materia per materia</h2><div class="subj">${subj.map(s=>`<div class="sj" style="--c:${s.c}"><h3><span>${s.t}</span><span class="badge ${s.st}">${stTxt[s.st]}</span></h3>${s.html}</div>`).join("")}</div>`:""}
   ${videoCard(A)}
-
-  <h2>In evidenza</h2>
-  <div class="ev">
-    <div class="evc good"><h3>✅ Punti di forza</h3>${li(A.good)}</div>
-    <div class="evc bad"><h3>⚠️ Da rinforzare</h3>${li(A.bad)}</div>
-  </div>
   ${prev?`<p class="lbl" style="margin:8px 4px">Confronto con la copia del ${fmt(prev.d)}: matematica ${now.math-prev.math>=0?"+":""}${now.math-prev.math} esercizi, scienze ${now.sci-prev.sci>=0?"+":""}${now.sci-prev.sci} argomenti, diario ${now.diary-prev.diary>=0?"+":""}${now.diary-prev.diary} pagine.</p>`:""}
-
-  <h2>Materia per materia</h2>
-  <div class="subj">${A.S.map(s=>`<div class="sj" style="--c:${s.c}"><h3><span>${s.t}</span><span class="badge ${s.st}">${stTxt[s.st]}</span></h3>${s.html}</div>`).join("")}</div>
-
-  <h2>Come leggere questi dati</h2>
-  <div class="note">${A.prog?"Le percentuali di risposte giuste vengono dal registro delle risposte di «Il mio mondo».":"<b>Cosa non è ancora misurato:</b> «Il mio mondo» oggi salva quanto viene usata ogni materia, i record delle tabelline e i livelli, ma non le singole risposte giuste e sbagliate dei quiz. Le carenze qui sopra si basano quindi sulle tabelline (misurate davvero), sulle materie e gli argomenti mai aperti e sulla costanza. Quando l’app salverà anche le risposte (registro «prog»), qui compariranno da sole le percentuali per materia."} I numeri «x/y» delle sfide indicano quante domande diverse sono già uscite rispetto al totale disponibile.</div>`;
+  <details class="more"><summary>ℹ️ Come leggere questi dati</summary><div class="note">${A.prog?"Le percentuali di risposte giuste vengono dal registro delle risposte di «Il mio mondo».":"Le carenze si basano sulle tabelline, sui livelli e sulla costanza: le risposte dei quiz arriveranno quando l’app le invia."} Qui compare solo quello che ha già usato: materie e giochi mai aperti non sono elencati. I numeri «x/y» delle sfide indicano quante domande diverse sono già uscite rispetto al totale disponibile.</div></details>`;
+  tidySubjects(out);
+  const sh=$("shareSum");if(sh)sh.onclick=async()=>{const t=summaryText(A);try{if(navigator.share){await navigator.share({title:"I progressi",text:t});return;}}catch(e){if(e&&e.name==="AbortError")return;}
+    try{await navigator.clipboard.writeText(t);toast("Riepilogo copiato");}catch(e){toast("Non riesco a copiare");}};
+  paintStatus();
 }
 
 /* ---------- avvio ---------- */
@@ -1041,6 +1113,7 @@ async function decrypt(key,txt){const o=JSON.parse(txt);if(o.app!=="mondo-sync")
 let LINK=lsGet(LKEY), pulling=false;
 function whenTxt(t){if(!t)return "mai";const d=new Date(t);return (d.toDateString()===new Date().toDateString()?"oggi":d.toLocaleDateString("it-IT",{weekday:"short",day:"numeric",month:"short"}))+" alle "+d.toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"});}
 function paintLink(){
+  setTimeout(()=>{try{paintStatus();}catch(e){}},0);
   const on=!!(LINK&&LINK.gist);$("lnkSet").hidden=on;$("lnkOn").hidden=!on;
   if(!on){$("lnkSt").textContent="Non collegato: i dati arrivano solo caricando i file.";return;}
   const age=LINK.sent?(Date.now()-new Date(LINK.sent).getTime())/36e5:null;
@@ -1115,7 +1188,7 @@ window.__analyze=analyze; window.__normalize=normalize;
 
 })();
 </script>
-<script>window.APP_VERSION="d3c3f98915";window.APP_BUILD="2026-10-10T16:33+02:00";</script>
+<script>window.APP_VERSION="f995b8479f";window.APP_BUILD="2026-10-10T17:07+02:00";</script>
 <script>
 /* ===== Aggiornamento automatico e controllo versione (uguale in tutte le sezioni di Pianificazione: costruita da comune/barra.html) =====
    - all'apertura, al ritorno sull'app e ogni 30 minuti legge version.json saltando ogni copia vecchia (anche quella del server di GitHub);
