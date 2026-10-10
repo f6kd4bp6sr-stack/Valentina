@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<script>window.APP_VERSION="503c419bbe";</script>
+<script>window.APP_VERSION="08672aeaca";</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://f6kd4bp6sr-stack.github.io; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://i.ytimg.com; font-src 'self' data:; media-src 'self' data: blob:; connect-src 'self' https://api.github.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src https://www.youtube-nocookie.com">
 <meta name="robots" content="noindex, nofollow, noarchive">
@@ -9575,7 +9575,7 @@ function qrData(days) {
   const ref = iso(addDays(new Date(), -days));
   const pd = store.get('prog-days', {}); d['prog-days'] = {}; Object.keys(pd).filter(x => x >= ref).forEach(x => d['prog-days'][x] = pd[x]);
   const vl = store.get('vid-log', {}); d['vid-log'] = {}; Object.keys(vl).filter(x => x >= ref).forEach(x => d['vid-log'][x] = vl[x]);
-  const di = store.get('diary', {}); if (di && typeof di === 'object') { d.diary = {}; Object.keys(di).filter(x => x >= ref).forEach(x => d.diary[x] = 1); }
+  const di = store.get('diary', {}); if (di && typeof di === 'object') { d.diary = {}; Object.keys(di).filter(x => x >= ref).forEach(x => { const v = di[x] || {}, o = {}; if (v.m) o.m = v.m; if (v.m && v.f) o.f = v.f; if (v.p) o.p = v.p; d.diary[x] = Object.keys(o).length ? o : 1; }); }   // nel QR solo emozioni e presenze: i testi viaggiano solo nel collegamento cifrato
   if (D) d.dragon = { name: D.name || '', energy: D.energy || 0 };
   try {
     const PA = store.get('path', null), td = todayIso();
