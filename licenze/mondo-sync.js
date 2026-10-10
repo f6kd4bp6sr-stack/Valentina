@@ -1,6 +1,6 @@
 /* «Il mio mondo» → sezione Progressi: invio automatico e cifrato dei progressi.
    - Si attiva solo dopo il collegamento fatto da un genitore (📊 Progressi → 🔗 Per i genitori).
-   - Invia SOLO i contatori dello studio (niente nome, niente testi del diario, niente aspetto o voce),
+   - Invia i contatori dello studio e il diario (emozioni, presenze e testi); niente nome, niente aspetto o voce;
      cifrati sull'iPad con una chiave che resta nel «codice di collegamento»: chi non ha il codice vede solo dati illeggibili.
    - Invio: all'apertura, quando l'app va in secondo piano e ogni 30 minuti; almeno una volta al giorno anche senza novità. */
 (function () {
@@ -25,8 +25,17 @@
         try { data[n] = JSON.parse(localStorage.getItem(k)); } catch (e) {}
       }
     } catch (e) {}
-    // solo quantità, mai testi: diario → giorni scritti; liste del metodo → quante voci
-    if (data.diary && typeof data.diary === "object") { var dd = {}; Object.keys(data.diary).forEach(function (d) { dd[d] = 1; }); data.diary = dd; }
+    // diario: per ogni giorno emozione, intensità, presenza e testo (ultimi 400 giorni); liste del metodo → quante voci
+    if (data.diary && typeof data.diary === "object") {
+      var dd = {}, lim = new Date(Date.now() - 400 * 864e5).toISOString().slice(0, 10);
+      Object.keys(data.diary).forEach(function (d) {
+        if (d < lim) return; var v = data.diary[d];
+        if (!v || typeof v !== "object") { dd[d] = 1; return; }
+        var o = {}; if (v.m) o.m = String(v.m); if (v.f) o.f = +v.f || 3; if (v.p === "P" || v.p === "A") o.p = v.p; if (typeof v.w === "string" && v.w.trim()) o.w = v.w.trim().slice(0, 600);
+        dd[d] = Object.keys(o).length ? o : 1;
+      });
+      data.diary = dd;
+    }
     ["m-steps", "m-open", "m-frasi"].forEach(function (k) { if (Array.isArray(data[k])) data[k] = data[k].map(function () { return 1; }); });
     // percorso: solo il riepilogo per materia (nozioni imparate, consolidate, da ripassare), non le domande
     try {

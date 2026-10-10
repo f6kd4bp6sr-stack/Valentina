@@ -67,6 +67,21 @@ button,.btn{font:inherit;border:0;border-radius:10px;padding:10px 14px;backgroun
 .tabs-grid div{border-radius:9px;text-align:center;padding:6px 0;font-weight:800;font-size:13px;line-height:1.15}
 .tabs-grid div small{display:block;font-size:11px;font-weight:700;opacity:.85}
 .t-good{background:var(--good-bg);color:var(--good)} .t-mid{background:var(--mid-bg);color:var(--mid)} .t-bad{background:var(--bad-bg);color:var(--bad)} .t-none{background:var(--none-bg);color:var(--none)}
+.dys{display:grid;grid-template-columns:repeat(14,1fr);gap:4px;margin:10px 0 6px}
+.dy{background:var(--seg);border-radius:10px;padding:5px 2px;text-align:center;min-width:0;border-bottom:4px solid transparent}
+.dy small{display:block;font-size:10px;color:var(--muted);white-space:nowrap}
+.dy span{display:block;font-size:20px;line-height:1.3}
+.dy i{display:block;font-style:normal;font-size:7px;letter-spacing:-1px;color:var(--muted);min-height:9px}
+.dy em{display:block;font-style:normal;font-size:11px;min-height:14px}
+.dy.up{border-color:var(--good)} .dy.mid{border-color:var(--mid)} .dy.tired{border-color:var(--c1)} .dy.down{border-color:var(--bad);background:var(--bad-bg)}
+@media (max-width:620px){ .dys{grid-template-columns:repeat(7,1fr)} }
+.mbar{display:flex;height:10px;border-radius:6px;overflow:hidden;background:var(--seg);margin:8px 0 6px}
+.mbar i{display:block;height:100%}
+.dpage{border-left:4px solid var(--line);padding:8px 12px;margin-top:10px;background:var(--seg);border-radius:0 12px 12px 0}
+.dpage.up{border-color:var(--good)} .dpage.mid{border-color:var(--mid)} .dpage.tired{border-color:var(--c1)} .dpage.down{border-color:var(--bad)}
+.dph{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:14px}
+.dpage p{margin:6px 0 0;white-space:pre-wrap;font-size:15px}
+.dold summary{cursor:pointer;margin-top:12px;font-weight:700;color:var(--accent)}
 .heat{display:grid;grid-template-rows:repeat(7,14px);grid-auto-flow:column;grid-auto-columns:14px;gap:3px;margin:8px 0 4px}
 .heat i{border-radius:3px;background:var(--seg)} .heat i.on{background:var(--good)} .heat i.x{background:transparent}
 .empty{text-align:center;padding:30px 16px;border:2px dashed var(--line);border-radius:16px;color:var(--muted)}
@@ -387,7 +402,10 @@ function analyze(pack){
   const gems=D.gems&&typeof D.gems==="object"?D.gems:null;
   const figs=D.coll&&D.coll.f?Object.values(D.coll.f).reduce((a,x)=>a+(Array.isArray(x)?x.length:0),0):(D.coll&&D.coll.figs!=null?+D.coll.figs:null);
   const piggy=D.piggy&&D.piggy.n!=null?+D.piggy.n:null;
-  return {D,days,last7,last30,lastUse,streak,diary,name,S,good,bad,prog:!!prog,ref,path,pd,gems,figs,piggy,energy:D.dragon&&D.dragon.energy||0,dragon:D.dragon&&D.dragon.name||""};
+  const di=diaryInfo(D,ref);
+  if(di.streak>=3) bad.unshift([`Diario: si sente giù da ${di.streak} pagine di fila`,"vedi «Diario · come sta»"]);
+  else if(di.strong.length) bad.unshift([`Diario: ${di.strong.length===1?"un’emozione difficile segnata":"emozioni difficili segnate"} «tanto» o «tantissimo» negli ultimi 7 giorni`,"vedi «Diario · come sta»"]);
+  return {di,D,days,last7,last30,lastUse,streak,diary,name,S,good,bad,prog:!!prog,ref,path,pd,gems,figs,piggy,energy:D.dragon&&D.dragon.energy||0,dragon:D.dragon&&D.dragon.name||""};
 }
 function summary(A){ // riepilogo numerico per l'andamento tra un caricamento e l'altro
   const D=A.D,md=D["math-done"]||{};
@@ -416,6 +434,60 @@ function pathCard(A){
   h+=`</div>`;
   if(P&&Object.keys(P.per).length){const rows=Object.entries(P.per).sort((a,b)=>b[1].l-a[1].l).map(([u,e])=>`<div class="row"><span>${esc(unitLabel(u))}</span><span class="v">${e.l} imparate · ${e.s} consolidate${e.d?` · <b style="color:var(--bad,#c2410c)">${e.d} da ripassare</b>`:""}</span></div>`).join("");
     h+=`<div class="card" style="margin-top:12px"><b>Materia per materia nel percorso</b>${rows}<div class="lbl">«Consolidate» = la nozione è stata ricordata più volte di fila e il prossimo ripasso è tra due settimane o più.</div></div>`;}
+  return h;
+}
+
+/* ---------- 📅 diario: come sta (emozioni, presenze e pagine scritte) ---------- */
+const MOODS={felice:["😄","Felice","up"],serena:["😊","Serena","up"],orgogliosa:["🤩","Orgogliosa","up"],carica:["💪","Carica","up"],cosi:["😐","Così così","mid"],stanca:["😴","Stanca","tired"],triste:["😢","Triste","down"],arrabbiata:["😠","Arrabbiata","down"],preoccupata:["😟","Preoccupata","down"]};
+const MK={up:["Serena / felice","var(--good)"],mid:["Così così","var(--mid)"],tired:["Stanca","var(--c1)"],down:["Giù (triste, arrabbiata, preoccupata)","var(--bad)"]};
+const FORZA=["","pochissimo","un po’","abbastanza","tanto","tantissimo"];
+function diaryInfo(D,ref){
+  const dd=D.diary&&typeof D.diary==="object"?D.diary:{};
+  const ago=k=>Math.round((new Date(ref+"T12:00")-new Date(k+"T12:00"))/864e5);
+  const E=Object.keys(dd).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)&&ago(k)>=0).sort().map(k=>{const v=dd[k];
+    if(!v||typeof v!=="object")return {d:k,old:1};
+    return {d:k,m:MOODS[v.m]?v.m:null,f:Math.min(5,Math.max(1,Math.round(+v.f||3))),p:v.p==="P"||v.p==="A"?v.p:null,w:typeof v.w==="string"?v.w.trim():""};});
+  const withM=E.filter(e=>e.m);
+  // giù di fila, come nell'app: pagine con un'emozione «giù», con buchi di al massimo 2 giorni
+  let streak=0,prev=null;
+  for(const e of withM.slice().reverse()){if(prev&&ago(e.d)-ago(prev)>2)break;if(MOODS[e.m][2]!=="down")break;streak++;prev=e.d;}
+  const lastM=withM.length?withM[withM.length-1].d:null; if(!lastM||ago(lastM)>3)streak=0;
+  const strong=withM.filter(e=>MOODS[e.m][2]==="down"&&e.f>=4&&ago(e.d)<7);
+  const l30=E.filter(e=>!e.old&&ago(e.d)<30), cnt={up:0,mid:0,tired:0,down:0}, per={};
+  l30.forEach(e=>{if(!e.m)return;cnt[MOODS[e.m][2]]++;per[e.m]=(per[e.m]||0)+1;});
+  const pres={P:l30.filter(e=>e.p==="P").length,A:l30.filter(e=>e.p==="A").length};
+  return {E,streak,strong,l30,cnt,per,pres,old:E.filter(e=>e.old).length,texts:E.filter(e=>e.w).length,ago};
+}
+function diaryCard(A){
+  const I=A.di; if(!I||!I.E.length)return `<h2>📅 Diario · come sta</h2><div class="card lbl">Ancora nessuna pagina di diario.</div>`;
+  const day=k=>new Date(k+"T12:00").toLocaleDateString("it-IT",{weekday:"short",day:"numeric",month:"short"});
+  let h=`<h2>📅 Diario · come sta</h2>`;
+  if(I.streak>=3||I.strong.length){
+    const li=[];
+    if(I.streak>=3)li.push(`<li><b>Si sente giù da ${I.streak} pagine di fila</b><small>ultima: ${esc(day(I.E.filter(e=>e.m).slice(-1)[0].d))}</small></li>`);
+    I.strong.slice(-4).reverse().forEach(e=>li.push(`<li><b>${MOODS[e.m][0]} ${esc(MOODS[e.m][1])} · «${FORZA[e.f]}»</b><small>${esc(day(e.d))}${e.w?" · «"+esc(e.w.length>90?e.w.slice(0,90)+"…":e.w)+"»":""}</small></li>`));
+    h+=`<div class="evc bad" style="margin-bottom:12px"><h3>⚠️ Da guardare con attenzione</h3><ul>${li.join("")}</ul></div>`;
+  }
+  const tot=I.cnt.up+I.cnt.mid+I.cnt.tired+I.cnt.down;
+  h+=`<div class="kpi"><div><b>${I.l30.length}</b><span>pagine negli ultimi 30 giorni</span></div>`+
+    Object.keys(MK).map(k=>`<div><b style="color:${MK[k][1]}">${I.cnt[k]}</b><span>${esc(MK[k][0])}</span></div>`).join("")+
+    `<div><b>${I.pres.P}<span class="lbl"> / ${I.pres.A} assenze</span></b><span>presenze a scuola segnate (30 gg)</span></div></div>`;
+  // ultimi 14 giorni
+  const end=new Date(A.ref+"T12:00"),map={};I.E.forEach(e=>map[e.d]=e);let cells="";
+  for(let i=13;i>=0;i--){const d=new Date(end);d.setDate(d.getDate()-i);const k=iso(d),e=map[k];
+    cells+=`<div class="dy${e&&e.m?" "+MOODS[e.m][2]:""}" title="${esc(day(k))}${e&&e.m?" · "+MOODS[e.m][1]+" ("+FORZA[e.f]+")":""}"><small>${d.toLocaleDateString("it-IT",{weekday:"narrow"})} ${d.getDate()}</small><span>${e&&e.m?MOODS[e.m][0]:e?"📝":"·"}</span><i>${e&&e.m?"●".repeat(e.f):""}</i><em>${e&&e.p==="P"?"🏫":e&&e.p==="A"?"🏠":""}</em></div>`;}
+  h+=`<div class="card" style="margin-top:12px"><b>Ultimi 14 giorni</b><div class="dys">${cells}</div>`+
+    (tot?`<div class="mbar">${Object.keys(MK).map(k=>I.cnt[k]?`<i style="width:${I.cnt[k]/tot*100}%;background:${MK[k][1]}" title="${esc(MK[k][0])}: ${I.cnt[k]}"></i>`:"").join("")}</div>`:"")+
+    `<div class="lbl">I pallini dicono quanto forte (da 1 «pochissimo» a 5 «tantissimo»). 🏫 presente · 🏠 assente. La barra: emozioni degli ultimi 30 giorni.</div>`+
+    (Object.keys(I.per).length?`<div class="lbl" style="margin-top:6px">Le più frequenti: ${Object.entries(I.per).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([m,n])=>MOODS[m][0]+" "+esc(MOODS[m][1].toLowerCase())+" "+n).join(" · ")}</div>`:"")+`</div>`;
+  // le pagine
+  const pages=I.E.filter(e=>!e.old&&(e.w||e.m||e.p)).slice().reverse();
+  const pg=e=>`<div class="dpage${e.m?" "+MOODS[e.m][2]:""}"><div class="dph"><b>${esc(day(e.d))}</b>${e.m?`<span>${MOODS[e.m][0]} ${esc(MOODS[e.m][1])} · ${FORZA[e.f]}</span>`:""}${e.p?`<span class="lbl">${e.p==="P"?"🏫 a scuola":"🏠 assente"}</span>`:""}</div>${e.w?`<p>${esc(e.w)}</p>`:`<p class="lbl">Nessun testo scritto.</p>`}</div>`;
+  const recent=pages.filter(e=>I.ago(e.d)<30), older=pages.filter(e=>I.ago(e.d)>=30);
+  h+=`<div class="card"><b>Le pagine del diario</b> <span class="lbl">· ${I.texts} con testo</span>${recent.length?recent.map(pg).join(""):`<p class="lbl">Nessuna pagina negli ultimi 30 giorni.</p>`}`+
+    (older.length?`<details class="dold"><summary>Pagine più vecchie (${older.length})</summary>${older.map(pg).join("")}</details>`:"")+
+    (I.old?`<div class="lbl" style="margin-top:8px">${I.old} ${I.old===1?"pagina arrivata":"pagine arrivate"} prima di questo aggiornamento: si vede solo la data. Con il prossimo invio dall’iPad arrivano anche emozioni e testi.</div>`:"")+
+    `<div class="lbl" style="margin-top:8px">I testi arrivano con il collegamento automatico, cifrato. Con il QR arrivano solo emozioni e presenze.</div></div>`;
   return h;
 }
 
@@ -457,6 +529,8 @@ function render(pack,hist){
   </div>
   ${daysCard(A.D["prog-days"],A.ref)}
   <div class="card" style="margin-top:12px"><b>Giorni di utilizzo · ultime 8 settimane</b><div class="heat">${heat}</div><div class="lbl">Ogni quadratino è un giorno (righe: lunedì → domenica). Verde = app usata.</div></div>
+
+  ${diaryCard(A)}
 
   ${pathCard(A)}
   ${videoCard(A)}
@@ -1041,7 +1115,7 @@ window.__analyze=analyze; window.__normalize=normalize;
 
 })();
 </script>
-<script>window.APP_VERSION="53e9039d41";window.APP_BUILD="2026-10-10T11:24+02:00";</script>
+<script>window.APP_VERSION="27eb8da311";window.APP_BUILD="2026-10-10T16:03+02:00";</script>
 <script>
 /* ===== Aggiornamento automatico e controllo versione (uguale in tutte le sezioni di Pianificazione: costruita da comune/barra.html) =====
    - all'apertura, al ritorno sull'app e ogni 30 minuti legge version.json saltando ogni copia vecchia (anche quella del server di GitHub);
