@@ -81,12 +81,59 @@ button,input,select,textarea{font:inherit}
 .cena{border-top:1px solid var(--line);padding:7px 0}.cena summary{cursor:pointer;font-weight:700}.cena summary small{color:var(--muted);font-weight:600;margin-left:4px}.cena div{margin-top:4px;color:var(--ok,#2e7d5b);font-weight:700}
 .warnbox{margin-top:8px;padding:9px 12px;border-radius:10px;background:#fff4e8;border:1px solid #f0a35e;font-size:14px;line-height:1.4}@media(prefers-color-scheme:dark){.warnbox{background:#3a2a1c;border-color:#b8743c}}
 a.btn{text-decoration:none}
+.cal-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.cal-head h1{margin:0}
+.cal-ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.seg{display:flex;background:var(--seg);border-radius:12px;padding:3px;gap:2px}
+.seg button{border:0;background:none;font:inherit;font-weight:700;font-size:14px;color:var(--muted);padding:7px 12px;border-radius:9px;cursor:pointer}
+.seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.cal-nav{display:flex;gap:4px}.cal-nav .btn{min-width:40px;font-size:16px}
+.cal-mo{display:grid;gap:14px}
+@media (min-width:1100px){.cal-mo{grid-template-columns:minmax(0,1fr) 340px;align-items:start}.cal-side{position:sticky;top:12px}}
+.mgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.mh{font-size:12px;font-weight:800;color:var(--muted);text-transform:capitalize;text-align:center;padding:2px 0}
+.mc{display:flex;flex-direction:column;align-items:stretch;gap:2px;min-height:98px;min-width:0;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:5px;font:inherit;color:var(--ink);cursor:pointer;overflow:hidden}
+.mc.out{opacity:.45}.mc.we{background:var(--seg)}.mc.lic{background:var(--lp-bg)}.mc.today{outline:2px solid var(--accent);outline-offset:-1px}.mc.sel{box-shadow:0 0 0 3px var(--accent) inset}
+.mc .mn{display:flex;align-items:baseline;gap:4px;min-width:0}.mc .mn b{font-size:15px}
+.mc .code{font-style:normal;font-size:10.5px;font-weight:800;color:var(--lp)}
+.mc .holn{font-style:normal;font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cc{display:block;font-size:11.5px;font-weight:700;line-height:1.25;border-radius:6px;padding:1px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--seg);color:var(--ink)}
+.cc.scad{background:var(--soon-bg);color:var(--soon)}.cc.scad.warn{background:var(--warn-bg);color:var(--warn)}.cc.scad.proj{opacity:.7}
+.cc.pay{background:var(--euro-bg);color:var(--euro)}.cc.pay.in{background:var(--ok-bg);color:var(--ok)}
+.cc.fam{background:var(--fam-bg);color:var(--fam)}.cc.ipad{background:var(--ben-bg);color:var(--ben)}.cc.lic{background:var(--lp-bg);color:var(--lp)}.cc.more{background:none;color:var(--muted)}
+.mc .mi{margin-top:auto;font-size:13px;line-height:1;min-height:14px}.mc .vs{font-style:normal}
+.cal-leg{margin:8px 2px}.lg{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;border:1px solid var(--line)}.lg.lic{background:var(--lp-bg)}.lg.we{background:var(--seg)}
+.lgu{display:inline-block;width:12px;border-bottom:3px solid var(--soon)}
+.pill.cc{display:inline-block;font-size:12.5px;min-width:52px;text-align:center}
+.dayed h3{flex-wrap:wrap}.lavbox{border-top:1px solid var(--line);padding:8px 0}
+.codes{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:6px}
+.codes button{border:2px solid var(--line);background:var(--card);border-radius:12px;padding:7px 8px;text-align:left;font:inherit;color:var(--ink);cursor:pointer}
+.codes button small{display:block;color:var(--muted);font-size:12px}.codes button.on{border-color:var(--accent);background:var(--euro-bg)}
+.addbar{display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--line);padding-top:10px;margin-top:4px}
+.addf{margin-top:10px}.addf .btns{margin-top:0}
+.mood.sm button{font-size:21px;padding:2px 6px}
+.vw{font-style:italic;margin-top:2px}.vw.down{color:var(--warn)}
+.cal-wk .day{font:inherit;color:var(--ink);text-align:left;cursor:pointer;align-content:start}.cal-wk .cc{white-space:normal}
+.ygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.ym{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px}
+.ymt{border:0;background:none;font:inherit;font-weight:800;color:var(--ink);cursor:pointer;padding:2px 2px 6px;text-align:left;width:100%}.ymt small{color:var(--lp);font-weight:700}
+.ymg{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.ymg i{font-style:normal;font-size:10px;color:var(--muted);text-align:center}
+.ymg button{position:relative;border:0;border-radius:6px;background:none;font:inherit;font-size:12px;padding:4px 0;color:var(--ink);cursor:pointer}
+.ymg button.we{color:var(--muted);background:var(--seg)}.ymg button.lic{background:var(--lp-bg);color:var(--lp);font-weight:800}.ymg button.today{outline:2px solid var(--accent)}
+.ymg button.end::after{content:"⭐";position:absolute;top:-6px;right:-4px;font-size:10px}
+.ymg button u{position:absolute;left:25%;right:25%;bottom:1px;border-bottom:2px solid var(--soon)}
+.cal-foot{margin-top:14px}
+.mc .md{display:none;gap:3px;flex-wrap:wrap}.mc .md i{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.mc .md i.scad{background:var(--soon)}.mc .md i.pay{background:var(--euro)}.mc .md i.fam{background:var(--fam)}.mc .md i.ipad{background:var(--ben)}.mc .md i.lic{background:var(--lp)}
+@media (max-width:820px){.cal-head h1{font-size:24px}}
+@media (max-width:600px){.mc{min-height:62px;padding:3px}.mc .cc{display:none}.mc .md{display:flex}.mc .mi{font-size:11px}.mc .holn{display:none}}
 .saved{font-size:12.5px;color:var(--muted);margin:6px 0 0}
 @media (max-width:820px){.wrap{grid-template-columns:1fr}.side{position:static;display:flex;flex-wrap:wrap;gap:6px}.side button{width:auto;white-space:nowrap;padding:8px 12px}.week{grid-template-columns:1fr}.day{min-height:auto}}
 @media (prefers-color-scheme:dark){:root{--bg:#0f1216;--card:#1a1e24;--ink:#eef0f3;--muted:#9aa3ae;--line:#2a3038;--seg:#242a32;--ok-bg:#16301f;--warn-bg:#3a1b19;--soon-bg:#33270f;--lp-bg:#3a2218;--fam-bg:#271f3d;--ben-bg:#14302f;--euro-bg:#172739}
   .form input,.form select,.form textarea,.chk,.mood button{background:#12161b;color:var(--ink)}.day.together{background:linear-gradient(180deg,#1a1e24,#14261b)}}
 </style>
-<script>window.APP_VERSION="27eb8da311";window.APP_BUILD="2026-10-10T16:03+02:00";</script>
+<script>window.APP_VERSION="d3c3f98915";window.APP_BUILD="2026-10-10T16:33+02:00";</script>
 </head>
 <body>
 <style id="lockCss">
@@ -193,7 +240,7 @@ html.locked #lockScr{display:grid}
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
 /* ================= PIANIFICAZIONE =================
-   Sezioni: Oggi · Scadenze · Calendario (esporta) · Famiglia · Conti · Benessere.
+   Sezioni: Calendario (punto di partenza: giorno, settimana, mese, anno; il giorno di oggi contiene il riepilogo) · Scadenze · Famiglia · Conti · Benessere.
    Tutti i dati restano su questo dispositivo: localStorage «pn-v1» + copia nel database del dispositivo (IndexedDB «licenze-marco», voce «pianifica»)
    + copie giornaliere e copia su File/iCloud insieme a Licenze, Tai Chi e Progressi (barra in fondo). Nessun dato personale nel codice. */
 "use strict";
@@ -325,7 +372,7 @@ const vub=s=>{s=String(s).replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s
 async function ghDaily(){const g=lsJ("prog-gh-v1");if(!g||!g.token||navigator.onLine===false)return;if(g.checked&&Date.now()-new Date(g.checked).getTime()<20*36e5)return;
   try{const r=await fetch("https://api.github.com/user",{cache:"no-store",headers:{Authorization:"Bearer "+g.token,Accept:"application/vnd.github+json"}});
     if(r.status===401){g.ok=false;g.why="la chiave GitHub non è valida o è scaduta";}else if(r.ok){g.ok=true;g.why="";const ex=r.headers.get("github-authentication-token-expiration");if(ex)g.exp=new Date(ex.replace(" UTC","Z").replace(" ","T")).toISOString();}else return;
-    g.checked=new Date().toISOString();localStorage.setItem("prog-gh-v1",JSON.stringify(g));if(cur==="oggi")render();}catch(e){}}
+    g.checked=new Date().toISOString();localStorage.setItem("prog-gh-v1",JSON.stringify(g));if(cur==="cal")render();}catch(e){}}
 function ghWarn(){const g=lsJ("prog-gh-v1");if(!g)return "";if(g.ok===false)return `<div class="warnbox">⚠️ ${esc(g.why||"La chiave GitHub non funziona")}: in <a href="progressi.html">Progressi</a> → 📲 Collega con un QR, prepara un QR con una chiave nuova.</div>`;
   const d=g.exp?Math.floor((new Date(g.exp)-Date.now())/864e5):null;return d!=null&&d<=10?`<div class="warnbox">⏳ La chiave GitHub scade tra ${Math.max(0,d)} giorni: in <a href="progressi.html">Progressi</a> prepara un QR con una chiave nuova.</div>`:"";}
 async function valePull(force){
@@ -344,7 +391,7 @@ async function valePull(force){
     try{const prev=lsJ(VIN)||{};localStorage.setItem(VIN,JSON.stringify(Object.assign({saved:pt.saved,checked:now,err:""},valeSum(d),valeWeekData(d,prev))));}catch(e){}
     L.sent=pt.saved;L.checked=now;L.err="";try{localStorage.setItem("prog-link-v1",JSON.stringify(L));}catch(e){}
   }catch(e){inb.checked=new Date().toISOString();inb.err=e&&e.name==="OperationError"?"il codice non corrisponde: ricollega nella sezione Progressi":String((e&&e.message)||e);try{localStorage.setItem(VIN,JSON.stringify(inb));}catch(x){}}
-  finally{valeBusy=false;const now=lsJ(VIN)||{};if(cur==="oggi"&&(now.saved!==JSON.parse(before).saved||now.err!==JSON.parse(before).err))render();}
+  finally{valeBusy=false;const now=lsJ(VIN)||{};if(cur==="cal"&&(now.saved!==JSON.parse(before).saved||now.err!==JSON.parse(before).err))render();}
 }
 
 /* ---------- scadenze ---------- */
@@ -897,6 +944,185 @@ function bindStat(){document.querySelectorAll("[data-sp]").forEach(b=>b.onclick=
     if(!$("cutM"))return;$("cutM").textContent=euro(m);$("cutY").textContent=euro(m*12);const S=stats(12),g=parseAmt($("goalA").value),per=S.E-S.U+m;$("goalT").textContent=g>0?(per>0?Math.ceil(g/per)+" mesi":"—"):"—";};
   document.querySelectorAll("[data-cut]").forEach(r=>r.oninput=upd);if($("goalA"))$("goalA").oninput=upd;upd();}
 
+/* ---------- 📆 CALENDARIO: il punto da cui si parte ----------
+   Vista Giorno · Settimana · Mese · Anno. Mostra insieme Licenze e presenze, Scadenze, pagamenti dei Conti,
+   Famiglia, eventi del Calendario dell'iPad, Benessere e Tai Chi, «Il mio mondo».
+   Ogni modifica fatta su un giorno scrive nella sezione di origine (Licenze, Scadenze, Conti, Famiglia, Benessere, Tai Chi),
+   così tutta l'app resta allineata. Le istruzioni per collegare il Calendario dell'iPad stanno dietro un pulsante. */
+const CV=[["giorno","Giorno"],["sett","Settimana"],["mese","Mese"],["anno","Anno"]];
+let calV=(()=>{try{const v=localStorage.getItem("pn-calv");return CV.some(x=>x[0]===v)?v:"mese";}catch(e){return "mese";}})();
+let calD=today(), calSel=today(), calLink=false, calAdd="", calOpenLav=false;
+const setCalV=v=>{calV=v;try{localStorage.setItem("pn-calv",v);}catch(e){}};
+const MESI_L=["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novembre","dicembre"];
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const LKEY="licenze-marco-v1";
+const CODES=[["P","🏢","In ufficio"],["LP","🏖️","Licenza anni prec."],["LO","🏖️","Licenza anno in corso"],["RL","🔁","Recupero festivo"],["AL","📝","Altra assenza"]];
+
+/* ---- scrittura nelle Licenze (stessa memoria della sezione Licenze: browser + database del dispositivo) ---- */
+function licWrite(fn){const s=lsJ(LKEY);if(!s)return false;s.days=s.days||{};fn(s);s.savedAt=new Date().toISOString();const t=JSON.stringify(s);
+  try{localStorage.setItem(LKEY,t);}catch(e){return false;}kv("readwrite","stato",t).catch(()=>{});return true;}
+function licEditable(S,s){const st=S.start||PROV_START;return s>=st&&s<=S.end&&kind(s)==="LAV"&&s!==S.end;}
+function licSetCode(s,c){return licWrite(S=>{const d=S.days[s]||{},from=d.c||"P";if(from===c)return;if(c==="P")delete d.c;else d.c=c;
+  if(Object.keys(d).length)S.days[s]=d;else delete S.days[s];S.log=(S.log||[]);S.log.push({t:new Date().toISOString(),s,from,to:c});if(S.log.length>60)S.log=S.log.slice(-60);});}
+function licSetField(s,k,v){return licWrite(S=>{const d=S.days[s]||{};if(v)d[k]=v;else delete d[k];if(Object.keys(d).length)S.days[s]=d;else delete S.days[s];});}
+function licOver(S){ // giorni di licenza oltre i saldi (stesso ordine di consumo della sezione Licenze)
+  const st=S.start||PROV_START,b=Object.assign({},S.bal);let over=0;
+  for(let s=st;s<=S.end;s=add(s,1)){if(kind(s)!=="LAV")continue;const c=(S.days[s]&&S.days[s].c)||"P",y27=s>="2027-01-01";
+    if(c==="LP"){if(b.lo25>0)b.lo25--;else if(y27&&b.lo26>0)b.lo26--;else over++;}
+    else if(c==="LO"){if(!y27){if(b.lo26>0)b.lo26--;else over++;}else if(b.lo27>0)b.lo27--;else over++;}
+    else if(c==="RL"){if(b.rl26>0)b.rl26--;else if(y27&&b.rl27>0)b.rl27--;else over++;}}
+  return over;}
+
+/* ---- «Il mio mondo»: giorni di studio e diario (dai Progressi) ---- */
+function valeCal(){const p=lsJ("prog-vale-v1"),inb=lsJ(VIN),d=p?((p.state&&p.state.data)||p.data||{}):{};
+  const days=new Set([].concat(Array.isArray(d.days)?d.days:[],inb&&Array.isArray(inb.days)?inb.days:[]).map(x=>{const m=String(x).match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);return m?m[1]+"-"+m[2].padStart(2,"0")+"-"+m[3].padStart(2,"0"):String(x);}));
+  return{days,diary:d.diary&&typeof d.diary==="object"?d.diary:{}};}
+const VMOOD={felice:["😄","felice"],serena:["😊","serena"],orgogliosa:["🤩","orgogliosa"],carica:["💪","carica"],cosi:["😐","così così"],stanca:["😴","stanca"],triste:["😢","triste"],arrabbiata:["😠","arrabbiata"],preoccupata:["😟","preoccupata"]};
+const VDOWN=new Set(["triste","arrabbiata","preoccupata"]);
+
+/* ---- tutto quello che c'è in un giorno ---- */
+function scadOn(s){const out=[];scadOpen().forEach(x=>{let d=x.d,g=0;while(d&&d<s&&g++<400){d=nextDate(d,x.ric);}if(d===s)out.push({x,proj:d!==x.d});});return out;}
+function tcOn(s){return tcSessions().filter(x=>x.d===s);}
+function dayData(s,V){
+  const S=licS(),L=S?licDay(S,s):{k:kind(s),c:null,t:""},it=[];
+  if(S&&S.ev&&S.ev[s])it.push({ic:"📅",t:S.ev[s],c:"lic",k:"licev"});
+  if(S&&s===S.end)it.push({ic:"🎉",t:"Congedo",c:"lic",k:"congedo"});
+  if(HOL[s])it.push({ic:"🇮🇹",t:HOL[s],c:"hol",k:"hol"});
+  scadOn(s).forEach(o=>it.push({ic:(CAT[o.x.cat]||CAT.altro)[0],t:o.x.t,c:o.proj?"scad proj":scadState(o.x)==="warn"?"scad warn":"scad",k:"scad",id:o.x.id,proj:o.proj,sub:RIC[o.x.ric]&&o.x.ric!=="no"?RIC[o.x.ric]:""}));
+  try{C().ric.forEach(r=>{if(ricDates(r,s,s).length)it.push({ic:r.tipo==="e"?"💰":"💶",t:r.t,amt:(r.tipo==="e"?"+":"−")+euro(r.imp),c:"pay"+(r.tipo==="e"?" in":""),k:"pay",id:r.id});});}catch(e){}
+  famOn(s).forEach(a=>it.push({ic:"👨‍👧",t:(a.chi?a.chi+": ":"")+a.t,o:a.o||"",f:a.f||"",c:"fam",k:a.tipo==="att"?"att":"fev",id:a.id,sub:a.acc?"🚗 "+a.acc:""}));
+  calOn(s).forEach(e=>it.push({ic:calIc(e),t:e.t,o:e.o||"",f:e.f||"",c:"ipad",k:"ipad",sub:[e.cal,e.loc].filter(Boolean).join(" · ")}));
+  const dn=(P.dn||{})[s];
+  it.sort((a,b)=>(a.o||"99")<(b.o||"99")?-1:(a.o||"99")>(b.o||"99")?1:0);
+  const V2=V||valeCal(),vd=V2.diary[s];
+  return{S,L,it,dn,ben:benDay(s),tc:tcOn(s),vstudy:V2.days.has(s),vmood:vd&&typeof vd==="object"&&VMOOD[vd.m]?vd:null};
+}
+const offDay=L=>L&&(L.k!=="LAV"||(L.c&&L.c!=="P"&&L.c!=="OUT"));
+
+/* ---- vista principale ---- */
+function calTitle(){const d=parse(calD);
+  if(calV==="giorno")return cap(fmt(calD,{weekday:"long",day:"numeric",month:"long",year:"numeric"}));
+  if(calV==="sett"){const m=monday(calD),e=add(m,6);return parse(m).getDate()+(m.slice(5,7)!==e.slice(5,7)?" "+MESI_L[+m.slice(5,7)-1]:"")+" – "+parse(e).getDate()+" "+MESI_L[+e.slice(5,7)-1]+" "+e.slice(0,4);}
+  if(calV==="mese")return cap(MESI_L[d.getMonth()])+" "+d.getFullYear();
+  return String(d.getFullYear());}
+function calStep(n){const d=parse(calD);
+  if(calV==="giorno")calD=add(calD,n);else if(calV==="sett")calD=add(calD,7*n);
+  else if(calV==="mese"){d.setDate(1);d.setMonth(d.getMonth()+n);calD=iso(d);}else{d.setFullYear(d.getFullYear()+n);calD=iso(d);}
+}
+function vCal(){
+  if(calLink)return `<div class="btns" style="margin:0 0 6px"><button class="btn sm" data-ca="back">‹ Torna al calendario</button></div>`+vCalImport()+vCalExport();
+  const t=today();
+  let o=`<div class="cal-head"><h1>📆 ${esc(calTitle())}</h1>
+    <div class="cal-ctl"><div class="seg" role="tablist">${CV.map(([k,n])=>`<button role="tab" data-cv="${k}" class="${calV===k?"on":""}" aria-selected="${calV===k}">${n}</button>`).join("")}</div>
+    <div class="cal-nav"><button class="btn sm" data-ca="prev" aria-label="Precedente">‹</button><button class="btn sm" data-ca="today">Oggi</button><button class="btn sm" data-ca="next" aria-label="Successivo">›</button></div></div></div>`;
+  if(P.cal.wait)o+=`<div class="btns" style="margin:0 0 10px"><button class="btn pri" data-ca="paste">📥 Tocca qui per inserire gli eventi del Calendario</button></div>`;
+  o+=calV==="giorno"?calDayView(calD):calV==="sett"?calWeekView():calV==="anno"?calYearView():calMonthView();
+  o+=`<div class="card cal-foot"><div class="btns" style="margin:0"><button class="btn sm" data-ca="run">🔄 Aggiorna dal Calendario dell’iPad</button><button class="btn sm" data-ca="paste">📥 Incolla dagli appunti</button><button class="btn sm" data-ca="link">ℹ️ Collega il Calendario dell’iPad</button></div>
+    ${P.cal.at?`<p class="lbl" style="margin:8px 0 0">Eventi dell’iPad aggiornati ${rel(P.cal.at.slice(0,10))} alle ${new Date(P.cal.at).toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"})}</p>`:""}</div>`;
+  return o;
+}
+function cellChips(D,max){const it=D.it.filter(x=>x.k!=="hol"),n=it.length,sh=it.slice(0,max);
+  return sh.map(x=>`<span class="cc ${x.c}" title="${esc((x.o?x.o+" ":"")+x.t)}">${x.ic} ${esc(x.k==="att"||x.k==="fev"?x.t.replace(/^[^:]{1,20}:\s*/,""):x.t)}</span>`).join("")+(n>max?`<span class="cc more">+${n-max}</span>`:"")+`<span class="md">${it.slice(0,5).map(x=>`<i class="${x.c.split(" ")[0]}"></i>`).join("")}</span>`;}
+function cellIcons(D){return (D.vmood?VMOOD[D.vmood.m][0]:"")+(D.tc.length?"🧘":"")+(D.ben.umore?UMORE[D.ben.umore-1]:"")+(D.dn?"📝":"");}
+function calMonthView(){
+  const d=parse(calD),y=d.getFullYear(),m=d.getMonth(),first=iso(new Date(y,m,1)),last=iso(new Date(y,m+1,0)),t=today(),V=valeCal();
+  let s=monday(first),cells="";
+  while(s<=last||((parse(s).getDay()+6)%7)!==0){
+    const D=dayData(s,V),inM=s.slice(0,7)===first.slice(0,7),lab=D.L&&D.S?(D.L.c==="P"?"":D.L.c&&D.L.c!=="OUT"?D.L.c:""):"";
+    cells+=`<button class="mc${inM?"":" out"}${s===t?" today":""}${s===calSel?" sel":""}${offDay(D.L)?(D.L.k==="LAV"?" lic":" we"):""}${HOL[s]?" hol":""}" data-cd="${s}" aria-label="${esc(fmt(s,{weekday:"long",day:"numeric",month:"long"}))}">
+      <span class="mn"><b>${parse(s).getDate()}</b>${lab?`<em class="code">${lab}</em>`:""}${HOL[s]?`<em class="holn">${esc(HOL[s])}</em>`:""}</span>${cellChips(D,3)}<span class="mi">${cellIcons(D)}${D.vstudy?"<i class='vs' title='Ha studiato'>🐉</i>":""}</span></button>`;
+    s=add(s,1);}
+  return `<div class="cal-mo"><div><div class="mgrid">${GIORNI.map(g=>`<div class="mh">${g.slice(0,3)}</div>`).join("")}${cells}</div>
+    <p class="lbl cal-leg"><span class="lg lic"></span> licenza / a casa · <span class="lg we"></span> fine settimana e festivi · 🐉 Il mio mondo · 🧘 Tai Chi · 📝 nota</p></div>
+    <div class="cal-side">${dayEditor(calSel,true)}</div></div>`;
+}
+function calWeekView(){const m=monday(calD),t=today(),V=valeCal();
+  return `<div class="week cal-wk">${[...Array(7)].map((_,i)=>{const s=add(m,i),D=dayData(s,V);
+    return `<button class="day${s===t?" today":""}${offDay(D.L)&&D.S?" together":""}" data-cday="${s}"><b class="dn">${fmt(s,{weekday:"long",day:"numeric"})}</b>
+      ${D.S?`<span class="ev ${D.L.c==="P"?"job":"off"}">${D.L.c==="P"?"🏢 "+esc(D.L.i||"")+"–"+esc(D.L.o||""):"🏡 "+esc(D.L.t)}</span>`:HOL[s]?`<span class="ev off">🇮🇹 ${esc(HOL[s])}</span>`:""}
+      ${D.it.filter(x=>x.k!=="hol").map(x=>`<span class="cc ${x.c}">${x.ic} ${esc(x.o?x.o+" ":"")}${esc(x.t)}${x.amt?" "+x.amt:""}</span>`).join("")}
+      <span class="mi">${cellIcons(D)}${D.vstudy?"🐉":""}</span></button>`;}).join("")}</div>`;}
+function calYearView(){const y=parse(calD).getFullYear(),t=today(),S=licS();
+  let o=`<div class="ygrid">`;
+  for(let m=0;m<12;m++){const first=iso(new Date(y,m,1)),last=iso(new Date(y,m+1,0));let s=first,cells='<i class="x"></i>'.repeat((parse(first).getDay()+6)%7),nl=0;
+    while(s<=last){const L=S?licDay(S,s):{k:kind(s)},hasS=scadOn(s).length,cls=(L.c&&L.c!=="P"&&L.c!=="OUT"&&L.k==="LAV")?"lic":L.k!=="LAV"?"we":"";if(cls==="lic")nl++;
+      cells+=`<button class="${cls}${s===t?" today":""}${S&&s===S.end?" end":""}" data-cday="${s}" title="${esc(fmt(s,{weekday:"long",day:"numeric",month:"long"}))}">${parse(s).getDate()}${hasS?"<u></u>":""}</button>`;s=add(s,1);}
+    o+=`<div class="ym"><button class="ymt" data-cmon="${first}">${cap(MESI_L[m])}${nl?` <small>${nl} gg a casa</small>`:""}</button><div class="ymg">${["L","M","M","G","V","S","D"].map(g=>`<i class="h">${g}</i>`).join("")}${cells}</div></div>`;}
+  return o+`</div><p class="lbl cal-leg"><span class="lg lic"></span> licenza / a casa · <span class="lg we"></span> fine settimana e festivi · <u class="lgu"></u> scadenza · ⭐ congedo. Tocca un mese o un giorno.</p>`;}
+
+/* ---- il giorno: elenco e modifiche ---- */
+function dayEditor(s,compact){
+  const D=dayData(s),S=D.S,t=today();
+  let o=`<div class="card dayed"><h3>${compact?cap(fmt(s,{weekday:"long",day:"numeric",month:"long"})):"🗓️ In programma"} <span class="pill${s===t?" ok":""}">${rel(s)}</span>${compact?`<button class="lnk" data-cday="${s}">Apri il giorno ›</button>`:""}</h3>`;
+  // lavoro
+  if(S){const L=D.L,ed=licEditable(S,s);
+    o+=`<div class="row"><span class="pill ${L.c==="P"?"":"lp"}">${L.c==="P"?"🏢":L.c==="OUT"?"—":L.k!=="LAV"?"🏡":"🏖️"}</span><div class="grow"><b>${esc(L.c==="P"?"In ufficio":cap(L.t||""))}</b>${L.c==="P"?`<small>${esc(L.i||"")}–${esc(L.o||"")}${(S.days[s]||{}).n?" · "+esc(S.days[s].n):""}</small>`:(S.days[s]||{}).n?`<small>${esc(S.days[s].n)}</small>`:""}</div>${ed?`<button class="btn sm" data-ca="lav">${calOpenLav?"Chiudi":"Cambia"}</button>`:""}</div>`;
+    if(ed&&calOpenLav){const c=L.c,d=S.days[s]||{};
+      o+=`<div class="lavbox"><div class="codes">${CODES.map(([k,i,n])=>`<button data-lc="${k}" class="${c===k?"on":""}"><b>${i} ${k}</b><small>${n}</small></button>`).join("")}</div>
+        ${c==="P"?`<div class="form" style="margin-top:8px"><label>Entrata<input type="time" data-lt="in" value="${esc(L.i||"")}"></label><label>Uscita<input type="time" data-lt="out" value="${esc(L.o||"")}"></label></div>`:""}
+        <div class="form" style="margin-top:8px"><label class="wide">Nota sul giorno di lavoro<input data-lt="n" maxlength="140" value="${esc(d.n||"")}" placeholder="facoltativa"></label></div>
+        ${(()=>{const S2=licS(),L2=licCalc(S2),ov=licOver(S2);return `<p class="lbl" style="margin:8px 0 0">Licenza ancora da collocare: <b>${L2.unpl}</b> giorni${ov?` · <b style="color:var(--warn)">⚠️ ${ov} ${ov===1?"giorno":"giorni"} oltre i saldi</b>`:""}. Il cambio aggiorna subito la sezione <a href="licenze.html">Licenze</a>.</p>`;})()}</div>`;}}
+  else o+=`<div class="row"><div class="grow lbl">Imposta rientro e saldi in <a href="licenze.html">Licenze</a> per vedere qui i giorni di lavoro.</div></div>`;
+  // elenco
+  const it=D.it;
+  o+=it.length?it.map(x=>`<div class="row"><span class="pill cc ${x.c}">${x.o?esc(x.o)+(x.f?"–"+esc(x.f):""):x.ic}</span><div class="grow"><b>${x.o?x.ic+" ":""}${esc(x.t)}</b>${x.sub||x.proj?`<small>${esc([x.sub,x.proj?"prossima volta (si ripete)":""].filter(Boolean).join(" · "))}</small>`:""}</div>${x.amt?`<span class="amt ${/in/.test(x.c)?"e":"u"}">${x.amt}</span>`:""}
+    ${x.k==="scad"&&!x.proj?`<button class="chk" data-done="${x.id}" aria-label="Segna fatto">✓</button>`:""}${x.k==="fev"?`<button class="btn sm" data-cdel="fev:${x.id}" aria-label="Togli">×</button>`:""}${x.k==="pay"?`<button class="lnk" data-go="conti">Conti ›</button>`:""}${x.k==="att"?`<button class="lnk" data-go="fam">Famiglia ›</button>`:""}</div>`).join(""):`<p class="empty">Niente in programma.</p>`;
+  if(D.dn)o+=`<div class="row"><span class="pill">📝</span><div class="grow">${esc(D.dn)}</div><button class="btn sm" data-ca="add:nota">Modifica</button></div>`;
+  // aggiungi
+  o+=`<div class="addbar">${[["scad","📌 Scadenza"],["pay","💶 Pagamento"],["fam","👨‍👧 Impegno"],["nota","📝 Nota"]].map(([k,n])=>`<button class="btn sm${calAdd===k?" pri":""}" data-ca="add:${k}">${n}</button>`).join("")}</div>`;
+  if(calAdd==="scad")o+=`<div class="form addf"><label class="wide">Che cosa<input id="caT" maxlength="120" placeholder="es. revisione auto, rinnovo documento"></label><label>Categoria<select id="caC">${Object.entries(CAT).map(([k,v])=>`<option value="${k}">${v[0]} ${v[1]}</option>`).join("")}</select></label><label>Si ripete<select id="caR">${Object.entries(RIC).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select></label><label>Avvisami<select id="caA">${[[0,"il giorno stesso"],[1,"1 giorno prima"],[3,"3 giorni prima"],[7,"1 settimana prima"],[14,"2 settimane prima"],[30,"1 mese prima"]].map(([k,v])=>`<option value="${k}"${k===7?" selected":""}>${v}</option>`).join("")}</select></label><div class="btns wide"><button class="btn pri" data-ca="save:scad">Aggiungi la scadenza</button></div></div>`;
+  if(calAdd==="pay")o+=`<div class="form addf"><label>Voce<input id="caT" maxlength="60" placeholder="es. bollo, rata, affitto"></label><label>Importo €<input id="caI" inputmode="decimal" placeholder="0,00"></label><label>Tipo<select id="caTp"><option value="u">uscita</option><option value="e">entrata</option></select></label><label>Si ripete<select id="caF"><option value="1">una volta</option>${Object.entries(FREQ).map(([k,v])=>`<option value="${k}">${v[0]}</option>`).join("")}</select></label><label>Ultima data (facoltativa)<input id="caE" type="date"></label><div class="btns wide"><button class="btn pri" data-ca="save:pay">Aggiungi il pagamento</button></div></div>`;
+  if(calAdd==="fam")o+=`<div class="form addf"><label class="wide">Che cosa<input id="caT" maxlength="80" placeholder="es. colloquio con le maestre, gara, festa"></label><label>Dalle (facoltativo)<input id="caO" type="time"></label><label>Alle<input id="caF2" type="time"></label><div class="btns wide"><button class="btn pri" data-ca="save:fam">Aggiungi l’impegno</button></div></div>`;
+  if(calAdd==="nota")o+=`<div class="form addf"><label class="wide">Nota del giorno<textarea id="caN" rows="2" maxlength="300">${esc(D.dn||"")}</textarea></label><div class="btns wide"><button class="btn pri" data-ca="save:nota">Salva la nota</button>${D.dn?'<button class="btn danger" data-ca="save:notadel">Togli</button>':""}</div></div>`;
+  // benessere
+  if(s<=t){const tm=D.tc.filter(x=>x.s==="mattina").length,tp=D.tc.filter(x=>x.s==="pomeriggio").length;
+    o+=`<div class="row ben"><span class="pill ben">🧘</span><div class="grow"><div class="mood sm">${UMORE.map((u,i)=>`<button data-cmood="${i+1}" class="${+D.ben.umore===i+1?"on":""}" aria-label="umore ${i+1}">${u}</button>`).join("")}</div>
+      <div class="btns" style="margin-top:6px"><button class="btn sm${tm?" ok":""}" data-tc="mattina">${tm?"✓ ":""}Tai Chi mattino</button><button class="btn sm${tp?" ok":""}" data-tc="pomeriggio">${tp?"✓ ":""}Tai Chi pomeriggio</button></div></div></div>`;}
+  // il mio mondo
+  if(D.vstudy||D.vmood){const v=D.vmood;
+    o+=`<div class="row"><span class="pill">🐉</span><div class="grow"><b>Il mio mondo</b><small>${D.vstudy?"ha studiato":"non ha studiato"}${v?" · diario: "+VMOOD[v.m][0]+" "+VMOOD[v.m][1]+(v.f?" ("+["","pochissimo","un po’","abbastanza","tanto","tantissimo"][Math.min(5,+v.f||0)]+")":""):""}</small>${v&&v.w?`<small class="vw${VDOWN.has(v.m)?" down":""}">«${esc(v.w)}»</small>`:""}</div><a class="lnk" href="progressi.html">Progressi ›</a></div>`;}
+  return o+`</div>`;
+}
+function calDayView(s){
+  let o=dayEditor(s,false);
+  if(s===today()){const g=vOggi().replace(/^<h1>[\s\S]*?<\/h1><p class="sub">[\s\S]*?<\/p>/,"");o+=`<h2>📋 Il riepilogo di oggi</h2>`+g;}
+  return o;
+}
+
+/* ---- azioni ---- */
+function bindCal(){
+  const R=()=>render();
+  document.querySelectorAll("[data-cv]").forEach(b=>b.onclick=()=>{setCalV(b.dataset.cv);if(calV==="giorno")calD=calSel;R();});
+  document.querySelectorAll("[data-cd]").forEach(b=>b.onclick=()=>{calSel=b.dataset.cd;calAdd="";calOpenLav=false;R();
+    if(!matchMedia("(min-width:1100px)").matches){const p=document.querySelector(".cal-side");if(p)p.scrollIntoView({behavior:"smooth",block:"start"});}});
+  document.querySelectorAll("[data-cday]").forEach(b=>b.onclick=e=>{e.stopPropagation();calSel=calD=b.dataset.cday;setCalV("giorno");calAdd="";calOpenLav=false;R();window.scrollTo(0,0);});
+  document.querySelectorAll("[data-cmon]").forEach(b=>b.onclick=()=>{calD=b.dataset.cmon;setCalV("mese");R();});
+  document.querySelectorAll("[data-ca]").forEach(b=>b.onclick=()=>{const a=b.dataset.ca,s=calV==="giorno"?calD:calSel;
+    if(a==="prev"||a==="next"){calStep(a==="prev"?-1:1);if(calV==="giorno")calSel=calD;return R();}
+    if(a==="today"){calD=calSel=today();return R();}
+    if(a==="link"){calLink=true;R();return window.scrollTo(0,0);}
+    if(a==="back"){calLink=false;return R();}
+    if(a==="run")return runShortcut();
+    if(a==="paste")return pasteCal();
+    if(a==="lav"){calOpenLav=!calOpenLav;return R();}
+    if(a.startsWith("add:")){const k=a.slice(4);calAdd=calAdd===k?"":k;R();const f=document.getElementById("caT")||document.getElementById("caN");if(f)f.focus();return;}
+    if(a==="save:scad"){const t=$("caT").value.trim();if(!t)return toast("Scrivi che cosa");P.scad.push({id:uid(),t,d:s,cat:$("caC").value,ric:$("caR").value,av:+$("caA").value,note:"",done:false});calAdd="";save();R();return toast("📌 Scadenza aggiunta");}
+    if(a==="save:pay"){const t=$("caT").value.trim(),i=parseFloat(String($("caI").value).replace(/\./g,"").replace(",","."));if(!t||!(i>0))return toast("Scrivi voce e importo");
+      const f=$("caF").value,one=f==="1";C().ric.push({id:uid(),t,imp:Math.round(i*100)/100,tipo:$("caTp").value,kind:"",freq:one?"m":f,d0:s,fine:one?s:($("caE").value||""),cat:"altro"});calAdd="";save();R();return toast("💶 Pagamento aggiunto in Conti");}
+    if(a==="save:fam"){const t=$("caT").value.trim();if(!t)return toast("Scrivi che cosa");P.fam.ev.push({id:uid(),t,d:s,o:$("caO").value,f:$("caF2").value});calAdd="";save();R();return toast("👨‍👧 Impegno aggiunto in Famiglia");}
+    if(a==="save:nota"||a==="save:notadel"){P.dn=P.dn||{};const v=a==="save:notadel"?"":$("caN").value.trim();if(v)P.dn[s]=v;else delete P.dn[s];calAdd="";save();R();return toast(v?"📝 Nota salvata":"Nota tolta");}
+  });
+  document.querySelectorAll("[data-lc]").forEach(b=>b.onclick=()=>{const s=calV==="giorno"?calD:calSel;if(licSetCode(s,b.dataset.lc)){toast("Licenze aggiornate");R();}});
+  document.querySelectorAll("[data-lt]").forEach(inp=>inp.onchange=()=>{const s=calV==="giorno"?calD:calSel;if(licSetField(s,inp.dataset.lt,inp.value.trim())){toast("Licenze aggiornate");R();}});
+  document.querySelectorAll("[data-cmood]").forEach(b=>b.onclick=()=>{const s=calV==="giorno"?calD:calSel,v=+b.dataset.cmood;setBen(s,"umore",+benDay(s).umore===v?"":v);R();toast("Umore salvato");});
+  document.querySelectorAll("[data-tc]").forEach(b=>b.onclick=()=>{const s=calV==="giorno"?calD:calSel,k=b.dataset.tc,m=lsJ("tc_sessions")||{};
+    const mine=Object.values(m).filter(x=>x&&x.d===s&&x.s===k);
+    if(mine.length){const man=mine.filter(x=>x.man);if(!man.length)return toast("Sessione registrata dal Tai Chi: si toglie da lì");man.forEach(x=>delete m[x.id]);toast("Tolta");}
+    else{const id="cal-"+s+"-"+k;m[id]={id,d:s,s:k,startedAt:Date.parse(s+"T"+(k==="mattina"?"09:00":"18:00")),planned:0,doneIdx:[],doneEx:[],dur:0,saved:true,man:1,rev:1,updatedAt:Date.now()};toast("🧘 Tai Chi segnato");}
+    try{localStorage.setItem("tc_sessions",JSON.stringify(m));}catch(e){}R();});
+  document.querySelectorAll("[data-cdel]").forEach(b=>b.onclick=()=>{const[tp,id]=b.dataset.cdel.split(":");if(tp==="fev"){if(!confirm("Togliere questo impegno?"))return;P.fam.ev=P.fam.ev.filter(a=>a.id!==id);save();R();}});
+}
+
 /* ---------- famiglia ---------- */
 const chiList=()=>[...new Set(P.fam.att.map(a=>a.chi).filter(Boolean))];
 function famOn(s){const g=(parse(s).getDay()+6)%7+1;return P.fam.att.filter(a=>+a.g===g).map(a=>Object.assign({tipo:"att"},a)).concat(P.fam.ev.filter(e=>e.d===s).map(e=>Object.assign({tipo:"ev"},e))).sort((a,b)=>(a.o||"")<(b.o||"")?-1:1);}
@@ -950,7 +1176,7 @@ function runShortcut(){P.cal.wait=true;save();location.href="shortcuts://run-sho
 function calOn(s){return (P.cal.ev||[]).filter(e=>e.d<=s&&(e.ed||e.d)>=s);}
 const calIc=e=>/compleann|🎂/i.test(e.t+" "+e.cal)?"🎂":/lavoro/i.test(e.cal)?"💼":"📆";
 function calCard(){const t=today(),up=(P.cal.ev||[]).filter(e=>e.d>=t&&diff(t,e.d)<=7);
-  return `<div class="card"><h3>📆 Dal tuo Calendario <button class="lnk" data-go="cal">Come funziona ›</button></h3>
+  return `<div class="card"><h3>📆 Dal Calendario dell’iPad <button class="lnk" data-ca="link">Come funziona ›</button></h3>
     ${P.cal.wait?'<div class="btns" style="margin:0 0 8px"><button class="btn pri" id="calPasteBtn">📥 Tocca qui per inserire gli eventi</button></div>':""}
     ${up.length?up.slice(0,7).map(e=>`<div class="row"><span class="pill ${e.d===t?"soon":""}">${e.d===t?"oggi":fmt(e.d,{weekday:"short",day:"numeric"})}${e.o?" "+esc(e.o):""}</span><div class="grow"><b>${calIc(e)} ${esc(e.t)}</b>${e.loc?`<small>${esc(e.loc)}</small>`:""}</div></div>`).join(""):`<p class="empty">${P.cal.at?"Niente nei prossimi 7 giorni.":"Ancora nessun evento: crea il Comando Rapido (vedi «Come funziona»)."}</p>`}
     <div class="btns"><button class="btn sm" id="calRun">🔄 Aggiorna dal Calendario</button><button class="btn sm" id="calClip">📥 Incolla dagli appunti</button></div>
@@ -983,13 +1209,13 @@ function icsText(items){const L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Pian
   items.forEach(i=>{L.push("BEGIN:VEVENT","UID:"+i.uid+"@pianificazione","DTSTAMP:"+ds,...i.lines,"END:VEVENT");});L.push("END:VCALENDAR");return L.map(fold).join("\r\n")+"\r\n";}
 
 /* ---------- interfaccia ---------- */
-const SECT=[["oggi","🏠","Oggi"],["scad","📌","Scadenze"],["cal","📆","Calendario"],["fam","👨‍👧","Famiglia"],["conti","💶","Conti"],["ben","🧘","Benessere"],["sic","🔒","Blocco"]];
-let cur=(location.hash||"").slice(1)||"oggi"; if(!SECT.some(x=>x[0]===cur))cur="oggi";
+const SECT=[["cal","📆","Calendario"],["scad","📌","Scadenze"],["fam","👨‍👧","Famiglia"],["conti","💶","Conti"],["ben","🧘","Benessere"],["sic","🔒","Blocco"]];
+let cur=(location.hash||"").slice(1)||"cal"; if(cur==="oggi"){cur="cal";calV="giorno";calD=calSel=today();} if(!SECT.some(x=>x[0]===cur))cur="cal";
 let famWeek=monday(today()), editId=null;
 function side(){const late=scadOpen().filter(x=>scadState(x)==="warn").length;
   $("side").innerHTML=SECT.map(([k,i,t])=>`<button data-s="${k}" class="${k===cur?"on":""}"${k===cur?' aria-current="page"':""}><span class="ic">${i}</span>${t}${k==="scad"&&late?`<span class="n">${late}</span>`:""}</button>`).join("");}
-function go(k){cur=k;try{history.replaceState(null,"","#"+k);}catch(e){}render();window.scrollTo(0,0);}
-function render(){side();const m=$("main");m.innerHTML=({oggi:vOggi,scad:vScad,cal:vCal,fam:vFam,conti:vConti,ben:vBen,sic:vSic}[cur]||vOggi)()+'<p class="saved" id="pnSaved"></p>';paintSaved();bind();}
+function go(k){if(k==="oggi"){k="cal";setCalV("giorno");calD=calSel=today();}if(k==="cal")calLink=false;cur=k;try{history.replaceState(null,"","#"+k);}catch(e){}render();window.scrollTo(0,0);}
+function render(){side();const m=$("main");m.innerHTML=({cal:vCal,oggi:vOggi,scad:vScad,fam:vFam,conti:vConti,ben:vBen,sic:vSic}[cur]||vOggi)()+'<p class="saved" id="pnSaved"></p>';paintSaved();bind();}
 
 function vOggi(){
   const t=today(),S=licS(),h=new Date().getHours();
@@ -1043,21 +1269,21 @@ function vScad(){
   return o;
 }
 function vCalImport(){
-  return `<h1>📆 Calendario</h1><p class="sub">In entrata: gli eventi del Calendario dell’iPad compaiono in Oggi, Famiglia e Scadenze. In uscita: assenze, scadenze e pagamenti diventano promemoria nel Calendario.</p><div class="card" id="calGuide"><h3>📥 Prendi gli eventi dal Calendario dell’iPad</h3>
+  return `<h1>ℹ️ Collega il Calendario dell’iPad</h1><p class="sub">In entrata: gli eventi del Calendario dell’iPad compaiono nel Calendario di Pianificazione, in Famiglia e in Scadenze. In uscita: assenze, scadenze e pagamenti diventano promemoria nel Calendario.</p><div class="card" id="calGuide"><h3>📥 Prendi gli eventi dal Calendario dell’iPad</h3>
   <p class="lbl">Un’app web non può leggere da sola il Calendario: lo fa un Comando Rapido, che copia gli eventi negli appunti. Si crea una volta sola.</p>
   <div class="row"><span class="pill">1</span><div class="grow">Apri <b>Comandi Rapidi</b> → <b>+</b> → chiamalo esattamente <b>${SC_NAME}</b>.</div></div>
   <div class="row"><span class="pill">2</span><div class="grow">Aggiungi <b>Trova eventi di Calendario</b>: tocca «Aggiungi filtro» → <b>Data di inizio</b> «è nei prossimi» <b>60 giorni</b>; nessun altro filtro (le festività le salta l’app, che le conosce già). Ordina per <b>Data di inizio</b>, limite 300.</div></div>
   <div class="row"><span class="pill">3</span><div class="grow">Aggiungi <b>Ripeti con ognuno</b>. Dentro, aggiungi <b>Testo</b> e scrivi, usando le variabili di «Elemento ripetuto»:<br><code>Data di inizio§Data di fine§Titolo§Calendario§Luogo</code><br>Le date vanno bene così come le propone l’iPad, senza cambiare formato. Il simbolo § copialo con il pulsante qui sotto.</div></div>
   <div class="row"><span class="pill">4</span><div class="grow">Dopo «Fine ripetizione» aggiungi <b>Combina testo</b> (con «Nuova riga») e poi <b>Copia negli appunti</b>.</div></div>
-  <div class="row"><span class="pill">5</span><div class="grow">Qui in Oggi tocca <b>🔄 Aggiorna dal Calendario</b>: parte il Comando Rapido; torna qui con «◀ Pianificazione» in alto a sinistra e tocca <b>📥 Tocca qui per inserire gli eventi</b> (iPad chiede «Incolla»: consenti).</div></div>
+  <div class="row"><span class="pill">5</span><div class="grow">Nel Calendario di Pianificazione tocca <b>🔄 Aggiorna dal Calendario dell’iPad</b>: parte il Comando Rapido; torna qui con «◀ Pianificazione» in alto a sinistra e tocca <b>📥 Tocca qui per inserire gli eventi</b> (iPad chiede «Incolla»: consenti).</div></div>
   <div class="row"><span class="pill">6</span><div class="grow">Facoltativo, ogni mattina da solo: Comandi Rapidi → <b>Automazione</b> → <b>Ora del giorno</b> 7:00 → <b>Esegui subito</b> → «${SC_NAME}». Poi in Pianificazione basta <b>📥 Incolla dagli appunti</b>.</div></div>
   <div class="form" style="margin-top:10px"><label class="wide">Oppure incolla qui il testo copiato<textarea id="calPaste" rows="3" placeholder="2026-10-06T17:00:00+02:00§…"></textarea></label></div>
   <div class="btns"><button class="btn pri" id="calPasteGo">Inserisci</button><button class="btn" id="calSym">Copia il simbolo §</button>${P.cal.at?'<button class="btn danger" id="calClear">Togli gli eventi importati</button>':""}</div></div>`;
 }
-function vCal(){
+function vCalExport(){
   const opt=P.ics.opt||{abs:true,app:true,scad:true,pay:true,fam:true},items=icsItems(opt),news=items.filter(i=>P.ics.sent[i.uid]!==i.sig);
   const lab={abs:"🏖️ Periodi a casa (dalle Licenze)",app:"📅 Appuntamenti delle Licenze e congedo",scad:"📌 Scadenze e pratiche (con promemoria)",pay:"💶 Pagamenti ricorrenti",fam:"👨‍👧 Attività della famiglia"};
-  return vCalImport()+`<h2>📤 Esporta verso il Calendario</h2><p class="sub">Crea un file da aggiungere al Calendario dell’iPad: così i promemoria arrivano anche ad app chiusa, e si vedono su tutti i tuoi dispositivi con iCloud.</p>
+  return `<h2>📤 Esporta verso il Calendario</h2><p class="sub">Crea un file da aggiungere al Calendario dell’iPad: così i promemoria arrivano anche ad app chiusa, e si vedono su tutti i tuoi dispositivi con iCloud.</p>
   <div class="card"><h3>Che cosa mettere nel Calendario</h3>${Object.keys(lab).map(k=>`<label class="row" style="cursor:pointer"><input type="checkbox" data-opt="${k}"${opt[k]?" checked":""} style="width:22px;height:22px"><span class="grow">${lab[k]}</span></label>`).join("")}
     <div class="kpi" style="margin-top:10px"><div><b>${items.length}</b><span>eventi in tutto</span></div><div><b>${news.length}</b><span>nuovi o cambiati dall’ultima volta</span></div></div>
     <div class="btns"><button class="btn pri" id="icsNew"${news.length?"":" disabled"}>📆 Aggiungi le novità (${news.length})</button><button class="btn" id="icsAll">Tutto da capo (${items.length})</button></div></div>
@@ -1121,6 +1347,7 @@ function vSic(){
 }
 /* ---------- eventi ---------- */
 function bind(){
+  if(cur==="cal"&&typeof bindCal==="function")bindCal();
   if(typeof bindConti==="function"&&cur==="conti")bindConti();
   if($("lkAv")&&window.__pnLock)window.__pnLock.available().then(ok=>{const e=$("lkAv");if(e)e.textContent=ok?"✓ Questo iPad può usare Face ID (o il suo codice).":"⚠️ Qui Face ID non è disponibile per le app web: puoi usare solo il codice di riserva.";});
   if($("lkOn"))$("lkOn").onclick=async()=>{const a=$("lkP1").value.trim(),b=$("lkP2").value.trim();if(!/^\d{4,8}$/.test(a)){toast("Il codice deve avere da 4 a 8 cifre");return;}if(a!==b){toast("I due codici non coincidono");return;}
@@ -1168,7 +1395,7 @@ async function exportIcs(all){
 window.addEventListener("hashchange",()=>{const k=(location.hash||"").slice(1);if(k&&k!==cur&&SECT.some(x=>x[0]===k)){cur=k;render();}});
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"){render();valePull(false);}});
 window.addEventListener("online",()=>valePull(false));setInterval(()=>valePull(false),30*60e3);
-window.__pn={icsItems,icsText,licCalc,licS,absBlocks,nextPayments,monthTotals,proj:()=>projection(),get P(){return P;}};
+window.__pn={dayData,licOver,icsItems,icsText,licCalc,licS,absBlocks,nextPayments,monthTotals,proj:()=>projection(),get P(){return P;}};
 render(); recover(); setTimeout(()=>valePull(false),800); setTimeout(ghDaily,1500);
 </script>
 <script>
